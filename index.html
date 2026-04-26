@@ -8,6 +8,18 @@
     <style>
         *{box-sizing:border-box;margin:0;padding:0}
         body{font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#111827;color:#f9fafb;min-height:100vh}
+
+        /* LOGIN */
+        #loginScreen{display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+        .login-box{background:#1f2937;padding:40px 30px;border-radius:16px;border:1px solid #374151;max-width:360px;width:100%;text-align:center}
+        .login-box img{max-width:80px;border-radius:50%;margin-bottom:16px}
+        .login-box h2{color:#60a5fa;font-size:20px;margin-bottom:24px}
+        .login-box input{width:100%;padding:12px 14px;border-radius:8px;border:1px solid #4b5563;background:#374151;color:#fff;font-size:14px;outline:none;margin-bottom:12px}
+        .login-box input:focus{border-color:#60a5fa}
+        .login-box button{width:100%;padding:12px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:.2s}
+        .login-box button:hover{background:#1d4ed8}
+        .login-error{color:#ef4444;font-size:13px;margin-top:10px;display:none}
+        #appContent{display:none}
         .header{text-align:center;padding:20px 16px 12px;border-bottom:1px solid #1f2937}
         .header img{max-width:70px;border-radius:50%;margin-bottom:8px}
         .header h1{font-size:20px;color:#60a5fa;text-transform:uppercase;letter-spacing:1px}
@@ -103,6 +115,21 @@
     </style>
 </head>
 <body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+    <div class="login-box">
+        <img src="https://i.ibb.co/N29Ts7WX/Logo-media-500-CIRCULAR-jpg.jpg" alt="Media 500">
+        <h2>Media 500</h2>
+        <input type="text" id="loginUser" placeholder="Usuario" autocomplete="username">
+        <input type="password" id="loginPass" placeholder="Contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+        <button onclick="doLogin()">Ingresar</button>
+        <div class="login-error" id="loginError">Usuario o contraseña incorrectos</div>
+    </div>
+</div>
+
+<!-- APP CONTENT -->
+<div id="appContent">
 
 <div class="header">
     <img src="https://i.ibb.co/N29Ts7WX/Logo-media-500-CIRCULAR-jpg.jpg" alt="Media 500">
@@ -242,9 +269,34 @@
 
 <div class="ft">
     Fuentes: <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">Min. Transporte (SUBE)</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">Dir. Nal. Vialidad (TMDA)</a> | Factor visibilidad: estándar OOH internacional (FEPE/OUTSMART)
+    <br><span style="cursor:pointer;color:#6b7280;font-size:10px;margin-left:8px" onclick="doLogout()">Cerrar sesión</span>
 </div>
 
+</div><!-- end appContent -->
+
 <script>
+// === AUTH ===
+const CREDS=[{u:'media500',p:'vendedores500'}];
+function doLogin(){
+    const u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value;
+    if(CREDS.find(c=>c.u===u&&c.p===p)){
+        sessionStorage.setItem('m500auth','1');
+        document.getElementById('loginScreen').style.display='none';
+        document.getElementById('appContent').style.display='block';
+        document.getElementById('loginError').style.display='none';
+    }else{
+        document.getElementById('loginError').style.display='block';
+    }
+}
+function doLogout(){sessionStorage.removeItem('m500auth');location.reload()}
+function checkAuth(){
+    if(sessionStorage.getItem('m500auth')==='1'){
+        document.getElementById('loginScreen').style.display='none';
+        document.getElementById('appContent').style.display='block';
+    }
+}
+checkAuth();
+
 const D={"12":{"p":420702,"t":30000,"z":["CABA"]},"41":{"p":121416,"t":30000,"z":["CABA","Norte"]},"42":{"p":181046,"t":40000,"z":["CABA"]},"47":{"p":250000,"t":30000,"z":["CABA"]},"51":{"p":25919,"t":20000,"z":["Sur"]},"53":{"p":22933,"t":30000,"z":["CABA","Oeste"]},"57":{"p":250000,"t":30000,"z":["CABA","Norte","Oeste"]},"64":{"p":72825,"t":40000,"z":["CABA"]},"65":{"p":172572,"t":30000,"z":["CABA"]},"67":{"p":75224,"t":30000,"z":["CABA"]},"68":{"p":64240,"t":40000,"z":["CABA"]},"74":{"p":16353,"t":20000,"z":["Sur"]},"79":{"p":250000,"t":20000,"z":["Sur"]},"92":{"p":250000,"t":30000,"z":["CABA"]},"102":{"p":2324,"t":30000,"z":["CABA"]},"123":{"p":250000,"t":30000,"z":["CABA","Oeste"]},"124":{"p":701959,"t":30000,"z":["CABA"]},"126":{"p":1182005,"t":30000,"z":["CABA","Oeste"]},"136":{"p":440059,"t":30000,"z":["CABA","Oeste"]},"148":{"p":250000,"t":20000,"z":["Sur"]},"151":{"p":250000,"t":40000,"z":["CABA"]},"163":{"p":277020,"t":30000,"z":["CABA","Norte","Oeste"]},"166":{"p":894049,"t":30000,"z":["CABA","Oeste"]},"176":{"p":1597825,"t":30000,"z":["CABA","Norte"]},"177":{"p":594679,"t":20000,"z":["Sur"]},"182":{"p":1113491,"t":30000,"z":["CABA","Norte","Oeste"]},"194":{"p":530650,"t":30000,"z":["CABA","Norte"]},"195":{"p":413138,"t":30000,"z":["CABA","Sur"]},"203":{"p":2758179,"t":20000,"z":["Norte","Oeste"]},"204":{"p":174016,"t":20000,"z":["Norte"]},"218":{"p":636423,"t":20000,"z":["Oeste"]},"222":{"p":121223,"t":20000,"z":["Oeste"]},"236":{"p":1798120,"t":20000,"z":["Oeste"]},"237":{"p":1115632,"t":20000,"z":["Oeste"]},"263":{"p":904083,"t":20000,"z":["Sur"]},"264":{"p":324549,"t":20000,"z":["Norte"]},"269":{"p":1150960,"t":20000,"z":["Oeste"]},"276":{"p":800924,"t":20000,"z":["Norte"]},"283":{"p":689263,"t":20000,"z":["Sur"]},"284":{"p":114030,"t":20000,"z":["Oeste"]},"306":{"p":1172811,"t":20000,"z":["Oeste"]},"310":{"p":108849,"t":20000,"z":["Norte"]},"315":{"p":561302,"t":20000,"z":["Norte","Oeste"]},"322":{"p":384973,"t":20000,"z":["Oeste"]},"325":{"p":206873,"t":20000,"z":["Oeste"]},"326":{"p":86944,"t":20000,"z":["Oeste"]},"327":{"p":542051,"t":20000,"z":["Oeste"]},"336":{"p":163683,"t":20000,"z":["Oeste"]},"365":{"p":2566192,"t":20000,"z":["Norte","Oeste"]},"370":{"p":13749,"t":20000,"z":["Sur"]},"371":{"p":69118,"t":20000,"z":["Sur"]},"373":{"p":367710,"t":20000,"z":["Sur"]},"378":{"p":635943,"t":20000,"z":["Oeste"]},"382":{"p":624749,"t":20000,"z":["Oeste"]},"388":{"p":912547,"t":20000,"z":["Oeste"]},"396":{"p":879949,"t":20000,"z":["Oeste"]},"404":{"p":508901,"t":20000,"z":["Oeste"]},"410":{"p":92149,"t":20000,"z":["Sur"]},"422":{"p":355810,"t":20000,"z":["Sur"]},"423":{"p":701549,"t":20000,"z":["Sur"]},"426":{"p":242549,"t":20000,"z":["Sur"]},"428":{"p":352949,"t":20000,"z":["Sur"]},"435":{"p":62149,"t":20000,"z":["Sur"]},"436":{"p":148810,"t":20000,"z":["Sur"]},"440":{"p":639349,"t":20000,"z":["Sur"]},"442":{"p":378749,"t":20000,"z":["Sur"]},"500":{"p":374949,"t":20000,"z":["Sur"]},"501":{"p":28910,"t":20000,"z":["Sur"]},"503":{"p":546149,"t":20000,"z":["Sur"]},"505":{"p":53210,"t":20000,"z":["Sur"]},"511":{"p":648649,"t":20000,"z":["Sur"]},"520":{"p":823149,"t":20000,"z":["Sur"]}};
 
 const BM=[{n:"Facebook/Instagram Ads",c:8000,cl:"#1877F2"},{n:"Google Search Ads",c:12000,cl:"#34A853"},{n:"YouTube Pre-roll",c:6000,cl:"#FF0000"},{n:"TV Abierta",c:15000,cl:"#8B5CF6"},{n:"Vía Pública (cartel fijo)",c:5000,cl:"#F59E0B"},{n:"Diario/Gráfica",c:18000,cl:"#6B7280"}];
