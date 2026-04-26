@@ -141,6 +141,7 @@
     <div class="tab active" onclick="swTab('impacto')"><span class="ti">📊</span>Impacto</div>
     <div class="tab" onclick="swTab('roi')"><span class="ti">💰</span>ROI</div>
     <div class="tab" onclick="swTab('sim')"><span class="ti">🎯</span>Simulador</div>
+    <div class="tab" onclick="swTab('roireal')"><span class="ti">📉</span>ROI Real</div>
     <div class="tab" onclick="swTab('rep')"><span class="ti">📈</span>Reportes</div>
 </div>
 
@@ -254,6 +255,59 @@
     </div>
 </div>
 
+<!-- ===== ROI REAL ===== -->
+<div class="tc" id="t-roireal">
+    <div class="st">📉 ROI Real de Campaña</div>
+    <div class="method-box">
+        <strong>📐 Cómo funciona:</strong> Ingresá cuánto facturó el cliente durante la campaña y cuánto facturaba antes. El sistema calcula el aumento de ventas, le aplica una <strong>atribución conservadora del 25%</strong> al OOH (porque hubo otros factores: estacionalidad, otros medios, etc.) y te da el ROI real. Es un número <strong>defendible</strong> — no inflado.
+    </div>
+    <div class="pnl">
+        <h3>Datos de la Campaña</h3>
+        <div class="fr">
+            <div class="fg"><label>Inversión en Lunetas ($)</label><input type="number" id="rrInv" placeholder="Ej: 350000" oninput="cRR()"><div class="rh">Lo que pagó el cliente en total</div></div>
+            <div class="fg"><label>Duración (meses)</label><input type="number" id="rrDur" min="1" max="4" value="1" oninput="cRR()"></div>
+        </div>
+    </div>
+    <div class="pnl">
+        <h3>💰 Resultados del Cliente</h3>
+        <div class="fr">
+            <div class="fg"><label>Ventas ANTES de la campaña ($)</label><input type="number" id="rrVentasAntes" placeholder="Ej: 5000000" oninput="cRR()"><div class="rh">Facturación del mismo período previo</div></div>
+            <div class="fg"><label>Ventas DURANTE la campaña ($)</label><input type="number" id="rrVentasDesp" placeholder="Ej: 6500000" oninput="cRR()"><div class="rh">Facturación mientras estuvieron las lunetas</div></div>
+        </div>
+        <div class="fg">
+            <label>Atribución OOH (%)</label>
+            <select id="rrAtr" onchange="cRR()">
+                <option value="15">15% — Muy conservador (muchos otros medios activos)</option>
+                <option value="25" selected>25% — Conservador (recomendado)</option>
+                <option value="35">35% — Moderado (OOH era el medio principal)</option>
+                <option value="50">50% — Agresivo (solo OOH, sin otros medios)</option>
+            </select>
+            <div class="rh">¿Cuánto del aumento de ventas se puede atribuir al OOH? Usá 25% como regla general.</div>
+        </div>
+    </div>
+    <div id="rrRes" style="display:none">
+        <div class="g2" style="margin-bottom:16px">
+            <div class="sc"><div class="l">Aumento de Ventas</div><div class="v" id="rrAumVentas">$0</div><div class="u" id="rrAumPct"></div></div>
+            <div class="sc"><div class="l">Atribuible al OOH</div><div class="v" id="rrAtrOOH">$0</div><div class="u" id="rrAtrPct"></div></div>
+        </div>
+        <div class="hc" id="rrCard">
+            <div class="l">ROI de la Campaña OOH</div>
+            <div class="v" id="rrROI">0%</div>
+            <div class="s" id="rrROIText"></div>
+            <div class="method">Atribución conservadora: solo se asigna al OOH lo que razonablemente le corresponde</div>
+        </div>
+        <div class="g3" style="margin-bottom:16px">
+            <div class="sc"><div class="l">Ganancia Neta OOH</div><div class="v" id="rrGanancia">$0</div><div class="u">Atribuible - Inversión</div></div>
+            <div class="sc"><div class="l">Por cada $1 invertido</div><div class="v" id="rrMultiplo">$0</div><div class="u">Retorno por peso</div></div>
+            <div class="sc"><div class="l">Ventas extra/mes</div><div class="v" id="rrVentasMes">$0</div><div class="u">Atribuible al OOH</div></div>
+        </div>
+        <div class="vis-factor">
+            <strong>⚠️ Aclaración importante:</strong> El ROI calculado usa una atribución conservadora del <span id="rrAtrLabel">25</span>%. Esto significa que solo el <span id="rrAtrLabel2">25</span>% del aumento de ventas se le asigna al OOH. El resto puede deberse a estacionalidad, otros medios, o factores externos. Este enfoque hace que el número sea <strong>defendible ante cualquier directorio</strong>.
+        </div>
+        <div style="text-align:center;margin-top:12px"><button class="btn bs" onclick="cpRR()">📲 Copiar para WhatsApp</button></div>
+    </div>
+</div>
+
 <!-- ===== REPORTES ===== -->
 <div class="tc" id="t-rep">
     <div class="st">📈 Reporte de Campaña</div>
@@ -314,7 +368,7 @@ function impEfect(info){return Math.round(info.p*VIS_P+info.t*30*VIS_T)}
 function swTab(t){
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
     document.querySelectorAll('.tc').forEach(x=>x.classList.remove('active'));
-    const idx={impacto:1,roi:2,sim:3,rep:4}[t];
+    const idx={impacto:1,roi:2,sim:3,roireal:4,rep:5}[t];
     document.querySelector('.tab:nth-child('+idx+')').classList.add('active');
     document.getElementById('t-'+t).classList.add('active');
 }
@@ -483,6 +537,48 @@ function genRep(){
         </div>`;
     document.getElementById('repVacio').style.display='none';
     document.getElementById('repCont').style.display='block';
+}
+
+// ROI REAL
+function cRR(){
+    const inv=parseFloat(document.getElementById('rrInv').value)||0;
+    const dur=parseInt(document.getElementById('rrDur').value)||1;
+    const vAntes=parseFloat(document.getElementById('rrVentasAntes').value)||0;
+    const vDesp=parseFloat(document.getElementById('rrVentasDesp').value)||0;
+    const atr=parseInt(document.getElementById('rrAtr').value)||25;
+    if(!inv||!vAntes||!vDesp){document.getElementById('rrRes').style.display='none';return}
+    const aum=vDesp-vAntes;
+    const aumPct=vAntes>0?(aum/vAntes*100):0;
+    const atrOOH=aum*(atr/100);
+    const ganancia=atrOOH-inv;
+    const roi=inv>0?(ganancia/inv*100):0;
+    const multiplo=inv>0?(atrOOH/inv):0;
+    const ventasMes=atrOOH/dur;
+    document.getElementById('rrAumVentas').innerText=fp(aum);
+    document.getElementById('rrAumPct').innerText=aumPct>=0?'+'+aumPct.toFixed(1)+'% vs. período anterior':aumPct.toFixed(1)+'% vs. período anterior';
+    document.getElementById('rrAtrOOH').innerText=fp(atrOOH);
+    document.getElementById('rrAtrPct').innerText=atr+'% del aumento atribuido al OOH';
+    document.getElementById('rrROI').innerText=roi>=0?roi.toFixed(0)+'%':roi.toFixed(0)+'%';
+    document.getElementById('rrROIText').innerText=roi>=0?'✅ Campaña rentable':'❌ Sin retorno positivo';
+    const card=document.getElementById('rrCard');
+    card.style.background=roi>=0?'linear-gradient(135deg,#065f46,#10b981)':'linear-gradient(135deg,#991b1b,#ef4444)';
+    document.getElementById('rrGanancia').innerText=fp(ganancia);
+    document.getElementById('rrGanancia').style.color=ganancia>=0?'#34d399':'#ef4444';
+    document.getElementById('rrMultiplo').innerText=multiplo>=0?'$'+multiplo.toFixed(2):'-$'+Math.abs(multiplo).toFixed(2);
+    document.getElementById('rrVentasMes').innerText=fp(ventasMes);
+    document.getElementById('rrAtrLabel').innerText=atr;
+    document.getElementById('rrAtrLabel2').innerText=atr;
+    document.getElementById('rrRes').style.display='block';
+}
+
+function cpRR(){
+    const inv=parseFloat(document.getElementById('rrInv').value)||0;
+    const vAntes=parseFloat(document.getElementById('rrVentasAntes').value)||0;
+    const vDesp=parseFloat(document.getElementById('rrVentasDesp').value)||0;
+    const atr=parseInt(document.getElementById('rrAtr').value)||25;
+    const aum=vDesp-vAntes,atrOOH=aum*(atr/100),ganancia=atrOOH-inv,roi=inv>0?(ganancia/inv*100):0,multiplo=inv>0?(atrOOH/inv):0;
+    const txt=`📉 *ROI Real — Campaña OOH*\n\n💵 Inversión: ${fp(inv)}\n📊 Ventas antes: ${fp(vAntes)}\n📊 Ventas durante: ${fp(vDesp)}\n📈 Aumento: ${fp(aum)} (${vAntes>0?(aum/vAntes*100).toFixed(1):0}%)\n👁 Atribución OOH: ${atr}%\n\n💰 *Ganancia atribuible al OOH: ${fp(atrOOH)}*\n📉 *ROI: ${roi.toFixed(0)}%*\n🪙 Por cada $1 invertido → $${multiplo.toFixed(2)}\n\n⚠ Atribución conservadora del ${atr}% — número defendible`;
+    navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
 function cpRep(){const t=document.getElementById('repPV').innerText;navigator.clipboard.writeText(t).then(()=>alert('¡Reporte copiado!'))}
