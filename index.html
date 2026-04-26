@@ -248,6 +248,43 @@
             <div class="method">Con factor de visibilidad 35%/15%</div>
         </div>
         <div class="pnl"><h3>📊 Comparación CPM</h3><div id="sCmp"></div></div>
+
+        <div class="pnl" style="margin-top:16px">
+            <h3>📉 Calcular ROI Real (opcional)</h3>
+            <div class="fr" style="margin-top:10px">
+                <div class="fg"><label>Ventas ANTES ($)</label><input type="number" id="sVA" placeholder="Ej: 5000000" oninput="recalc()"><div class="rh">Facturación del período previo</div></div>
+                <div class="fg"><label>Ventas DURANTE ($)</label><input type="number" id="sVD" placeholder="Ej: 6500000" oninput="recalc()"><div class="rh">Facturación durante la campaña</div></div>
+            </div>
+            <div class="fg">
+                <label>Atribución OOH</label>
+                <select id="sAtr" onchange="recalc()">
+                    <option value="0">No calcular ROI</option>
+                    <option value="15">15% — Muy conservador</option>
+                    <option value="25" selected>25% — Conservador (recomendado)</option>
+                    <option value="35">35% — Moderado</option>
+                    <option value="50">50% — Agresivo</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="simROI" style="display:none">
+            <div class="g2" style="margin-bottom:16px">
+                <div class="sc"><div class="l">Aumento de Ventas</div><div class="v" id="sAumV">$0</div><div class="u" id="sAumPct"></div></div>
+                <div class="sc"><div class="l">Atribuible al OOH</div><div class="v" id="sAtrOOHV">$0</div><div class="u" id="sAtrPctV"></div></div>
+            </div>
+            <div id="simROICard" style="background:linear-gradient(135deg,#065f46,#10b981);padding:24px;border-radius:12px;text-align:center;margin-bottom:16px;box-shadow:0 8px 16px rgba(16,185,129,.3)">
+                <div style="font-size:13px;color:#a7f3d0;text-transform:uppercase;margin-bottom:6px">ROI de la Campaña</div>
+                <div id="sROIpct" style="font-size:38px;font-weight:700;color:#fff">0%</div>
+                <div id="sROIlabel" style="font-size:14px;color:#6ee7b7;font-weight:600;margin-top:3px"></div>
+                <div style="font-size:11px;color:#d1fae5;margin-top:8px">Atribución conservadora: solo lo que razonablemente corresponde al OOH</div>
+            </div>
+            <div class="g3" style="margin-bottom:16px">
+                <div class="sc"><div class="l">Ganancia Neta</div><div class="v" id="sGanancia">$0</div><div class="u">Atribuible - Inversión</div></div>
+                <div class="sc"><div class="l">Por cada $1</div><div class="v" id="sMultiplo">$0</div><div class="u">Retorno por peso</div></div>
+                <div class="sc"><div class="l">Ventas extra/mes</div><div class="v" id="sVMes">$0</div><div class="u">Atribuible al OOH</div></div>
+            </div>
+        </div>
+
         <div style="text-align:center;margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
             <button class="btn bs" onclick="cpSim()">📲 Copiar WhatsApp</button>
             <button class="btn bp" onclick="genRep()">📈 Generar Reporte</button>
@@ -470,14 +507,46 @@ function recalc(){
     document.getElementById('sImp').innerText=f(ti);
     document.getElementById('sImpD').innerText=f(ti/d)+'/mes × '+d+' meses';
     rCmp('sCmp',cpm);
+
+    // ROI en simulador
+    const vA=parseFloat(document.getElementById('sVA').value)||0;
+    const vD=parseFloat(document.getElementById('sVD').value)||0;
+    const atr=parseInt(document.getElementById('sAtr').value)||0;
+    const roiDiv=document.getElementById('simROI');
+    if(vA>0&&vD>0&&atr>0){
+        const aum=vD-vA,aumPct=vA>0?(aum/vA*100):0;
+        const atrOOH=aum*(atr/100),gan=atrOOH-tinv;
+        const roi=tinv>0?(gan/tinv*100):0,mult=tinv>0?(atrOOH/tinv):0;
+        document.getElementById('sAumV').innerText=fp(aum);
+        document.getElementById('sAumPct').innerText=(aumPct>=0?'+':'')+aumPct.toFixed(1)+'%';
+        document.getElementById('sAtrOOHV').innerText=fp(atrOOH);
+        document.getElementById('sAtrPctV').innerText=atr+'% del aumento';
+        document.getElementById('sROIpct').innerText=(roi>=0?roi.toFixed(0):roi.toFixed(0))+'%';
+        document.getElementById('sROIlabel').innerText=roi>=0?'✅ Campaña rentable':'❌ Sin retorno positivo';
+        const card=document.getElementById('simROICard');
+        card.style.background=roi>=0?'linear-gradient(135deg,#065f46,#10b981)':'linear-gradient(135deg,#991b1b,#ef4444)';
+        document.getElementById('sGanancia').innerText=fp(gan);
+        document.getElementById('sGanancia').style.color=gan>=0?'#34d399':'#ef4444';
+        document.getElementById('sMultiplo').innerText=mult>=0?'$'+mult.toFixed(2):'-$'+Math.abs(mult).toFixed(2);
+        document.getElementById('sVMes').innerText=fp(atrOOH/d);
+        roiDiv.style.display='block';
+    }else{
+        roiDiv.style.display='none';
+    }
 }
 
 function cpSim(){
     const d=parseInt(document.getElementById('sD').value)||1,cl=document.getElementById('sC').value||'Cliente';
+    const vA=parseFloat(document.getElementById('sVA').value)||0,vD=parseFloat(document.getElementById('sVD').value)||0,atr=parseInt(document.getElementById('sAtr').value)||0;
     let ti=0,tinv=0,tl=0;
     const lt=camp.map(c=>{const i=D[c.l];const im=i?impEfect(i)*c.n*d:0;const inv=c.pr*c.n*d;ti+=im;tinv+=inv;tl+=c.n;return`  • Línea ${c.l}: ${c.n} lun × ${fp(c.pr)} = ${fp(inv)}`}).join('\n');
     const cpm=ti>0?tinv/ti*1e3:0;
-    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión: ${fp(tinv)}*\n📊 *${f(ti)} impactos efectivos*\n📈 CPM: ${fp(cpm)}\n👁 Visibilidad: 35% pasajeros + 15% tránsito\n🚌 ${tl} lunetas en ${camp.length} líneas\n\n🔗 Media 500`;
+    let roiTxt='';
+    if(vA>0&&vD>0&&atr>0){
+        const aum=vD-vA,atrOOH=aum*(atr/100),gan=atrOOH-tinv,roi=tinv>0?(gan/tinv*100):0,mult=tinv>0?(atrOOH/tinv):0;
+        roiTxt=`\n\n📉 *ROI Real:*\n📊 Ventas antes: ${fp(vA)}\n📊 Ventas durante: ${fp(vD)}\n📈 Aumento: ${fp(aum)}\n👁 Atribución OOH ${atr}%: ${fp(atrOOH)}\n💰 ROI: ${roi.toFixed(0)}%\n🪙 Por cada $1 → $${mult.toFixed(2)}`;
+    }
+    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión: ${fp(tinv)}*\n📊 *${f(ti)} impactos efectivos*\n📈 CPM: ${fp(cpm)}\n👁 Visibilidad: 35% pasajeros + 15% tránsito\n🚌 ${tl} lunetas en ${camp.length} líneas${roiTxt}\n\n🔗 Media 500`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -498,6 +567,31 @@ function genRep(){
         return`<tr><td>${m.n}</td><td style="font-weight:700">${fp(m.c)}</td><td style="color:${m.n.startsWith("Media 500")?'#1d4ed8':'#dc2626'};font-weight:700">${rt}</td></tr>`;
     }).join('');
     const rp=document.getElementById('repPV');
+    // ROI en reporte
+    const vA=parseFloat(document.getElementById('sVA').value)||0;
+    const vD=parseFloat(document.getElementById('sVD').value)||0;
+    const atr=parseInt(document.getElementById('sAtr').value)||0;
+    let roiHtml='';
+    if(vA>0&&vD>0&&atr>0){
+        const aum=vD-vA,aumPct=vA>0?(aum/vA*100):0;
+        const atrOOH=aum*(atr/100),gan=atrOOH-tinv;
+        const roi=tinv>0?(gan/tinv*100):0,mult=tinv>0?(atrOOH/tinv):0;
+        roiHtml=`
+        <div class="rs" style="background:#f0fdf4;border-radius:6px;padding:16px;margin:16px 0">
+            <div class="rl" style="color:#065f46;font-size:15px;margin-bottom:8px">📉 ROI Real de la Campaña</div>
+            <table>
+                <tr><td style="font-weight:700">Ventas antes de campaña</td><td>${fp(vA)}</td></tr>
+                <tr><td style="font-weight:700">Ventas durante campaña</td><td>${fp(vD)}</td></tr>
+                <tr><td style="font-weight:700">Aumento de ventas</td><td>${fp(aum)} (${aumPct.toFixed(1)}%)</td></tr>
+                <tr><td style="font-weight:700">Atribución OOH</td><td>${atr}% = ${fp(atrOOH)}</td></tr>
+                <tr><td style="font-weight:700;color:#065f46;font-size:14px">ROI</td><td style="font-weight:700;color:${roi>=0?'#065f46':'#dc2626'};font-size:14px">${roi.toFixed(0)}%</td></tr>
+                <tr><td style="font-weight:700">Ganancia neta OOH</td><td style="color:${gan>=0?'#065f46':'#dc2626'}">${fp(gan)}</td></tr>
+                <tr><td style="font-weight:700">Por cada $1 invertido</td><td>$${mult.toFixed(2)}</td></tr>
+            </table>
+            <div style="font-size:11px;color:#6b7280;margin-top:8px">⚠ Atribución conservadora del ${atr}% — solo se asigna al OOH lo que razonablemente le corresponde.</div>
+        </div>`;
+    }
+
     rp.innerHTML=`
         <div style="text-align:center;margin-bottom:16px">
             <img src="https://i.ibb.co/N29Ts7WX/Logo-media-500-CIRCULAR-jpg.jpg" alt="Media 500" style="width:50px;border-radius:50%;margin-bottom:6px">
@@ -528,6 +622,7 @@ function genRep(){
         <div class="rs"><div class="rl">Comparación con Otros Medios:</div>
             <table><thead><tr><th>Medio</th><th>CPM</th><th>vs. Su Campaña</th></tr></thead><tbody>${cmpRows}</tbody></table>
         </div>
+        ${roiHtml}
         <div class="rf">
             <strong>Media 500</strong> — Publicidad en Vía Pública<br>
             Fuentes: Ministerio de Transporte (Red SUBE), Dirección Nacional de Vialidad (TMDA).<br>
