@@ -149,7 +149,7 @@
 </div>
 
 <div class="tabs">
-    <div class="tab active" onclick="swTab('impacto')"><span class="ti">📊</span>Impacto</div>
+    <div class="tab active" onclick="swTab('impacto')"><span class="ti">📊</span>OTS</div>
     <div class="tab" onclick="swTab('roi')"><span class="ti">💰</span>CPM</div>
     <div class="tab" onclick="swTab('sim')"><span class="ti">🎯</span>Simulador</div>
     <div class="tab" onclick="swTab('roireal')"><span class="ti">📉</span>ROI Real</div>
@@ -159,12 +159,12 @@
 <!-- ===== IMPACTO ===== -->
 <div class="tc active" id="t-impacto">
     <div class="method-box">
-        <strong>📐 Metodología:</strong> Los impactos se calculan aplicando un <strong>factor de visibilidad del 35%</strong> sobre pasajeros SUBE (solo quienes miran la luneta) + <strong>factor del 15%</strong> sobre tránsito vehicular (exposición breve en movimiento). Es un estándar conservador de la industria OOH internacional.<br><br><strong>📊 Fuentes de datos:</strong><br><a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 SUBE — Min. Transporte</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Vialidad Nacional (TMDA rutas)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 GCBA — Anillo Digital (tránsito CABA)</a><br><span style="font-size:11px;color:#6b7280">Líneas CABA: datos de tránsito de sensores viales GCBA. Líneas GBA: estimaciones de Vialidad Nacional.</span>
+        <strong>📐 Metodología:</strong> Los OTS (Opportunity to See) se calculan aplicando un <strong>factor de visibilidad del 20%</strong> sobre pasajeros SUBE (oportunidad de visualización al subir/bajar) + <strong>factor del 20%</strong> sobre tránsito vehicular (vehículos detrás del bondi con tiempo de lectura). Es una estimación conservadora basada en estándares OOH internacionales.<br><br><strong>📊 Fuentes de datos:</strong><br><a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 SUBE — Min. Transporte</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Vialidad Nacional (TMDA rutas)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 GCBA — Anillo Digital (tránsito CABA)</a><br><span style="font-size:11px;color:#6b7280">Líneas CABA: datos de tránsito de sensores viales GCBA. Líneas GBA: estimaciones de Vialidad Nacional.</span>
     </div>
     <div class="fb">
         <input type="text" id="sI" placeholder="🔍 Buscar línea..." onkeyup="fL()">
         <select id="zF" onchange="fL()"><option value="ALL">Todas</option><option value="CABA">CABA</option><option value="Norte">GBA Norte</option><option value="Oeste">GBA Oeste</option><option value="Sur">GBA Sur</option></select>
-        <select id="sF" onchange="fL()"><option value="NUM">Nro.</option><option value="IMP">Mayor Impacto</option></select>
+        <select id="sF" onchange="fL()"><option value="NUM">Nro.</option><option value="IMP">Mayor OTS</option></select>
         <select id="lS" onchange="uP()" style="width:100%;min-width:100%"><option value="" disabled selected>Elegí una Línea...</option></select>
     </div>
     <div class="pnl" id="placa" style="display:none">
@@ -188,13 +188,13 @@
             </div>
         </div>
         <div class="vis-factor">
-            <strong>👁 Factor de visibilidad aplicado:</strong> 35% pasajeros + 15% tránsito → Solo contabilizamos las personas que efectivamente miran la luneta. Esto hace que nuestros números sean <strong>conservadores y defendibles</strong> ante cualquier cliente.
+            <strong>👁 Factor de visibilidad aplicado:</strong> 20% pasajeros + 20% tránsito → Solo contabilizamos las personas que efectivamente miran la luneta. Esto hace que nuestros números sean <strong>conservadores y defendibles</strong> ante cualquier cliente.
         </div>
         <div class="hc">
-            <div class="l">Impactos Visuales Efectivos (por luneta/mes)</div>
+            <div class="l">OTS (Opportunity to See) (por luneta/mes)</div>
             <div class="v" id="iM">0</div>
-            <div class="s" id="iD">0 impactos diarios</div>
-            <div class="method">Pasajeros × 35% + Tránsito × 15% = Impactos efectivos</div>
+            <div class="s" id="iD">0 OTS diarios</div>
+            <div class="method">Pasajeros × 20% + Tránsito × 20% = OTS</div>
         </div>
         <div style="text-align:center"><button class="btn bs" onclick="cpImp()">📲 Copiar para WhatsApp</button></div>
     </div>
@@ -214,14 +214,14 @@
     <div id="rR" style="display:none">
         <div class="g3" style="margin-bottom:16px">
             <div class="sc"><div class="l">Inversión Total</div><div class="v" id="rInv">$0</div><div class="u" id="rInvD"></div></div>
-            <div class="sc"><div class="l">CPM</div><div class="v" id="rCPM">$0</div><div class="u">Costo cada 1.000 impactos</div></div>
-            <div class="sc"><div class="l">Costo por Impacto</div><div class="v" id="rCPI">$0</div><div class="u">Por visualización</div></div>
+            <div class="sc"><div class="l">CPM</div><div class="v" id="rCPM">$0</div><div class="u">Costo cada 1.000 OTS</div></div>
+            <div class="sc"><div class="l">Costo por OTS</div><div class="v" id="rCPI">$0</div><div class="u">Por visualización</div></div>
         </div>
         <div class="hc">
-            <div class="l">Impactos Visuales Efectivos de la Campaña</div>
+            <div class="l">OTS (Opportunity to See) de la Campaña</div>
             <div class="v" id="rImp">0</div>
             <div class="s" id="rImpD"></div>
-            <div class="method">Calculado con factor de visibilidad 35%/15%</div>
+            <div class="method">Calculado con factor de visibilidad 20%/20%</div>
         </div>
         <div class="pnl"><h3>📊 Comparación CPM con Otros Medios</h3><div id="rCmp"></div></div>
         <div style="text-align:center;margin-top:12px"><button class="btn bs" onclick="cpROI()">📲 Copiar para WhatsApp</button></div>
@@ -246,17 +246,17 @@
     </div>
     <div id="simVacia" class="es"><div class="ei">🎯</div><div>Agregá líneas para armar tu campaña</div></div>
     <div id="simCont" style="display:none">
-        <div class="pnl" style="overflow-x:auto"><h3>Líneas en la Campaña</h3><table class="ct" style="margin-top:10px"><thead><tr><th>Línea</th><th>Zona</th><th>Lunetas</th><th>$ Luneta</th><th>Impactos/mes</th><th></th></tr></thead><tbody id="simB"></tbody></table></div>
+        <div class="pnl" style="overflow-x:auto"><h3>Líneas en la Campaña</h3><table class="ct" style="margin-top:10px"><thead><tr><th>Línea</th><th>Zona</th><th>Lunetas</th><th>$ Luneta</th><th>OTS/mes</th><th></th></tr></thead><tbody id="simB"></tbody></table></div>
         <div class="g3" style="margin-bottom:16px">
             <div class="sc"><div class="l">Inversión Total</div><div class="v" id="sInv">$0</div></div>
             <div class="sc"><div class="l">CPM Campaña</div><div class="v" id="sCPM">$0</div></div>
             <div class="sc"><div class="l">Total Lunetas</div><div class="v" id="sTL">0</div></div>
         </div>
         <div class="hc">
-            <div class="l">Impactos Visuales Efectivos Totales</div>
+            <div class="l">OTS (Opportunity to See) Totales</div>
             <div class="v" id="sImp">0</div>
             <div class="s" id="sImpD"></div>
-            <div class="method">Con factor de visibilidad 35%/15%</div>
+            <div class="method">Con factor de visibilidad 20%/20%</div>
         </div>
         <div class="pnl"><h3>📊 Comparación CPM</h3><div id="sCmp"></div></div>
 
@@ -270,9 +270,9 @@
                 <label>Atribución OOH</label>
                 <select id="sAtr" onchange="recalc()">
                     <option value="0">No calcular ROI</option>
-                    <option value="15">15% — Muy conservador</option>
+                    <option value="15">20% — Muy conservador</option>
                     <option value="25" selected>25% — Conservador (recomendado)</option>
-                    <option value="35">35% — Moderado</option>
+                    <option value="35">20% — Moderado</option>
                     <option value="50">50% — Agresivo</option>
                 </select>
             </div>
@@ -325,9 +325,9 @@
         <div class="fg">
             <label>Atribución OOH (%)</label>
             <select id="rrAtr" onchange="cRR()">
-                <option value="15">15% — Muy conservador (muchos otros medios activos)</option>
+                <option value="15">20% — Muy conservador (muchos otros medios activos)</option>
                 <option value="25" selected>25% — Conservador (recomendado)</option>
-                <option value="35">35% — Moderado (OOH era el medio principal)</option>
+                <option value="35">20% — Moderado (OOH era el medio principal)</option>
                 <option value="50">50% — Agresivo (solo OOH, sin otros medios)</option>
             </select>
             <div class="rh">¿Cuánto del aumento de ventas se puede atribuir al OOH? Usá 25% como regla general.</div>
@@ -399,7 +399,7 @@
 
                 <div class="src-card" style="border-color:#a78bfa">
                     <h4 style="color:#a78bfa">👁 Factor de Visibilidad</h4>
-                    <div class="src-val">35% pasaj. / 15% tráns.</div>
+                    <div class="src-val">20% pasaj. / 20% tráns.</div>
                     <p>Estimación propia basada en estudios de OOH internacional. No existen estudios específicos para lunetas traseras de colectivos en Argentina.</p>
                     <a href="https://www.outsmart.org.uk/route/" target="_blank">🔗 OUTSMART ROUTE Study</a><br>
                     <a href="https://www.fepemarketing.com/knowledge-hub/" target="_blank">🔗 FEPE Knowledge Hub</a>
@@ -413,7 +413,7 @@
                 <strong>OUTSMART/ROUTE (Reino Unido):</strong> Encontró que solo el 30-40% de las personas que pasan por un cartel OOH lo "ven" efectivamente (opportunity to see vs. actual visibility). Fuente: outsmart.org.uk/route<br><br>
                 <strong>FEPE (Europa):</strong> Estableció el estándar europeo de medición OOH (EUROHOHP), que distingue entre exposición (pasar cerca) y visibilidad (mirar efectivamente). Sugiere factores de 25-45% según formato y posición. Fuente: fepemarketing.com<br><br>
                 <strong>GfK/Nielsen OOH:</strong> Estudios de eye-tracking en vía pública muestran tasas de atención de 25-45% según formato. Los formatos en movimiento (como lunetas de colectivos) tienden al extremo inferior.<br><br>
-                <strong>Nuestra adaptación:</strong> Usamos 35% para pasajeros (solo ven la luneta al subir/bajar, no durante el viaje) y 15% para tránsito (solo una fracción pasa detrás del bondi con tiempo de lectura). Son estimaciones conservadoras que no constituyen un dato duro local — las presentamos como referencia y pueden ajustarse con mediciones propias.
+                <strong>Nuestra adaptación:</strong> Usamos 20% para pasajeros (solo ven la luneta al subir/bajar, no durante el viaje) y 20% para tránsito (solo los vehículos que van detrás del bondi con tiempo de lectura). Son estimaciones conservadoras que no constituyen un dato duro local — las presentamos como referencia y pueden ajustarse con mediciones propias. El término OTS (Opportunity to See) es el estándar internacional OOH: no decimos "impacto" sino "oportunidad de ver".
             </div>
         </div>
 
@@ -451,14 +451,14 @@ const D={"12":{"p":420702,"t":122000,"z":["CABA"],"ts":"gcba"},"41":{"p":121416,
 
 const BM=[{n:"Facebook/Instagram Ads",c:8000,cl:"#1877F2"},{n:"Google Search Ads",c:12000,cl:"#34A853"},{n:"YouTube Pre-roll",c:6000,cl:"#FF0000"},{n:"TV Abierta",c:15000,cl:"#8B5CF6"},{n:"Vía Pública (cartel fijo)",c:5000,cl:"#F59E0B"},{n:"Diario/Gráfica",c:18000,cl:"#6B7280"}];
 
-const VIS_P=0.35,VIS_T=0.15; // visibilidad factores
+const VIS_P=0.20,VIS_T=0.20; // visibilidad factores
 let cL=null,camp=[];
 
 function f(n){return n>=1e6?(n/1e6).toFixed(1)+"M":n>=1e3?Math.round(n).toLocaleString("es-AR"):n.toString()}
 function fp(n){return"$"+Math.round(n).toLocaleString("es-AR")}
 function fdt(){return new Date().toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit",year:"numeric"})}
 
-// impactos efectivos por luneta/mes
+// OTS por luneta/mes
 function impEfect(info){return Math.round(info.p*VIS_P+info.t*30*VIS_T)}
 
 function swTab(t){
@@ -502,7 +502,7 @@ function uP(){
     document.getElementById('vM').innerText=f(i.t*30);
     document.getElementById('vD').innerText=f(i.t)+' / día';
     document.getElementById('iM').innerText=f(ie);
-    document.getElementById('iD').innerText=f(ied)+' impactos diarios';
+    document.getElementById('iD').innerText=f(ied)+' OTS diarios';
     document.getElementById('placa').style.display='block';
 }
 
@@ -510,7 +510,7 @@ function cpImp(){
     if(!cL)return;const i=D[cL],ie=impEfect(i);
     const srcLabel=i.ts==='gcba'?'GCBA Anillo Digital':'Vialidad';
     const srcUrl=i.ts==='gcba'?'data.buenosaires.gob.ar':'argentina.gob.ar/vialidad';
-    const txt=`🚌 *Impacto OOH — Línea ${cL}*\n📍 ${i.z.join(', ')}\n\n👥 ${f(i.p)} pasajeros/mes (SUBE)\n🚗 ${f(i.t*30)} vehículos/mes (${srcLabel})\n👁 Factor visibilidad: 35% pasajeros + 15% tránsito\n\n🔥 *${f(ie)} impactos visuales efectivos/mes* por luneta\n\n🔗 Fuentes: datos.transporte.gob.ar | ${srcUrl}`;
+    const txt=`🚌 *OTS OOH — Línea ${cL}*\n📍 ${i.z.join(', ')}\n\n👥 ${f(i.p)} pasajeros/mes (SUBE)\n🚗 ${f(i.t*30)} vehículos/mes (${srcLabel})\n👁 Factor visibilidad: 20% pasajeros + 20% tránsito\n\n🔥 *${f(ie)} OTS/mes* por luneta\n\n🔗 Fuentes: datos.transporte.gob.ar | ${srcUrl}`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -546,7 +546,7 @@ function cpROI(){
     const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value),d=parseInt(document.getElementById('rD').value);
     const i=D[l];if(!i)return;
     const inv=pr*n*d,imT=impEfect(i)*n*d,cpm=imT>0?inv/imT*1e3:0;
-    const txt=`💰 *ROI OOH — Línea ${l}*\n\n💵 Inversión: ${fp(inv)}\n📊 Impactos efectivos: ${f(imT)}\n📈 CPM: ${fp(cpm)}\n📉 Costo/impacto: ${fp(inv/imT)}\n👁 Visibilidad: 35% pasajeros + 15% tránsito\n\n🔥 ${f(imT)} visualizaciones por ${fp(inv)}`;
+    const txt=`💰 *ROI OOH — Línea ${l}*\n\n💵 Inversión: ${fp(inv)}\n📊 OTS efectivos: ${f(imT)}\n📈 CPM: ${fp(cpm)}\n📉 Costo/OTS: ${fp(inv/imT)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n\n🔥 ${f(imT)} visualizaciones por ${fp(inv)}`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -618,7 +618,7 @@ function cpSim(){
         const aum=vD-vA,atrOOH=aum*(atr/100),gan=atrOOH-tinv,roi=tinv>0?(gan/tinv*100):0,mult=tinv>0?(atrOOH/tinv):0;
         roiTxt=`\n\n📉 *ROI Real:*\n📊 Ventas antes: ${fp(vA)}\n📊 Ventas durante: ${fp(vD)}\n📈 Aumento: ${fp(aum)}\n👁 Atribución OOH ${atr}%: ${fp(atrOOH)}\n💰 ROI: ${roi.toFixed(0)}%\n🪙 Por cada $1 → $${mult.toFixed(2)}`;
     }
-    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión: ${fp(tinv)}*\n📊 *${f(ti)} impactos efectivos*\n📈 CPM: ${fp(cpm)}\n👁 Visibilidad: 35% pasajeros + 15% tránsito\n🚌 ${tl} lunetas en ${camp.length} líneas${roiTxt}\n\n🔗 Media 500`;
+    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión: ${fp(tinv)}*\n📊 *${f(ti)} OTS*\n📈 CPM: ${fp(cpm)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n🚌 ${tl} lunetas en ${camp.length} líneas${roiTxt}\n\n🔗 Media 500`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -674,21 +674,21 @@ function genRep(){
         <div class="rs"><div class="rl">Duración:</div> ${d} mes(es)</div>
         <div class="rs"><div class="rl">Total Lunetas:</div> ${tl} unidades en ${camp.length} líneas</div>
         <div class="rs" style="background:#eff6ff;border-radius:6px;padding:10px;margin-top:10px">
-            <div class="rl">📐 Metodología:</div> Impactos visuales efectivos = Pasajeros SUBE × 35% + Tránsito vehicular × 15%. Factor de visibilidad basado en estándar FEPE/OUTSMART (federación europea de publicidad exterior).
+            <div class="rl">📐 Metodología:</div> Impactos visuales efectivos = Pasajeros SUBE × 20% + Tránsito vehicular × 20%. Factor de visibilidad basado en estándar FEPE/OUTSMART (federación europea de publicidad exterior).
         </div>
         <div class="rs" style="margin-top:12px"><div class="rl">Detalle por Línea:</div>
-            <table><thead><tr><th>Línea</th><th>Zona</th><th>Lunetas</th><th>$ Luneta</th><th>Impactos/mes</th><th>Total</th></tr></thead><tbody>${rows}</tbody></table>
+            <table><thead><tr><th>Línea</th><th>Zona</th><th>Lunetas</th><th>$ Luneta</th><th>OTS/mes</th><th>Total</th></tr></thead><tbody>${rows}</tbody></table>
         </div>
         <div style="background:#eff6ff;border-radius:6px;padding:16px;margin:16px 0;text-align:center">
             <div style="font-size:12px;color:#1d4ed8;font-weight:700;text-transform:uppercase">Inversión Total</div>
             <div class="rh2">${fp(tinv)}</div>
-            <div style="font-size:12px;color:#374151;margin-top:6px">${f(ti)} impactos visuales efectivos</div>
+            <div style="font-size:12px;color:#374151;margin-top:6px">${f(ti)} OTS</div>
         </div>
         <div class="rs"><div class="rl">Métricas de Eficiencia:</div>
             <table>
-                <tr><td style="font-weight:700">CPM (costo por 1.000 impactos)</td><td>${fp(cpm)}</td></tr>
-                <tr><td style="font-weight:700">Costo por impacto individual</td><td>${fp(cpi)}</td></tr>
-                <tr><td style="font-weight:700">Impactos diarios promedio</td><td>${f(ti/(d*30))}</td></tr>
+                <tr><td style="font-weight:700">CPM (costo por 1.000 OTS)</td><td>${fp(cpm)}</td></tr>
+                <tr><td style="font-weight:700">Costo por OTS individual</td><td>${fp(cpi)}</td></tr>
+                <tr><td style="font-weight:700">OTS diarios promedio</td><td>${f(ti/(d*30))}</td></tr>
             </table>
         </div>
         <div class="rs"><div class="rl">Comparación con Otros Medios:</div>
@@ -698,7 +698,7 @@ function genRep(){
         <div class="rf">
             <strong>Media 500</strong> — Publicidad en Vía Pública<br>
             Fuentes: Ministerio de Transporte (Red SUBE), Dirección Nacional de Vialidad (TMDA), GCBA — Anillo Digital (tránsito CABA).<br>
-            Factor de visibilidad: estándar FEPE/OUTSMART. Pasajeros × 35% + Tránsito × 15%.<br>
+            Factor de visibilidad: estándar FEPE/OUTSMART. Pasajeros × 20% + Tránsito × 20%.<br>
             Los CPM de otros medios son promedios de mercado argentino (2026).<br>
             Datos de pasajeros: promedio 2024. Datos de tránsito CABA: sensores GCBA Anillo Digital. Datos de tránsito GBA: TMDA Vialidad Nacional.
         </div>`;
