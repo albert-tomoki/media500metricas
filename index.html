@@ -188,7 +188,7 @@
             </div>
         </div>
         <div class="vis-factor">
-            <strong>👁 Factor de visibilidad aplicado:</strong> 20% pasajeros + 20% tránsito → Solo contabilizamos las personas que efectivamente miran la luneta. Esto hace que nuestros números sean <strong>conservadores y defendibles</strong> ante cualquier cliente.
+            <strong>👁 Factor de visibilidad aplicado:</strong> 20% pasajeros + 20% tránsito → Solo contabilizamos las oportunidades reales de visualización (OTS). Esto hace que nuestros números sean <strong>conservadores y defendibles</strong> ante cualquier cliente.
         </div>
         <div class="hc">
             <div class="l">OTS (Opportunity to See) (por luneta/mes)</div>
@@ -270,9 +270,9 @@
                 <label>Atribución OOH</label>
                 <select id="sAtr" onchange="recalc()">
                     <option value="0">No calcular ROI</option>
-                    <option value="15">20% — Muy conservador</option>
+                    <option value="15">15% — Muy conservador</option>
                     <option value="25" selected>25% — Conservador (recomendado)</option>
-                    <option value="35">20% — Moderado</option>
+                    <option value="35">35% — Moderado</option>
                     <option value="50">50% — Agresivo</option>
                 </select>
             </div>
@@ -674,7 +674,7 @@ function genRep(){
         <div class="rs"><div class="rl">Duración:</div> ${d} mes(es)</div>
         <div class="rs"><div class="rl">Total Lunetas:</div> ${tl} unidades en ${camp.length} líneas</div>
         <div class="rs" style="background:#eff6ff;border-radius:6px;padding:10px;margin-top:10px">
-            <div class="rl">📐 Metodología:</div> Impactos visuales efectivos = Pasajeros SUBE × 20% + Tránsito vehicular × 20%. Factor de visibilidad basado en estándar FEPE/OUTSMART (federación europea de publicidad exterior).
+            <div class="rl">📐 Metodología:</div> OTS (Opportunity to See) = Pasajeros SUBE × 20% + Tránsito vehicular × 20%. Factor de visibilidad basado en estándar FEPE/OUTSMART (federación europea de publicidad exterior). El término OTS es el estándar internacional: oportunidad de ver, no impacto.
         </div>
         <div class="rs" style="margin-top:12px"><div class="rl">Detalle por Línea:</div>
             <table><thead><tr><th>Línea</th><th>Zona</th><th>Lunetas</th><th>$ Luneta</th><th>OTS/mes</th><th>Total</th></tr></thead><tbody>${rows}</tbody></table>
