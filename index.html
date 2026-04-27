@@ -100,8 +100,19 @@
         .rp table td{padding:6px;border-bottom:1px solid #e5e7eb;font-size:12px}
         .rp .rf{margin-top:16px;padding-top:10px;border-top:2px solid #1d4ed8;font-size:10px;color:#6b7280}
 
-        .ft{text-align:center;font-size:11px;color:#6b7280;margin-top:16px;padding:12px;border-top:1px solid #374151}
-        .ft a{color:#60a5fa;text-decoration:none}
+        .src-section{max-width:900px;margin:0 auto;padding:16px}
+        .src-section h2{font-size:17px;color:#60a5fa;margin-bottom:16px;font-weight:700}
+        .src-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+        @media(max-width:600px){.src-grid{grid-template-columns:1fr}}
+        .src-card{background:#1f2937;padding:16px;border-radius:10px;border-left:4px solid}
+        .src-card h4{font-size:14px;font-weight:700;margin-bottom:6px}
+        .src-card .src-val{font-size:24px;font-weight:700;color:#34d399}
+        .src-card p{font-size:12px;color:#9ca3af;line-height:1.5;margin-top:6px}
+        .src-card a{color:#60a5fa;text-decoration:none;font-size:12px}
+        .src-card a:hover{text-decoration:underline}
+        .src-card .src-tag{font-size:10px;color:#6b7280;background:#111827;padding:2px 8px;border-radius:10px;display:inline-block;margin-top:4px}
+        .src-note{background:#1e293b;border:1px solid #334155;padding:16px;border-radius:10px;font-size:13px;color:#94a3b8;line-height:1.6}
+        .src-note strong{color:#e2e8f0}
 
         .es{text-align:center;padding:30px 16px;color:#6b7280}
         .es .ei{font-size:36px;margin-bottom:10px}
@@ -358,8 +369,56 @@
     </div>
 </div>
 
+        <div class="src-section">
+            <h2>📚 Fuentes y Metodología</h2>
+
+            <div class="src-grid">
+                <div class="src-card" style="border-color:#34d399">
+                    <h4 style="color:#34d399">🚌 Pasajeros — SUBE</h4>
+                    <div class="src-val">Datos reales</div>
+                    <p>Boletos cortados con tarjeta SUBE por línea de colectivo, por mes. Fuente oficial del Ministerio de Transporte de la Nación.</p>
+                    <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 datos.transporte.gob.ar</a>
+                    <div class="src-tag">Período: Promedio 2024</div>
+                </div>
+
+                <div class="src-card" style="border-color:#60a5fa">
+                    <h4 style="color:#60a5fa">🚗 Tránsito CABA — Anillo Digital</h4>
+                    <div class="src-val">Sensores reales</div>
+                    <p>Flujo vehicular horario medido por sensores del GCBA en avenidas de la Ciudad. Incluye lat/long, volumen por hora y sentido. Datos por avenida específica.</p>
+                    <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 data.buenosaires.gob.ar</a>
+                    <div class="src-tag">Período: 2020-2024</div>
+                </div>
+
+                <div class="src-card" style="border-color:#f59e0b">
+                    <h4 style="color:#f59e0b">🛣️ Tránsito GBA — Vialidad Nacional</h4>
+                    <div class="src-val">TMDA estimado</div>
+                    <p>Tránsito Medio Diario Anual en rutas nacionales del conurbano. Datos del Ministerio de Obras Públicas. Para líneas que circulan fuera de CABA.</p>
+                    <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 argentina.gob.ar/vialidad</a>
+                    <div class="src-tag">Período: 2022-2023</div>
+                </div>
+
+                <div class="src-card" style="border-color:#a78bfa">
+                    <h4 style="color:#a78bfa">👁 Factor de Visibilidad</h4>
+                    <div class="src-val">35% pasaj. / 15% tráns.</div>
+                    <p>Estimación propia basada en estudios de OOH internacional. No existen estudios específicos para lunetas traseras de colectivos en Argentina.</p>
+                    <a href="https://www.outsmart.org.uk/route/" target="_blank">🔗 OUTSMART ROUTE Study</a><br>
+                    <a href="https://www.fepemarketing.com/knowledge-hub/" target="_blank">🔗 FEPE Knowledge Hub</a>
+                    <div class="src-tag">Estándar internacional adaptado</div>
+                </div>
+            </div>
+
+            <div class="src-note">
+                <strong>⚠️ Sobre los porcentajes de visibilidad:</strong><br><br>
+                Los estudios de FEPE y OUTSMART miden audiencia de cartelería estática en Europa, no lunetas de colectivos. Adaptamos sus hallazgos a nuestro formato:<br><br>
+                <strong>OUTSMART/ROUTE (Reino Unido):</strong> Encontró que solo el 30-40% de las personas que pasan por un cartel OOH lo "ven" efectivamente (opportunity to see vs. actual visibility). Fuente: outsmart.org.uk/route<br><br>
+                <strong>FEPE (Europa):</strong> Estableció el estándar europeo de medición OOH (EUROHOHP), que distingue entre exposición (pasar cerca) y visibilidad (mirar efectivamente). Sugiere factores de 25-45% según formato y posición. Fuente: fepemarketing.com<br><br>
+                <strong>GfK/Nielsen OOH:</strong> Estudios de eye-tracking en vía pública muestran tasas de atención de 25-45% según formato. Los formatos en movimiento (como lunetas de colectivos) tienden al extremo inferior.<br><br>
+                <strong>Nuestra adaptación:</strong> Usamos 35% para pasajeros (solo ven la luneta al subir/bajar, no durante el viaje) y 15% para tránsito (solo una fracción pasa detrás del bondi con tiempo de lectura). Son estimaciones conservadoras que no constituyen un dato duro local — las presentamos como referencia y pueden ajustarse con mediciones propias.
+            </div>
+        </div>
+
 <div class="ft">
-    Fuentes: <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">Min. Transporte (SUBE)</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">Dir. Nal. Vialidad (TMDA)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">GCBA — Anillo Digital (tránsito CABA)</a> | Factor visibilidad: estándar OOH internacional (FEPE/OUTSMART)
+    Fuentes: <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">Min. Transporte (SUBE)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">GCBA Anillo Digital</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">Dir. Nal. Vialidad</a> | Factor visibilidad: estimación propia basada en FEPE/OUTSMART
     <br><span style="cursor:pointer;color:#6b7280;font-size:10px;margin-left:8px" onclick="doLogout()">Cerrar sesión</span>
 </div>
 
