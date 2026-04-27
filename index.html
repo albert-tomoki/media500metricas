@@ -148,7 +148,7 @@
 <!-- ===== IMPACTO ===== -->
 <div class="tc active" id="t-impacto">
     <div class="method-box">
-        <strong>📐 Metodología:</strong> Los impactos se calculan aplicando un <strong>factor de visibilidad del 35%</strong> sobre pasajeros SUBE (solo quienes miran la luneta) + <strong>factor del 15%</strong> sobre tránsito vehicular (exposición breve en movimiento). Es un estándar conservador de la industria OOH internacional. <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">Ver fuente SUBE →</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">Ver fuente Vialidad →</a>
+        <strong>📐 Metodología:</strong> Los impactos se calculan aplicando un <strong>factor de visibilidad del 35%</strong> sobre pasajeros SUBE (solo quienes miran la luneta) + <strong>factor del 15%</strong> sobre tránsito vehicular (exposición breve en movimiento). Es un estándar conservador de la industria OOH internacional.<br><br><strong>📊 Fuentes de datos:</strong><br><a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 SUBE — Min. Transporte</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Vialidad Nacional (TMDA rutas)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 GCBA — Anillo Digital (tránsito CABA)</a><br><span style="font-size:11px;color:#6b7280">Líneas CABA: datos de tránsito de sensores viales GCBA. Líneas GBA: estimaciones de Vialidad Nacional.</span>
     </div>
     <div class="fb">
         <input type="text" id="sI" placeholder="🔍 Buscar línea..." onkeyup="fL()">
@@ -173,7 +173,7 @@
                 <div class="v" id="vM">0</div>
                 <div class="s" id="vD">0 / día</div>
                 <div class="u">Tránsito vehicular mensual estimado</div>
-                <a class="src-link" href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Ver fuente Vialidad</a>
+                <a class="src-link" id="vSrc" href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Ver fuente</a>
             </div>
         </div>
         <div class="vis-factor">
@@ -359,7 +359,7 @@
 </div>
 
 <div class="ft">
-    Fuentes: <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">Min. Transporte (SUBE)</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">Dir. Nal. Vialidad (TMDA)</a> | Factor visibilidad: estándar OOH internacional (FEPE/OUTSMART)
+    Fuentes: <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">Min. Transporte (SUBE)</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">Dir. Nal. Vialidad (TMDA)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">GCBA — Anillo Digital (tránsito CABA)</a> | Factor visibilidad: estándar OOH internacional (FEPE/OUTSMART)
     <br><span style="cursor:pointer;color:#6b7280;font-size:10px;margin-left:8px" onclick="doLogout()">Cerrar sesión</span>
 </div>
 
@@ -388,7 +388,7 @@ function checkAuth(){
 }
 checkAuth();
 
-const D={"12":{"p":420702,"t":30000,"z":["CABA"]},"41":{"p":121416,"t":30000,"z":["CABA","Norte"]},"42":{"p":181046,"t":40000,"z":["CABA"]},"47":{"p":250000,"t":30000,"z":["CABA"]},"51":{"p":25919,"t":20000,"z":["Sur"]},"53":{"p":22933,"t":30000,"z":["CABA","Oeste"]},"57":{"p":250000,"t":30000,"z":["CABA","Norte","Oeste"]},"64":{"p":72825,"t":40000,"z":["CABA"]},"65":{"p":172572,"t":30000,"z":["CABA"]},"67":{"p":75224,"t":30000,"z":["CABA"]},"68":{"p":64240,"t":40000,"z":["CABA"]},"74":{"p":16353,"t":20000,"z":["Sur"]},"79":{"p":250000,"t":20000,"z":["Sur"]},"92":{"p":250000,"t":30000,"z":["CABA"]},"102":{"p":2324,"t":30000,"z":["CABA"]},"123":{"p":250000,"t":30000,"z":["CABA","Oeste"]},"124":{"p":701959,"t":30000,"z":["CABA"]},"126":{"p":1182005,"t":30000,"z":["CABA","Oeste"]},"136":{"p":440059,"t":30000,"z":["CABA","Oeste"]},"148":{"p":250000,"t":20000,"z":["Sur"]},"151":{"p":250000,"t":40000,"z":["CABA"]},"163":{"p":277020,"t":30000,"z":["CABA","Norte","Oeste"]},"166":{"p":894049,"t":30000,"z":["CABA","Oeste"]},"176":{"p":1597825,"t":30000,"z":["CABA","Norte"]},"177":{"p":594679,"t":20000,"z":["Sur"]},"182":{"p":1113491,"t":30000,"z":["CABA","Norte","Oeste"]},"194":{"p":530650,"t":30000,"z":["CABA","Norte"]},"195":{"p":413138,"t":30000,"z":["CABA","Sur"]},"203":{"p":2758179,"t":20000,"z":["Norte","Oeste"]},"204":{"p":174016,"t":20000,"z":["Norte"]},"218":{"p":636423,"t":20000,"z":["Oeste"]},"222":{"p":121223,"t":20000,"z":["Oeste"]},"236":{"p":1798120,"t":20000,"z":["Oeste"]},"237":{"p":1115632,"t":20000,"z":["Oeste"]},"263":{"p":904083,"t":20000,"z":["Sur"]},"264":{"p":324549,"t":20000,"z":["Norte"]},"269":{"p":1150960,"t":20000,"z":["Oeste"]},"276":{"p":800924,"t":20000,"z":["Norte"]},"283":{"p":689263,"t":20000,"z":["Sur"]},"284":{"p":114030,"t":20000,"z":["Oeste"]},"306":{"p":1172811,"t":20000,"z":["Oeste"]},"310":{"p":108849,"t":20000,"z":["Norte"]},"315":{"p":561302,"t":20000,"z":["Norte","Oeste"]},"322":{"p":384973,"t":20000,"z":["Oeste"]},"325":{"p":206873,"t":20000,"z":["Oeste"]},"326":{"p":86944,"t":20000,"z":["Oeste"]},"327":{"p":542051,"t":20000,"z":["Oeste"]},"336":{"p":163683,"t":20000,"z":["Oeste"]},"365":{"p":2566192,"t":20000,"z":["Norte","Oeste"]},"370":{"p":13749,"t":20000,"z":["Sur"]},"371":{"p":69118,"t":20000,"z":["Sur"]},"373":{"p":367710,"t":20000,"z":["Sur"]},"378":{"p":635943,"t":20000,"z":["Oeste"]},"382":{"p":624749,"t":20000,"z":["Oeste"]},"388":{"p":912547,"t":20000,"z":["Oeste"]},"396":{"p":879949,"t":20000,"z":["Oeste"]},"404":{"p":508901,"t":20000,"z":["Oeste"]},"410":{"p":92149,"t":20000,"z":["Sur"]},"422":{"p":355810,"t":20000,"z":["Sur"]},"423":{"p":701549,"t":20000,"z":["Sur"]},"426":{"p":242549,"t":20000,"z":["Sur"]},"428":{"p":352949,"t":20000,"z":["Sur"]},"435":{"p":62149,"t":20000,"z":["Sur"]},"436":{"p":148810,"t":20000,"z":["Sur"]},"440":{"p":639349,"t":20000,"z":["Sur"]},"442":{"p":378749,"t":20000,"z":["Sur"]},"500":{"p":374949,"t":20000,"z":["Sur"]},"501":{"p":28910,"t":20000,"z":["Sur"]},"503":{"p":546149,"t":20000,"z":["Sur"]},"505":{"p":53210,"t":20000,"z":["Sur"]},"511":{"p":648649,"t":20000,"z":["Sur"]},"520":{"p":823149,"t":20000,"z":["Sur"]}};
+const D={"12":{"p":420702,"t":122000,"z":["CABA"],"ts":"gcba"},"41":{"p":121416,"t":79000,"z":["CABA","Norte"],"ts":"gcba"},"42":{"p":181046,"t":84000,"z":["CABA"],"ts":"gcba"},"47":{"p":250000,"t":79000,"z":["CABA"],"ts":"gcba"},"51":{"p":25919,"t":20000,"z":["Sur"],"ts":"vialidad"},"53":{"p":22933,"t":84000,"z":["CABA","Oeste"],"ts":"gcba"},"57":{"p":250000,"t":184000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"64":{"p":72825,"t":122000,"z":["CABA"],"ts":"gcba"},"65":{"p":172572,"t":122000,"z":["CABA"],"ts":"gcba"},"67":{"p":75224,"t":122000,"z":["CABA"],"ts":"gcba"},"68":{"p":64240,"t":84000,"z":["CABA"],"ts":"gcba"},"74":{"p":16353,"t":20000,"z":["Sur"],"ts":"vialidad"},"79":{"p":250000,"t":20000,"z":["Sur"],"ts":"vialidad"},"92":{"p":250000,"t":84000,"z":["CABA"],"ts":"gcba"},"102":{"p":2324,"t":22000,"z":["CABA"],"ts":"gcba"},"123":{"p":250000,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"124":{"p":701959,"t":184000,"z":["CABA"],"ts":"gcba"},"126":{"p":1182005,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"136":{"p":440059,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"148":{"p":250000,"t":20000,"z":["Sur"],"ts":"vialidad"},"151":{"p":250000,"t":122000,"z":["CABA"],"ts":"gcba"},"163":{"p":277020,"t":84000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"166":{"p":894049,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"176":{"p":1597825,"t":184000,"z":["CABA","Norte"],"ts":"gcba"},"177":{"p":594679,"t":20000,"z":["Sur"],"ts":"vialidad"},"182":{"p":1113491,"t":184000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"194":{"p":530650,"t":40000,"z":["CABA","Norte"],"ts":"gcba"},"195":{"p":413138,"t":84000,"z":["CABA","Sur"],"ts":"gcba"},"203":{"p":2758179,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"204":{"p":174016,"t":20000,"z":["Norte"],"ts":"vialidad"},"218":{"p":636423,"t":20000,"z":["Oeste"],"ts":"vialidad"},"222":{"p":121223,"t":20000,"z":["Oeste"],"ts":"vialidad"},"236":{"p":1798120,"t":20000,"z":["Oeste"],"ts":"vialidad"},"237":{"p":1115632,"t":20000,"z":["Oeste"],"ts":"vialidad"},"263":{"p":904083,"t":20000,"z":["Sur"],"ts":"vialidad"},"264":{"p":324549,"t":20000,"z":["Norte"],"ts":"vialidad"},"269":{"p":1150960,"t":20000,"z":["Oeste"],"ts":"vialidad"},"276":{"p":800924,"t":20000,"z":["Norte"],"ts":"vialidad"},"283":{"p":689263,"t":20000,"z":["Sur"],"ts":"vialidad"},"284":{"p":114030,"t":20000,"z":["Oeste"],"ts":"vialidad"},"306":{"p":1172811,"t":20000,"z":["Oeste"],"ts":"vialidad"},"310":{"p":108849,"t":20000,"z":["Norte"],"ts":"vialidad"},"315":{"p":561302,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"322":{"p":384973,"t":20000,"z":["Oeste"],"ts":"vialidad"},"325":{"p":206873,"t":20000,"z":["Oeste"],"ts":"vialidad"},"326":{"p":86944,"t":20000,"z":["Oeste"],"ts":"vialidad"},"327":{"p":542051,"t":20000,"z":["Oeste"],"ts":"vialidad"},"336":{"p":163683,"t":20000,"z":["Oeste"],"ts":"vialidad"},"365":{"p":2566192,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"370":{"p":13749,"t":20000,"z":["Sur"],"ts":"vialidad"},"371":{"p":69118,"t":20000,"z":["Sur"],"ts":"vialidad"},"373":{"p":367710,"t":20000,"z":["Sur"],"ts":"vialidad"},"378":{"p":635943,"t":20000,"z":["Oeste"],"ts":"vialidad"},"382":{"p":624749,"t":20000,"z":["Oeste"],"ts":"vialidad"},"388":{"p":912547,"t":20000,"z":["Oeste"],"ts":"vialidad"},"396":{"p":879949,"t":20000,"z":["Oeste"],"ts":"vialidad"},"404":{"p":508901,"t":20000,"z":["Oeste"],"ts":"vialidad"},"410":{"p":92149,"t":20000,"z":["Sur"],"ts":"vialidad"},"422":{"p":355810,"t":20000,"z":["Sur"],"ts":"vialidad"},"423":{"p":701549,"t":20000,"z":["Sur"],"ts":"vialidad"},"426":{"p":242549,"t":20000,"z":["Sur"],"ts":"vialidad"},"428":{"p":352949,"t":20000,"z":["Sur"],"ts":"vialidad"},"435":{"p":62149,"t":20000,"z":["Sur"],"ts":"vialidad"},"436":{"p":148810,"t":20000,"z":["Sur"],"ts":"vialidad"},"440":{"p":639349,"t":20000,"z":["Sur"],"ts":"vialidad"},"442":{"p":378749,"t":20000,"z":["Sur"],"ts":"vialidad"},"500":{"p":374949,"t":20000,"z":["Sur"],"ts":"vialidad"},"501":{"p":28910,"t":20000,"z":["Sur"],"ts":"vialidad"},"503":{"p":546149,"t":20000,"z":["Sur"],"ts":"vialidad"},"505":{"p":53210,"t":20000,"z":["Sur"],"ts":"vialidad"},"511":{"p":648649,"t":20000,"z":["Sur"],"ts":"vialidad"},"520":{"p":823149,"t":20000,"z":["Sur"],"ts":"vialidad"}};
 
 const BM=[{n:"Facebook/Instagram Ads",c:8000,cl:"#1877F2"},{n:"Google Search Ads",c:12000,cl:"#34A853"},{n:"YouTube Pre-roll",c:6000,cl:"#FF0000"},{n:"TV Abierta",c:15000,cl:"#8B5CF6"},{n:"Vía Pública (cartel fijo)",c:5000,cl:"#F59E0B"},{n:"Diario/Gráfica",c:18000,cl:"#6B7280"}];
 
@@ -425,8 +425,19 @@ function uP(){
     const l=document.getElementById('lS').value;if(!l)return;cL=l;
     const i=D[l];if(!i)return;
     const ie=impEfect(i),ied=ie/30;
+    // Update traffic source link based on data provenance
+    const srcEl=document.getElementById('vSrc');
+    if(i.ts==='gcba'){
+        srcEl.href='https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital';
+        srcEl.innerHTML='🔗 GCBA — Anillo Digital';
+    } else {
+        srcEl.href='https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos';
+        srcEl.innerHTML='🔗 Vialidad Nacional';
+    }
     let tg=i.z.map(z=>'<span class="zt">'+z+'</span>').join(' ');
-    document.getElementById('pT').innerHTML='Línea '+l+' '+tg;
+    // Add source badge for traffic data
+    const srcBadge=i.ts==='gcba'?'<span style="display:inline-block;font-size:10px;background:#dcfce7;color:#166534;padding:1px 6px;border-radius:8px;margin-left:6px;font-weight:600">GCBA Anillo Digital</span>':'<span style="display:inline-block;font-size:10px;background:#dbeafe;color:#1e40af;padding:1px 6px;border-radius:8px;margin-left:6px;font-weight:600">Vialidad Nacional</span>';
+    document.getElementById('pT').innerHTML='Línea '+l+' '+tg+srcBadge;
     document.getElementById('pM').innerText=f(i.p);
     document.getElementById('pD').innerText=f(i.p/30)+' / día';
     document.getElementById('vM').innerText=f(i.t*30);
@@ -438,7 +449,9 @@ function uP(){
 
 function cpImp(){
     if(!cL)return;const i=D[cL],ie=impEfect(i);
-    const txt=`🚌 *Impacto OOH — Línea ${cL}*\n📍 ${i.z.join(', ')}\n\n👥 ${f(i.p)} pasajeros/mes (SUBE)\n🚗 ${f(i.t*30)} vehículos/mes (Vialidad)\n👁 Factor visibilidad: 35% pasajeros + 15% tránsito\n\n🔥 *${f(ie)} impactos visuales efectivos/mes* por luneta\n\n🔗 Fuentes: datos.transporte.gob.ar | argentina.gob.ar/vialidad`;
+    const srcLabel=i.ts==='gcba'?'GCBA Anillo Digital':'Vialidad';
+    const srcUrl=i.ts==='gcba'?'data.buenosaires.gob.ar':'argentina.gob.ar/vialidad';
+    const txt=`🚌 *Impacto OOH — Línea ${cL}*\n📍 ${i.z.join(', ')}\n\n👥 ${f(i.p)} pasajeros/mes (SUBE)\n🚗 ${f(i.t*30)} vehículos/mes (${srcLabel})\n👁 Factor visibilidad: 35% pasajeros + 15% tránsito\n\n🔥 *${f(ie)} impactos visuales efectivos/mes* por luneta\n\n🔗 Fuentes: datos.transporte.gob.ar | ${srcUrl}`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -625,10 +638,10 @@ function genRep(){
         ${roiHtml}
         <div class="rf">
             <strong>Media 500</strong> — Publicidad en Vía Pública<br>
-            Fuentes: Ministerio de Transporte (Red SUBE), Dirección Nacional de Vialidad (TMDA).<br>
+            Fuentes: Ministerio de Transporte (Red SUBE), Dirección Nacional de Vialidad (TMDA), GCBA — Anillo Digital (tránsito CABA).<br>
             Factor de visibilidad: estándar FEPE/OUTSMART. Pasajeros × 35% + Tránsito × 15%.<br>
             Los CPM de otros medios son promedios de mercado argentino (2026).<br>
-            Datos de pasajeros: promedio 2024. Datos de tránsito: TMDA anual.
+            Datos de pasajeros: promedio 2024. Datos de tránsito CABA: sensores GCBA Anillo Digital. Datos de tránsito GBA: TMDA Vialidad Nacional.
         </div>`;
     document.getElementById('repVacio').style.display='none';
     document.getElementById('repCont').style.display='block';
