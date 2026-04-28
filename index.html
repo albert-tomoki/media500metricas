@@ -40,7 +40,8 @@
         .pnl h3{font-size:13px;color:#9ca3af;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
         .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
         .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-        @media(max-width:600px){.g2,.g3{grid-template-columns:1fr}}
+        .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+        @media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
 
         .sc{background:rgba(17,24,39,.8);padding:16px;border-radius:10px;text-align:center;border:1px solid #374151}
         .sc .l{font-size:11px;color:#6b7280;text-transform:uppercase;margin-bottom:4px}
@@ -160,7 +161,6 @@
     <div class="tab active" onclick="swTab('impacto')"><span class="ti">📊</span>OTS</div>
     <div class="tab" onclick="swTab('roi')"><span class="ti">💰</span>CPM</div>
     <div class="tab" onclick="swTab('sim')"><span class="ti">🎯</span>Simulador</div>
-    <div class="tab" onclick="swTab('roireal')"><span class="ti">📉</span>ROI Real</div>
     <div class="tab" onclick="swTab('rep')"><span class="ti">📈</span>Reportes</div>
 </div>
 
@@ -231,6 +231,9 @@
             <div class="sc"><div class="l">CPM</div><div class="v" id="rCPM">$0</div><div class="u">Costo cada 1.000 OTS</div></div>
             <div class="sc"><div class="l">Costo por OTS</div><div class="v" id="rCPI">$0</div><div class="u">Por visualización</div></div>
         </div>
+        <div class="method-box" style="margin-bottom:16px">
+            <strong>🏭 Costo de producción incluido:</strong> $48.000 por luneta (pago único, incluye ploteo e instalación). No incluye IVA. Este costo se suma a la inversión en pauta para calcular el CPM total.
+        </div>
         <div class="hc">
             <div class="l">OTS (Opportunity to See) de la Campaña</div>
             <div class="v" id="rImp">0</div>
@@ -245,6 +248,9 @@
 <!-- ===== SIMULADOR ===== -->
 <div class="tc" id="t-sim">
     <div class="st">🎯 Simulador de Campaña</div>
+    <div class="method-box">
+        <strong>🏭 Costo de producción:</strong> $48.000 por luneta (pago único, incluye ploteo e instalación). No incluye IVA. Este costo se suma a la inversión en pauta para calcular el CPM total.
+    </div>
     <div class="pnl">
         <h3>Agregar Línea</h3>
         <div class="fr" style="margin-top:10px">
@@ -260,11 +266,16 @@
     </div>
     <div id="simVacia" class="es"><div class="ei">🎯</div><div>Agregá líneas para armar tu campaña</div></div>
     <div id="simCont" style="display:none">
-        <div class="pnl" style="overflow-x:auto"><h3>Líneas en la Campaña</h3><table class="ct" style="margin-top:10px"><thead><tr><th>Línea</th><th>Zona</th><th>Lunetas</th><th>$ Luneta</th><th>OTS/mes</th><th></th></tr></thead><tbody id="simB"></tbody></table></div>
-        <div class="g3" style="margin-bottom:16px">
-            <div class="sc"><div class="l">Inversión Total</div><div class="v" id="sInv">$0</div></div>
+        <div class="pnl" style="overflow-x:auto"><h3>Líneas en la Campaña</h3><table class="ct" style="margin-top:10px"><thead><tr><th>Línea</th><th>Zona</th><th>Lunetas</th><th>$ Luneta</th><th>OTS/mes</th><th>Producción</th><th></th></tr></thead><tbody id="simB"></tbody></table></div>
+        <div class="g4" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px">
+            <div class="sc"><div class="l">Inversión en Pauta</div><div class="v" id="sInvPauta">$0</div><div class="u" id="sInvPautaD"></div></div>
+            <div class="sc"><div class="l">Producción (pago único)</div><div class="v" id="sInvProd">$0</div><div class="u">$48.000/luneta</div></div>
+            <div class="sc"><div class="l">Inversión Total</div><div class="v" id="sInv">$0</div><div class="u" id="sInvD"></div></div>
             <div class="sc"><div class="l">CPM Campaña</div><div class="v" id="sCPM">$0</div></div>
+        </div>
+        <div class="g2" style="margin-bottom:16px">
             <div class="sc"><div class="l">Total Lunetas</div><div class="v" id="sTL">0</div></div>
+            <div class="sc"><div class="l">Producción: $48.000/luneta (pago único)</div><div class="v" style="font-size:14px;color:#f59e0b">Incluye ploteo e instalación</div></div>
         </div>
         <div class="hc">
             <div class="l">OTS (Opportunity to See) Totales</div>
@@ -274,99 +285,10 @@
         </div>
         <div class="pnl"><h3>📊 Comparación CPM</h3><div id="sCmp"></div></div>
 
-        <div class="pnl" style="margin-top:16px">
-            <h3>📉 Calcular ROI Real (opcional)</h3>
-            <div class="fr" style="margin-top:10px">
-                <div class="fg"><label>Ventas ANTES ($)</label><input type="number" id="sVA" placeholder="Ej: 5000000" oninput="recalc()"><div class="rh">Facturación del período previo</div></div>
-                <div class="fg"><label>Ventas DURANTE ($)</label><input type="number" id="sVD" placeholder="Ej: 6500000" oninput="recalc()"><div class="rh">Facturación durante la campaña</div></div>
-            </div>
-            <div class="fg">
-                <label>Atribución OOH</label>
-                <select id="sAtr" onchange="recalc()">
-                    <option value="0">No calcular ROI</option>
-                    <option value="15">15% — Muy conservador</option>
-                    <option value="25" selected>25% — Conservador (recomendado)</option>
-                    <option value="35">35% — Moderado</option>
-                    <option value="50">50% — Agresivo</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="simROI" style="display:none">
-            <div class="g2" style="margin-bottom:16px">
-                <div class="sc"><div class="l">Aumento de Ventas</div><div class="v" id="sAumV">$0</div><div class="u" id="sAumPct"></div></div>
-                <div class="sc"><div class="l">Atribuible al OOH</div><div class="v" id="sAtrOOHV">$0</div><div class="u" id="sAtrPctV"></div></div>
-            </div>
-            <div id="simROICard" style="background:linear-gradient(135deg,#065f46,#10b981);padding:24px;border-radius:12px;text-align:center;margin-bottom:16px;box-shadow:0 8px 16px rgba(16,185,129,.3)">
-                <div style="font-size:13px;color:#a7f3d0;text-transform:uppercase;margin-bottom:6px">ROI de la Campaña</div>
-                <div id="sROIpct" style="font-size:38px;font-weight:700;color:#fff">0%</div>
-                <div id="sROIlabel" style="font-size:14px;color:#6ee7b7;font-weight:600;margin-top:3px"></div>
-                <div style="font-size:11px;color:#d1fae5;margin-top:8px">Atribución conservadora: solo lo que razonablemente corresponde al OOH</div>
-            </div>
-            <div class="g3" style="margin-bottom:16px">
-                <div class="sc"><div class="l">Ganancia Neta</div><div class="v" id="sGanancia">$0</div><div class="u">Atribuible - Inversión</div></div>
-                <div class="sc"><div class="l">Por cada $1</div><div class="v" id="sMultiplo">$0</div><div class="u">Retorno por peso</div></div>
-                <div class="sc"><div class="l">Ventas extra/mes</div><div class="v" id="sVMes">$0</div><div class="u">Atribuible al OOH</div></div>
-            </div>
-        </div>
-
         <div style="text-align:center;margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
             <button class="btn bs" onclick="cpSim()">📲 Copiar WhatsApp</button>
             <button class="btn bp" onclick="genRep()">📈 Generar Reporte</button>
         </div>
-    </div>
-</div>
-
-<!-- ===== ROI REAL ===== -->
-<div class="tc" id="t-roireal">
-    <div class="st">📉 ROI Real de Campaña</div>
-    <div class="method-box">
-        <strong>📐 Cómo funciona:</strong> Ingresá cuánto facturó el cliente durante la campaña y cuánto facturaba antes. El sistema calcula el aumento de ventas, le aplica una <strong>atribución conservadora del 25%</strong> al OOH (porque hubo otros factores: estacionalidad, otros medios, etc.) y te da el ROI real. Es un número <strong>defendible</strong> — no inflado.
-    </div>
-    <div class="pnl">
-        <h3>Datos de la Campaña</h3>
-        <div class="fr">
-            <div class="fg"><label>Inversión en Lunetas ($)</label><input type="number" id="rrInv" placeholder="Ej: 350000" oninput="cRR()"><div class="rh">Lo que pagó el cliente en total</div></div>
-            <div class="fg"><label>Duración (meses)</label><input type="number" id="rrDur" min="1" max="4" value="1" oninput="cRR()"></div>
-        </div>
-    </div>
-    <div class="pnl">
-        <h3>💰 Resultados del Cliente</h3>
-        <div class="fr">
-            <div class="fg"><label>Ventas ANTES de la campaña ($)</label><input type="number" id="rrVentasAntes" placeholder="Ej: 5000000" oninput="cRR()"><div class="rh">Facturación del mismo período previo</div></div>
-            <div class="fg"><label>Ventas DURANTE la campaña ($)</label><input type="number" id="rrVentasDesp" placeholder="Ej: 6500000" oninput="cRR()"><div class="rh">Facturación mientras estuvieron las lunetas</div></div>
-        </div>
-        <div class="fg">
-            <label>Atribución OOH (%)</label>
-            <select id="rrAtr" onchange="cRR()">
-                <option value="15">20% — Muy conservador (muchos otros medios activos)</option>
-                <option value="25" selected>25% — Conservador (recomendado)</option>
-                <option value="35">20% — Moderado (OOH era el medio principal)</option>
-                <option value="50">50% — Agresivo (solo OOH, sin otros medios)</option>
-            </select>
-            <div class="rh">¿Cuánto del aumento de ventas se puede atribuir al OOH? Usá 25% como regla general.</div>
-        </div>
-    </div>
-    <div id="rrRes" style="display:none">
-        <div class="g2" style="margin-bottom:16px">
-            <div class="sc"><div class="l">Aumento de Ventas</div><div class="v" id="rrAumVentas">$0</div><div class="u" id="rrAumPct"></div></div>
-            <div class="sc"><div class="l">Atribuible al OOH</div><div class="v" id="rrAtrOOH">$0</div><div class="u" id="rrAtrPct"></div></div>
-        </div>
-        <div class="hc" id="rrCard">
-            <div class="l">ROI de la Campaña OOH</div>
-            <div class="v" id="rrROI">0%</div>
-            <div class="s" id="rrROIText"></div>
-            <div class="method">Atribución conservadora: solo se asigna al OOH lo que razonablemente le corresponde</div>
-        </div>
-        <div class="g3" style="margin-bottom:16px">
-            <div class="sc"><div class="l">Ganancia Neta OOH</div><div class="v" id="rrGanancia">$0</div><div class="u">Atribuible - Inversión</div></div>
-            <div class="sc"><div class="l">Por cada $1 invertido</div><div class="v" id="rrMultiplo">$0</div><div class="u">Retorno por peso</div></div>
-            <div class="sc"><div class="l">Ventas extra/mes</div><div class="v" id="rrVentasMes">$0</div><div class="u">Atribuible al OOH</div></div>
-        </div>
-        <div class="vis-factor">
-            <strong>⚠️ Aclaración importante:</strong> El ROI calculado usa una atribución conservadora del <span id="rrAtrLabel">25</span>%. Esto significa que solo el <span id="rrAtrLabel2">25</span>% del aumento de ventas se le asigna al OOH. El resto puede deberse a estacionalidad, otros medios, o factores externos. Este enfoque hace que el número sea <strong>defendible ante cualquier directorio</strong>.
-        </div>
-        <div style="text-align:center;margin-top:12px"><button class="btn bs" onclick="cpRR()">📲 Copiar para WhatsApp</button></div>
     </div>
 </div>
 
@@ -495,7 +417,7 @@ function impEfect(info){return Math.round(info.p*VIS_P+info.t*30*VIS_T)}
 function swTab(t){
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
     document.querySelectorAll('.tc').forEach(x=>x.classList.remove('active'));
-    const idx={impacto:1,roi:2,sim:3,roireal:4,rep:5}[t];
+    const idx={impacto:1,roi:2,sim:3,rep:4}[t];
     document.querySelector('.tab:nth-child('+idx+')').classList.add('active');
     document.getElementById('t-'+t).classList.add('active');
 }
@@ -581,9 +503,9 @@ function cROI(){
     const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value)||0,d=parseInt(document.getElementById('rD').value)||1;
     if(!l||!pr||!n){document.getElementById('rR').style.display='none';return}
     const i=D[l];if(!i)return;
-    const inv=pr*n*d,imM=impEfect(i)*n,imT=imM*d,cpm=imT>0?inv/imT*1e3:0,cpi=imT>0?inv/imT:0;
+    const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imM=impEfect(i)*n,imT=imM*d,cpm=imT>0?inv/imT*1e3:0,cpi=imT>0?inv/imT:0;
     document.getElementById('rInv').innerText=fp(inv);
-    document.getElementById('rInvD').innerText=fp(pr)+' × '+n+' lun × '+d+' mes';
+    document.getElementById('rInvD').innerText='Pauta '+fp(invPauta)+' + Prod. '+fp(invProd);
     document.getElementById('rCPM').innerText=fp(cpm);
     document.getElementById('rCPI').innerText=fp(cpi);
     document.getElementById('rImp').innerText=f(imT);
@@ -607,8 +529,8 @@ function rCmp(id,cpm){
 function cpROI(){
     const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value),d=parseInt(document.getElementById('rD').value);
     const i=D[l];if(!i)return;
-    const inv=pr*n*d,imT=impEfect(i)*n*d,cpm=imT>0?inv/imT*1e3:0;
-    const txt=`💰 *ROI OOH — Línea ${l}*\n\n💵 Inversión: ${fp(inv)}\n📊 OTS efectivos: ${f(imT)}\n📈 CPM: ${fp(cpm)}\n📉 Costo/OTS: ${fp(inv/imT)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n\n🔥 ${f(imT)} visualizaciones por ${fp(inv)}`;
+    const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imT=impEfect(i)*n*d,cpm=imT>0?inv/imT*1e3:0;
+    const txt=`💰 *CPM OOH — Línea ${l}*\n\n💵 Inversión en pauta: ${fp(invPauta)}\n🏭 Producción: ${fp(invProd)} ($48.000/lun, pago único)\n💵 *Inversión Total: ${fp(inv)}*\n📊 OTS efectivos: ${f(imT)}\n📈 CPM: ${fp(cpm)}\n📉 Costo/OTS: ${fp(inv/imT)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n\n🔥 ${f(imT)} visualizaciones por ${fp(inv)}`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -628,59 +550,33 @@ function recalc(){
     document.getElementById('simVacia').style.display=emp?'block':'none';
     document.getElementById('simCont').style.display=emp?'none':'block';
     if(emp)return;
-    let tl=0,ti=0,tinv=0;const b=document.getElementById('simB');b.innerHTML='';
+    let tl=0,ti=0,tinvPauta=0,tinvProd=0;const b=document.getElementById('simB');b.innerHTML='';
     camp.forEach(c=>{
         const i=D[c.l];if(!i)return;
-        const im=impEfect(i)*c.n;tl+=c.n;ti+=im*d;tinv+=c.pr*c.n*d;
-        b.innerHTML+=`<tr><td class="lc">${c.l}</td><td>${i.z.map(z=>'<span class="zt">'+z+'</span>').join(' ')}</td><td>${c.n}</td><td>${fp(c.pr)}</td><td>${f(im)}/mes</td><td class="rc"><button class="btn bd" onclick="rmL('${c.l}')">✕</button></td></tr>`;
+        const im=impEfect(i)*c.n;tl+=c.n;ti+=im*d;tinvPauta+=c.pr*c.n*d;tinvProd+=48000*c.n;
+        b.innerHTML+=`<tr><td class="lc">${c.l}</td><td>${i.z.map(z=>'<span class="zt">'+z+'</span> ').join('')}</td><td>${c.n}</td><td>${fp(c.pr)}</td><td>${f(im)}/mes</td><td>${fp(48000*c.n)}</td><td class="rc"><button class="btn bd" onclick="rmL('${c.l}')">✕</button></td></tr>`;
     });
+    const tinv=tinvPauta+tinvProd;
     const cpm=ti>0?tinv/ti*1e3:0;
+    document.getElementById('sInvPauta').innerText=fp(tinvPauta);
+    document.getElementById('sInvPautaD').innerText='Pauta mensual × '+d+' mes(es)';
+    document.getElementById('sInvProd').innerText=fp(tinvProd);
     document.getElementById('sInv').innerText=fp(tinv);
+    document.getElementById('sInvD').innerText='Pauta + Producción';
     document.getElementById('sCPM').innerText=fp(cpm);
     document.getElementById('sTL').innerText=tl;
     document.getElementById('sImp').innerText=f(ti);
     document.getElementById('sImpD').innerText=f(ti/d)+'/mes × '+d+' meses';
     rCmp('sCmp',cpm);
-
-    // ROI en simulador
-    const vA=parseFloat(document.getElementById('sVA').value)||0;
-    const vD=parseFloat(document.getElementById('sVD').value)||0;
-    const atr=parseInt(document.getElementById('sAtr').value)||0;
-    const roiDiv=document.getElementById('simROI');
-    if(vA>0&&vD>0&&atr>0){
-        const aum=vD-vA,aumPct=vA>0?(aum/vA*100):0;
-        const atrOOH=aum*(atr/100),gan=atrOOH-tinv;
-        const roi=tinv>0?(gan/tinv*100):0,mult=tinv>0?(atrOOH/tinv):0;
-        document.getElementById('sAumV').innerText=fp(aum);
-        document.getElementById('sAumPct').innerText=(aumPct>=0?'+':'')+aumPct.toFixed(1)+'%';
-        document.getElementById('sAtrOOHV').innerText=fp(atrOOH);
-        document.getElementById('sAtrPctV').innerText=atr+'% del aumento';
-        document.getElementById('sROIpct').innerText=(roi>=0?roi.toFixed(0):roi.toFixed(0))+'%';
-        document.getElementById('sROIlabel').innerText=roi>=0?'✅ Campaña rentable':'❌ Sin retorno positivo';
-        const card=document.getElementById('simROICard');
-        card.style.background=roi>=0?'linear-gradient(135deg,#065f46,#10b981)':'linear-gradient(135deg,#991b1b,#ef4444)';
-        document.getElementById('sGanancia').innerText=fp(gan);
-        document.getElementById('sGanancia').style.color=gan>=0?'#34d399':'#ef4444';
-        document.getElementById('sMultiplo').innerText=mult>=0?'$'+mult.toFixed(2):'-$'+Math.abs(mult).toFixed(2);
-        document.getElementById('sVMes').innerText=fp(atrOOH/d);
-        roiDiv.style.display='block';
-    }else{
-        roiDiv.style.display='none';
-    }
 }
 
 function cpSim(){
     const d=parseInt(document.getElementById('sD').value)||1,cl=document.getElementById('sC').value||'Cliente';
-    const vA=parseFloat(document.getElementById('sVA').value)||0,vD=parseFloat(document.getElementById('sVD').value)||0,atr=parseInt(document.getElementById('sAtr').value)||0;
-    let ti=0,tinv=0,tl=0;
-    const lt=camp.map(c=>{const i=D[c.l];const im=i?impEfect(i)*c.n*d:0;const inv=c.pr*c.n*d;ti+=im;tinv+=inv;tl+=c.n;return`  • Línea ${c.l}: ${c.n} lun × ${fp(c.pr)} = ${fp(inv)}`}).join('\n');
+    let ti=0,tinvPauta=0,tinvProd=0,tl=0;
+    const lt=camp.map(c=>{const i=D[c.l];const im=i?impEfect(i)*c.n*d:0;const invP=c.pr*c.n*d;const prod=48000*c.n;ti+=im;tinvPauta+=invP;tinvProd+=prod;tl+=c.n;return`  • Línea ${c.l}: ${c.n} lun × ${fp(c.pr)}/mes = ${fp(invP)} (prod: ${fp(prod)})`}).join('\n');
+    const tinv=tinvPauta+tinvProd;
     const cpm=ti>0?tinv/ti*1e3:0;
-    let roiTxt='';
-    if(vA>0&&vD>0&&atr>0){
-        const aum=vD-vA,atrOOH=aum*(atr/100),gan=atrOOH-tinv,roi=tinv>0?(gan/tinv*100):0,mult=tinv>0?(atrOOH/tinv):0;
-        roiTxt=`\n\n📉 *ROI Real:*\n📊 Ventas antes: ${fp(vA)}\n📊 Ventas durante: ${fp(vD)}\n📈 Aumento: ${fp(aum)}\n👁 Atribución OOH ${atr}%: ${fp(atrOOH)}\n💰 ROI: ${roi.toFixed(0)}%\n🪙 Por cada $1 → $${mult.toFixed(2)}`;
-    }
-    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión: ${fp(tinv)}*\n📊 *${f(ti)} OTS*\n📈 CPM: ${fp(cpm)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n🚌 ${tl} lunetas en ${camp.length} líneas${roiTxt}\n\n🔗 Media 500`;
+    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión en pauta:* ${fp(tinvPauta)}\n🏭 *Producción:* ${fp(tinvProd)} ($48.000/luneta, pago único)\n💰 *Inversión Total:* ${fp(tinv)}\n📊 *${f(ti)} OTS*\n📈 CPM: ${fp(cpm)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n🚌 ${tl} lunetas en ${camp.length} líneas\n\n📝 *Costo de producción: $48.000 por luneta (pago único, incluye ploteo e instalación). No incluye IVA.*\n\n🔗 Media 500`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -689,42 +585,19 @@ function genRep(){
     if(!camp.length){alert('Armá la campaña primero');return}
     swTab('rep');
     const d=parseInt(document.getElementById('sD').value)||1,cl=document.getElementById('sC').value||'Cliente',dt=fdt();
-    let ti=0,tinv=0,tl=0;
+    let ti=0,tinvPauta=0,tinvProd=0,tl=0;
     const rows=camp.map(c=>{
-        const i=D[c.l];const im=impEfect(i)*c.n;const imT=im*d;const inv=c.pr*c.n*d;
-        ti+=imT;tinv+=inv;tl+=c.n;
-        return`<tr><td style="font-weight:700;color:#1d4ed8">Línea ${c.l}</td><td>${i.z.join(', ')}</td><td>${c.n}</td><td>${fp(c.pr)}</td><td>${f(im)}/mes</td><td>${f(imT)}</td></tr>`;
+        const i=D[c.l];const im=impEfect(i)*c.n;const imT=im*d;const invP=c.pr*c.n*d;const prod=48000*c.n;
+        ti+=imT;tinvPauta+=invP;tinvProd+=prod;tl+=c.n;
+        return`<tr><td style="font-weight:700;color:#1d4ed8">Línea ${c.l}</td><td>${i.z.join(', ')}</td><td>${c.n}</td><td>${fp(c.pr)}/mes</td><td>${fp(prod)} (pago único)</td><td>${f(im)}/mes</td><td>${f(imT)}</td></tr>`;
     }).join('');
+    const tinv=tinvPauta+tinvProd;
     const cpm=ti>0?tinv/ti*1e3:0,cpi=ti>0?tinv/ti:0;
     const cmpRows=[{n:"Media 500 (su campaña)",c:cpm,cl:"#1d4ed8"},...BM].map(m=>{
         const rt=m.n.startsWith("Media 500")?"✅ Su campaña":(cpm>0?(m.c/cpm).toFixed(1)+"x más caro":"");
         return`<tr><td>${m.n}</td><td style="font-weight:700">${fp(m.c)}</td><td style="color:${m.n.startsWith("Media 500")?'#1d4ed8':'#dc2626'};font-weight:700">${rt}</td></tr>`;
     }).join('');
     const rp=document.getElementById('repPV');
-    // ROI en reporte
-    const vA=parseFloat(document.getElementById('sVA').value)||0;
-    const vD=parseFloat(document.getElementById('sVD').value)||0;
-    const atr=parseInt(document.getElementById('sAtr').value)||0;
-    let roiHtml='';
-    if(vA>0&&vD>0&&atr>0){
-        const aum=vD-vA,aumPct=vA>0?(aum/vA*100):0;
-        const atrOOH=aum*(atr/100),gan=atrOOH-tinv;
-        const roi=tinv>0?(gan/tinv*100):0,mult=tinv>0?(atrOOH/tinv):0;
-        roiHtml=`
-        <div class="rs" style="background:#f0fdf4;border-radius:6px;padding:16px;margin:16px 0">
-            <div class="rl" style="color:#065f46;font-size:15px;margin-bottom:8px">📉 ROI Real de la Campaña</div>
-            <table>
-                <tr><td style="font-weight:700">Ventas antes de campaña</td><td>${fp(vA)}</td></tr>
-                <tr><td style="font-weight:700">Ventas durante campaña</td><td>${fp(vD)}</td></tr>
-                <tr><td style="font-weight:700">Aumento de ventas</td><td>${fp(aum)} (${aumPct.toFixed(1)}%)</td></tr>
-                <tr><td style="font-weight:700">Atribución OOH</td><td>${atr}% = ${fp(atrOOH)}</td></tr>
-                <tr><td style="font-weight:700;color:#065f46;font-size:14px">ROI</td><td style="font-weight:700;color:${roi>=0?'#065f46':'#dc2626'};font-size:14px">${roi.toFixed(0)}%</td></tr>
-                <tr><td style="font-weight:700">Ganancia neta OOH</td><td style="color:${gan>=0?'#065f46':'#dc2626'}">${fp(gan)}</td></tr>
-                <tr><td style="font-weight:700">Por cada $1 invertido</td><td>$${mult.toFixed(2)}</td></tr>
-            </table>
-            <div style="font-size:11px;color:#6b7280;margin-top:8px">⚠ Atribución conservadora del ${atr}% — solo se asigna al OOH lo que razonablemente le corresponde.</div>
-        </div>`;
-    }
 
     rp.innerHTML=`
         <div style="text-align:center;margin-bottom:16px">
@@ -739,12 +612,19 @@ function genRep(){
             <div class="rl">📐 Metodología:</div> OTS (Opportunity to See) = Pasajeros SUBE × 20% + Tránsito vehicular × 20%. Factor de visibilidad basado en estándar FEPE/OUTSMART (federación europea de publicidad exterior). El término OTS es el estándar internacional: oportunidad de ver, no impacto.
         </div>
         <div class="rs" style="margin-top:12px"><div class="rl">Detalle por Línea:</div>
-            <table><thead><tr><th>Línea</th><th>Zona</th><th>Lunetas</th><th>$ Luneta</th><th>OTS/mes</th><th>Total</th></tr></thead><tbody>${rows}</tbody></table>
+            <table><thead><tr><th>Línea</th><th>Zona</th><th>Lunetas</th><th>$ Luneta/mes</th><th>Producción</th><th>OTS/mes</th><th>Total OTS</th></tr></thead><tbody>${rows}</tbody></table>
         </div>
         <div style="background:#eff6ff;border-radius:6px;padding:16px;margin:16px 0;text-align:center">
-            <div style="font-size:12px;color:#1d4ed8;font-weight:700;text-transform:uppercase">Inversión Total</div>
-            <div class="rh2">${fp(tinv)}</div>
-            <div style="font-size:12px;color:#374151;margin-top:6px">${f(ti)} OTS</div>
+            <div style="font-size:12px;color:#1d4ed8;font-weight:700;text-transform:uppercase">Desglose de Inversión</div>
+            <table style="width:60%;margin:8px auto 0">
+                <tr><td style="font-weight:700;text-align:right;padding:4px 8px">Inversión en Pauta (${d} mes(es)):</td><td style="font-weight:700;padding:4px 8px">${fp(tinvPauta)}</td></tr>
+                <tr><td style="font-weight:700;text-align:right;padding:4px 8px">Producción (${tl} lunetas × $48.000):</td><td style="font-weight:700;padding:4px 8px">${fp(tinvProd)}</td></tr>
+                <tr style="border-top:2px solid #1d4ed8"><td style="font-weight:700;text-align:right;padding:6px 8px;font-size:14px;color:#1d4ed8">INVERSIÓN TOTAL:</td><td style="font-weight:700;padding:6px 8px;font-size:14px;color:#1d4ed8">${fp(tinv)}</td></tr>
+            </table>
+            <div style="font-size:12px;color:#374151;margin-top:8px">${f(ti)} OTS</div>
+        </div>
+        <div class="rs" style="background:#fefce8;border-radius:6px;padding:10px;margin-top:10px;font-size:12px;color:#92400e;line-height:1.5">
+            <strong>📝 Costo de producción:</strong> $48.000 por luneta (pago único, incluye ploteo e instalación). No incluye IVA.
         </div>
         <div class="rs"><div class="rl">Métricas de Eficiencia:</div>
             <table>
@@ -756,58 +636,16 @@ function genRep(){
         <div class="rs"><div class="rl">Comparación con Otros Medios:</div>
             <table><thead><tr><th>Medio</th><th>CPM</th><th>vs. Su Campaña</th></tr></thead><tbody>${cmpRows}</tbody></table>
         </div>
-        ${roiHtml}
         <div class="rf">
             <strong>Media 500</strong> — Publicidad en Vía Pública<br>
             Fuentes: Ministerio de Transporte (Red SUBE), Dirección Nacional de Vialidad (TMDA), GCBA — Anillo Digital (tránsito CABA).<br>
             Factor de visibilidad: estándar FEPE/OUTSMART. Pasajeros × 20% + Tránsito × 20%.<br>
+            Costo de producción: $48.000 por luneta (pago único, incluye ploteo e instalación). No incluye IVA.<br>
             Los CPM de otros medios son promedios de mercado argentino (2026).<br>
             Datos de pasajeros: promedio 2024. Datos de tránsito CABA: sensores GCBA Anillo Digital. Datos de tránsito GBA: TMDA Vialidad Nacional.
         </div>`;
     document.getElementById('repVacio').style.display='none';
     document.getElementById('repCont').style.display='block';
-}
-
-// ROI REAL
-function cRR(){
-    const inv=parseFloat(document.getElementById('rrInv').value)||0;
-    const dur=parseInt(document.getElementById('rrDur').value)||1;
-    const vAntes=parseFloat(document.getElementById('rrVentasAntes').value)||0;
-    const vDesp=parseFloat(document.getElementById('rrVentasDesp').value)||0;
-    const atr=parseInt(document.getElementById('rrAtr').value)||25;
-    if(!inv||!vAntes||!vDesp){document.getElementById('rrRes').style.display='none';return}
-    const aum=vDesp-vAntes;
-    const aumPct=vAntes>0?(aum/vAntes*100):0;
-    const atrOOH=aum*(atr/100);
-    const ganancia=atrOOH-inv;
-    const roi=inv>0?(ganancia/inv*100):0;
-    const multiplo=inv>0?(atrOOH/inv):0;
-    const ventasMes=atrOOH/dur;
-    document.getElementById('rrAumVentas').innerText=fp(aum);
-    document.getElementById('rrAumPct').innerText=aumPct>=0?'+'+aumPct.toFixed(1)+'% vs. período anterior':aumPct.toFixed(1)+'% vs. período anterior';
-    document.getElementById('rrAtrOOH').innerText=fp(atrOOH);
-    document.getElementById('rrAtrPct').innerText=atr+'% del aumento atribuido al OOH';
-    document.getElementById('rrROI').innerText=roi>=0?roi.toFixed(0)+'%':roi.toFixed(0)+'%';
-    document.getElementById('rrROIText').innerText=roi>=0?'✅ Campaña rentable':'❌ Sin retorno positivo';
-    const card=document.getElementById('rrCard');
-    card.style.background=roi>=0?'linear-gradient(135deg,#065f46,#10b981)':'linear-gradient(135deg,#991b1b,#ef4444)';
-    document.getElementById('rrGanancia').innerText=fp(ganancia);
-    document.getElementById('rrGanancia').style.color=ganancia>=0?'#34d399':'#ef4444';
-    document.getElementById('rrMultiplo').innerText=multiplo>=0?'$'+multiplo.toFixed(2):'-$'+Math.abs(multiplo).toFixed(2);
-    document.getElementById('rrVentasMes').innerText=fp(ventasMes);
-    document.getElementById('rrAtrLabel').innerText=atr;
-    document.getElementById('rrAtrLabel2').innerText=atr;
-    document.getElementById('rrRes').style.display='block';
-}
-
-function cpRR(){
-    const inv=parseFloat(document.getElementById('rrInv').value)||0;
-    const vAntes=parseFloat(document.getElementById('rrVentasAntes').value)||0;
-    const vDesp=parseFloat(document.getElementById('rrVentasDesp').value)||0;
-    const atr=parseInt(document.getElementById('rrAtr').value)||25;
-    const aum=vDesp-vAntes,atrOOH=aum*(atr/100),ganancia=atrOOH-inv,roi=inv>0?(ganancia/inv*100):0,multiplo=inv>0?(atrOOH/inv):0;
-    const txt=`📉 *ROI Real — Campaña OOH*\n\n💵 Inversión: ${fp(inv)}\n📊 Ventas antes: ${fp(vAntes)}\n📊 Ventas durante: ${fp(vDesp)}\n📈 Aumento: ${fp(aum)} (${vAntes>0?(aum/vAntes*100).toFixed(1):0}%)\n👁 Atribución OOH: ${atr}%\n\n💰 *Ganancia atribuible al OOH: ${fp(atrOOH)}*\n📉 *ROI: ${roi.toFixed(0)}%*\n🪙 Por cada $1 invertido → $${multiplo.toFixed(2)}\n\n⚠ Atribución conservadora del ${atr}% — número defendible`;
-    navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
 function cpRep(){const t=document.getElementById('repPV').innerText;navigator.clipboard.writeText(t).then(()=>alert('¡Reporte copiado!'))}
