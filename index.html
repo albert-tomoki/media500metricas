@@ -224,6 +224,12 @@
             <div class="fg"><label>Lunetas</label><input type="number" id="rN" min="1" value="1" oninput="cROI()"></div>
             <div class="fg"><label>Meses</label><input type="number" id="rD" min="1" max="4" value="1" oninput="cROI()"><div class="rh">Máx 4 (vida útil ploteo)</div></div>
         </div>
+        <div class="fg" style="margin-top:8px">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                <input type="checkbox" id="rIVA" onchange="cROI()" style="width:auto;margin:0">
+                <span>Incluir IVA (21%)</span>
+            </label>
+        </div>
     </div>
     <div id="rR" style="display:none">
         <div class="g3" style="margin-bottom:16px">
@@ -232,7 +238,7 @@
             <div class="sc"><div class="l">Costo por OTS</div><div class="v" id="rCPI">$0</div><div class="u">Por visualización</div></div>
         </div>
         <div class="method-box" style="margin-bottom:16px">
-            <strong>🏭 Costo de producción incluido:</strong> $48.000 por luneta (pago único, incluye ploteo e instalación). No incluye IVA. Este costo se suma a la inversión en pauta para calcular el CPM total.
+            <strong>🏭 Costo de producción incluido:</strong> $48.000 por luneta (pago único, incluye ploteo e instalación). IVA según checkbox. Este costo se suma a la inversión en pauta para calcular el CPM total.
         </div>
         <div class="hc">
             <div class="l">OTS (Opportunity to See) de la Campaña</div>
@@ -263,6 +269,13 @@
             <div class="fg"><label>Duración (meses)</label><input type="number" id="sD" min="1" max="4" value="1" oninput="recalc()"><div class="rh">Máx 4</div></div>
             <div class="fg"><label>Cliente</label><input type="text" id="sC" placeholder="Ej: Coca-Cola"></div>
         </div>
+        <div class="fg" style="margin-top:8px">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                <input type="checkbox" id="sIVA" onchange="recalc()" style="width:auto;margin:0">
+                <span>Incluir IVA (21%)</span>
+            </label>
+        </div>
+        </div>
     </div>
     <div id="simVacia" class="es"><div class="ei">🎯</div><div>Agregá líneas para armar tu campaña</div></div>
     <div id="simCont" style="display:none">
@@ -272,6 +285,13 @@
             <div class="sc"><div class="l">Producción (pago único)</div><div class="v" id="sInvProd">$0</div><div class="u">$48.000/luneta</div></div>
             <div class="sc"><div class="l">Inversión Total</div><div class="v" id="sInv">$0</div><div class="u" id="sInvD"></div></div>
             <div class="sc"><div class="l">CPM Campaña</div><div class="v" id="sCPM">$0</div></div>
+        </div>
+        <div id="sIVARow" style="display:none;margin-bottom:16px">
+            <div class="g4" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px">
+                <div class="sc"><div class="l">IVA (21%)</div><div class="v" id="sIVABox">—</div><div class="u">Sobre inversión total</div></div>
+                <div class="sc"><div class="l" style="color:#f59e0b">Total con IVA</div><div class="v" id="sTotalIVA" style="color:#f59e0b">$0</div><div class="u">Pauta + Prod. + IVA</div></div>
+                <div class="sc" style="grid-column:span 2"></div>
+            </div>
         </div>
         <div class="g2" style="margin-bottom:16px">
             <div class="sc"><div class="l">Total Lunetas</div><div class="v" id="sTL">0</div></div>
@@ -504,10 +524,12 @@ function cROI(){
     if(!l||!pr||!n){document.getElementById('rR').style.display='none';return}
     const i=D[l];if(!i)return;
     const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imM=impEfect(i)*n,imT=imM*d,cpm=imT>0?inv/imT*1e3:0,cpi=imT>0?inv/imT:0;
-    document.getElementById('rInv').innerText=fp(inv);
-    document.getElementById('rInvD').innerText='Pauta '+fp(invPauta)+' + Prod. '+fp(invProd);
-    document.getElementById('rCPM').innerText=fp(cpm);
-    document.getElementById('rCPI').innerText=fp(cpi);
+    const ivaChk=document.getElementById('rIVA').checked,ivaAmt=ivaChk?inv*0.21:0,totalInv=inv+ivaAmt;
+    const cpmIVA=imT>0?totalInv/imT*1e3:0,cpiIVA=imT>0?totalInv/imT:0;
+    document.getElementById('rInv').innerText=fp(ivaChk?totalInv:inv);
+    document.getElementById('rInvD').innerText=ivaChk?'Pauta '+fp(invPauta)+' + Prod. '+fp(invProd)+' + IVA '+fp(ivaAmt):'Pauta '+fp(invPauta)+' + Prod. '+fp(invProd);
+    document.getElementById('rCPM').innerText=fp(ivaChk?cpmIVA:cpm);
+    document.getElementById('rCPI').innerText=fp(ivaChk?cpiIVA:cpi);
     document.getElementById('rImp').innerText=f(imT);
     document.getElementById('rImpD').innerText=f(imM)+'/mes × '+n+' lunetas';
     rCmp('rCmp',cpm);
@@ -558,12 +580,18 @@ function recalc(){
     });
     const tinv=tinvPauta+tinvProd;
     const cpm=ti>0?tinv/ti*1e3:0;
+    const iva=document.getElementById('sIVA').checked?tinv*0.21:0;
+    const totalConIVA=tinv+iva;
     document.getElementById('sInvPauta').innerText=fp(tinvPauta);
     document.getElementById('sInvPautaD').innerText='Pauta mensual × '+d+' mes(es)';
     document.getElementById('sInvProd').innerText=fp(tinvProd);
     document.getElementById('sInv').innerText=fp(tinv);
-    document.getElementById('sInvD').innerText='Pauta + Producción';
-    document.getElementById('sCPM').innerText=fp(cpm);
+    document.getElementById('sInvD').innerText=iva>0?'Pauta + Prod. + IVA':'Pauta + Producción';
+    if(document.getElementById('sIVABox'))document.getElementById('sIVABox').innerText=iva>0?fp(iva):'—';
+    if(document.getElementById('sTotalIVA'))document.getElementById('sTotalIVA').innerText=fp(totalConIVA);
+    const cpmBase=ti>0?tinv/ti*1e3:0;
+    const cpmIVA=ti>0?totalConIVA/ti*1e3:0;
+    document.getElementById('sCPM').innerText=iva>0?fp(cpmIVA):fp(cpmBase);
     document.getElementById('sTL').innerText=tl;
     document.getElementById('sImp').innerText=f(ti);
     document.getElementById('sImpD').innerText=f(ti/d)+'/mes × '+d+' meses';
@@ -572,11 +600,11 @@ function recalc(){
 
 function cpSim(){
     const d=parseInt(document.getElementById('sD').value)||1,cl=document.getElementById('sC').value||'Cliente';
-    let ti=0,tinvPauta=0,tinvProd=0,tl=0;
-    const lt=camp.map(c=>{const i=D[c.l];const im=i?impEfect(i)*c.n*d:0;const invP=c.pr*c.n*d;const prod=48000*c.n;ti+=im;tinvPauta+=invP;tinvProd+=prod;tl+=c.n;return`  • Línea ${c.l}: ${c.n} lun × ${fp(c.pr)}/mes = ${fp(invP)} (prod: ${fp(prod)})`}).join('\n');
-    const tinv=tinvPauta+tinvProd;
-    const cpm=ti>0?tinv/ti*1e3:0;
-    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión en pauta:* ${fp(tinvPauta)}\n🏭 *Producción:* ${fp(tinvProd)} ($48.000/luneta, pago único)\n💰 *Inversión Total:* ${fp(tinv)}\n📊 *${f(ti)} OTS*\n📈 CPM: ${fp(cpm)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n🚌 ${tl} lunetas en ${camp.length} líneas\n\n📝 *Costo de producción: $48.000 por luneta (pago único, incluye ploteo e instalación). No incluye IVA.*\n\n🔗 Media 500`;
+    const ivaChk=document.getElementById('sIVA').checked,ivaAmt=ivaChk?tinv*0.21:0,totalIVA=tinv+ivaAmt;
+    const cpmIVA=ti>0?totalIVA/ti*1e3:0;
+    let lt=camp.map(c=>{const i=D[c.l];const im=i?impEfect(i)*c.n*d:0;const invP=c.pr*c.n*d;const prod=48000*c.n;return`  • Línea ${c.l}: ${c.n} lun × ${fp(c.pr)}/mes = ${fp(invP)} (prod: ${fp(prod)})`}).join('\n');
+    const ivaTxt=ivaChk?`\n📊 IVA (21%): ${fp(ivaAmt)}\n💰 *Total con IVA: ${fp(totalIVA)}*`:'';
+    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión en pauta:* ${fp(tinvPauta)}\n🏭 *Producción:* ${fp(tinvProd)} ($48.000/luneta, pago único)\n💰 *Inversión Total:* ${fp(tinv)}${ivaTxt}\n📊 *${f(ti)} OTS*\n📈 CPM${ivaChk?' con IVA':''}: ${fp(ivaChk?cpmIVA:cpm)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n🚌 ${tl} lunetas en ${camp.length} líneas\n\n📝 *Costo de producción: $48.000 por luneta (pago único, incluye ploteo e instalación).${ivaChk?' Incluye IVA 21%.':' No incluye IVA.'}*\n\n🔗 Media 500`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -592,7 +620,8 @@ function genRep(){
         return`<tr><td style="font-weight:700;color:#1d4ed8">Línea ${c.l}</td><td>${i.z.join(', ')}</td><td>${c.n}</td><td>${fp(c.pr)}/mes</td><td>${fp(prod)} (pago único)</td><td>${f(im)}/mes</td><td>${f(imT)}</td></tr>`;
     }).join('');
     const tinv=tinvPauta+tinvProd;
-    const cpm=ti>0?tinv/ti*1e3:0,cpi=ti>0?tinv/ti:0;
+    const ivaChk=document.getElementById('sIVA').checked,ivaAmt=ivaChk?tinv*0.21:0,totalIVA=tinv+ivaAmt;
+    const cpm=ti>0?tinv/ti*1e3:0,cpmIVA=ti>0?totalIVA/ti*1e3:0,cpi=ti>0?tinv/ti:0;
     const cmpRows=[{n:"Media 500 (su campaña)",c:cpm,cl:"#1d4ed8"},...BM].map(m=>{
         const rt=m.n.startsWith("Media 500")?"✅ Su campaña":(cpm>0?(m.c/cpm).toFixed(1)+"x más caro":"");
         return`<tr><td>${m.n}</td><td style="font-weight:700">${fp(m.c)}</td><td style="color:${m.n.startsWith("Media 500")?'#1d4ed8':'#dc2626'};font-weight:700">${rt}</td></tr>`;
@@ -619,7 +648,8 @@ function genRep(){
             <table style="width:60%;margin:8px auto 0">
                 <tr><td style="font-weight:700;text-align:right;padding:4px 8px">Inversión en Pauta (${d} mes(es)):</td><td style="font-weight:700;padding:4px 8px">${fp(tinvPauta)}</td></tr>
                 <tr><td style="font-weight:700;text-align:right;padding:4px 8px">Producción (${tl} lunetas × $48.000):</td><td style="font-weight:700;padding:4px 8px">${fp(tinvProd)}</td></tr>
-                <tr style="border-top:2px solid #1d4ed8"><td style="font-weight:700;text-align:right;padding:6px 8px;font-size:14px;color:#1d4ed8">INVERSIÓN TOTAL:</td><td style="font-weight:700;padding:6px 8px;font-size:14px;color:#1d4ed8">${fp(tinv)}</td></tr>
+                ${ivaChk?`<tr><td style="font-weight:700;text-align:right;padding:4px 8px">IVA (21%):</td><td style="font-weight:700;padding:4px 8px">${fp(ivaAmt)}</td></tr>`:''}
+                <tr style="border-top:2px solid #1d4ed8"><td style="font-weight:700;text-align:right;padding:6px 8px;font-size:14px;color:#1d4ed8">INVERSIÓN TOTAL${ivaChk?' (con IVA)':''}:</td><td style="font-weight:700;padding:6px 8px;font-size:14px;color:#1d4ed8">${fp(ivaChk?totalIVA:tinv)}</td></tr>
             </table>
             <div style="font-size:12px;color:#374151;margin-top:8px">${f(ti)} OTS</div>
         </div>
@@ -628,8 +658,8 @@ function genRep(){
         </div>
         <div class="rs"><div class="rl">Métricas de Eficiencia:</div>
             <table>
-                <tr><td style="font-weight:700">CPM (costo por 1.000 OTS)</td><td>${fp(cpm)}</td></tr>
-                <tr><td style="font-weight:700">Costo por OTS individual</td><td>${fp(cpi)}</td></tr>
+                <tr><td style="font-weight:700">CPM (costo por 1.000 OTS)${ivaChk?' con IVA':''}</td><td>${fp(ivaChk?cpmIVA:cpm)}</td></tr>
+                <tr><td style="font-weight:700">Costo por OTS individual${ivaChk?' con IVA':''}</td><td>${fp(ivaChk?totalIVA/ti:tinv/ti)}</td></tr>
                 <tr><td style="font-weight:700">OTS diarios promedio</td><td>${f(ti/(d*30))}</td></tr>
             </table>
         </div>
@@ -640,7 +670,7 @@ function genRep(){
             <strong>Media 500</strong> — Publicidad en Vía Pública<br>
             Fuentes: Ministerio de Transporte (Red SUBE), Dirección Nacional de Vialidad (TMDA), GCBA — Anillo Digital (tránsito CABA).<br>
             Factor de visibilidad: estándar FEPE/OUTSMART. Pasajeros × 20% + Tránsito × 20%.<br>
-            Costo de producción: $48.000 por luneta (pago único, incluye ploteo e instalación). No incluye IVA.<br>
+            Costo de producción: $48.000 por luneta (pago único, incluye ploteo e instalación). ${ivaChk?'Incluye IVA 21%.':'No incluye IVA.'}<br>
             Los CPM de otros medios son promedios de mercado argentino (2026).<br>
             Datos de pasajeros: promedio 2024. Datos de tránsito CABA: sensores GCBA Anillo Digital. Datos de tránsito GBA: TMDA Vialidad Nacional.
         </div>`;
