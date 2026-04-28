@@ -123,6 +123,14 @@
         .method-box{background:#1e293b;border:1px solid #334155;padding:16px;border-radius:8px;margin-bottom:16px;font-size:12px;color:#94a3b8;line-height:1.5}
         .method-box strong{color:#cbd5e1}
         .method-box a{color:#60a5fa;text-decoration:none}
+
+        .route-ave{display:inline-block;font-size:11px;background:#1e3a5f;color:#93c5fd;padding:3px 10px;border-radius:12px;margin:2px 3px 2px 0;font-weight:600 }
+        .route-sensor{background:#111827;border:1px solid #374151;padding:10px 14px;border-radius:8px;margin:6px 0;font-size:12px;line-height:1.5 }
+        .route-sensor .sn{color:#60a5fa;font-weight:700 }
+        .route-sensor .sd{color:#6b7280 }
+        .route-cov{font-size:11px;color:#f59e0b;background:#422006;padding:6px 12px;border-radius:6px;margin-top:8px;line-height:1.4 }
+        .route-cov.full{color:#34d399;background:#064e3b }
+        .route-nodata{font-size:12px;color:#6b7280;font-style:italic }
     </style>
 </head>
 <body>
@@ -159,7 +167,7 @@
 <!-- ===== IMPACTO ===== -->
 <div class="tc active" id="t-impacto">
     <div class="method-box">
-        <strong>📐 Metodología:</strong> Los OTS (Opportunity to See) se calculan aplicando un <strong>factor de visibilidad del 20%</strong> sobre pasajeros SUBE (oportunidad de visualización al subir/bajar) + <strong>factor del 20%</strong> sobre tránsito vehicular (vehículos detrás del bondi con tiempo de lectura). Es una estimación conservadora basada en estándares OOH internacionales.<br><br><strong>📊 Fuentes de datos:</strong><br><a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 SUBE — Min. Transporte</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Vialidad Nacional (TMDA rutas)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 GCBA — Anillo Digital (tránsito CABA)</a><br><span style="font-size:11px;color:#6b7280">Líneas CABA: datos de tránsito de sensores viales GCBA. Líneas GBA: estimaciones de Vialidad Nacional.</span>
+        <strong>📐 Metodología:</strong> Los OTS (Opportunity to See) se calculan aplicando un <strong>factor de visibilidad del 20%</strong> sobre pasajeros SUBE (oportunidad de visualización al subir/bajar) + <strong>factor del 20%</strong> sobre tránsito vehicular (vehículos detrás del bondi con tiempo de lectura). Es una estimación conservadora basada en estándares OOH internacionales.<br><br><strong>📊 Fuentes de datos:</strong><br><a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 SUBE — Min. Transporte</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Vialidad Nacional (TMDA rutas)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 GCBA — Anillo Digital (tránsito CABA)</a><br><span style="font-size:11px;color:#6b7280">Líneas CABA: datos de tránsito de sensores viales GCBA. Líneas GBA: estimaciones de Vialidad Nacional. Recorridos: cruce de paradas GCBA con sensores Anillo Digital (radio 500m).</span>
     </div>
     <div class="fb">
         <input type="text" id="sI" placeholder="🔍 Buscar línea..." onkeyup="fL()">
@@ -195,6 +203,12 @@
             <div class="v" id="iM">0</div>
             <div class="s" id="iD">0 OTS diarios</div>
             <div class="method">Pasajeros × 20% + Tránsito × 20% = OTS</div>
+        </div>
+        <div id="routeSection" style="display:none">
+            <div style="border-top:2px solid #374151;padding-top:16px;margin-top:16px;margin-bottom:16px">
+                <h3 style="font-size:13px;color:#9ca3af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">🗺️ Recorrido y cobertura de datos</h3>
+                <div id="routeContent"></div>
+            </div>
         </div>
         <div style="text-align:center"><button class="btn bs" onclick="cpImp()">📲 Copiar para WhatsApp</button></div>
     </div>
@@ -412,6 +426,14 @@
                     <a href="https://www.fepemarketing.com/knowledge-hub/" target="_blank">🔗 FEPE Knowledge Hub</a>
                     <div class="src-tag">Estándar internacional adaptado</div>
                 </div>
+
+                <div class="src-card" style="border-color:#ec4899">
+                    <h4 style="color:#ec4899">🚏 Recorridos de Líneas — Paradas GCBA</h4>
+                    <div class="src-val">6.963 paradas</div>
+                    <p>Dataset de paradas de colectivo de la Ciudad con coordenadas, líneas que pasan y barrios. Se cruzó con sensores Anillo Digital para determinar qué avenidas del recorrido tienen datos reales de tránsito.</p>
+                    <a href="https://data.buenosaires.gob.ar/dataset/colectivos-paradas" target="_blank">🔗 data.buenosaires.gob.ar</a>
+                    <div class="src-tag">Cruce: paradas ↔ sensores (radio 500m)</div>
+                </div>
             </div>
 
             <div class="src-note">
@@ -425,7 +447,7 @@
         </div>
 
 <div class="ft">
-    Fuentes: <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">Min. Transporte (SUBE)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">GCBA Anillo Digital</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">Dir. Nal. Vialidad</a> | Factor visibilidad: estimación propia basada en FEPE/OUTSMART
+    Fuentes: <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">Min. Transporte (SUBE)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">GCBA Anillo Digital</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">Dir. Nal. Vialidad</a> | <a href="https://data.buenosaires.gob.ar/dataset/colectivos-paradas" target="_blank">GCBA Paradas de Colectivo</a> | Factor visibilidad: estimación propia basada en FEPE/OUTSMART
     <br><span style="cursor:pointer;color:#6b7280;font-size:10px;margin-left:8px" onclick="doLogout()">Cerrar sesión</span>
 </div>
 
@@ -453,6 +475,8 @@ function checkAuth(){
     }
 }
 checkAuth();
+
+const ROUTES={"12":{"avenues":["Av. Cabildo"],"sensors":[{"id":"48Q3CH00+","name":"Av. Cabildo / Av. Lacroze","ave":"Av. Cabildo","stops":2,"dist":327}],"stop_count":67,"coverage":"Cobertura parcial"},"41":{"avenues":["Av. Corrientes","Av. Cabildo"],"sensors":[{"id":"48Q39H00+","name":"Av. Corrientes / Av. Pueyrredón","ave":"Av. Corrientes","stops":7,"dist":110},{"id":"48Q3CH00+","name":"Av. Cabildo / Av. Lacroze","ave":"Av. Cabildo","stops":4,"dist":210}],"stop_count":99,"coverage":"Cobertura parcial"},"42":{"avenues":[],"sensors":[],"stop_count":107,"coverage":"Sin sensores cercanos"},"47":{"avenues":[],"sensors":[],"stop_count":186,"coverage":"Sin sensores cercanos"},"51":{"avenues":[],"sensors":[],"stop_count":15,"coverage":"Sin sensores cercanos"},"53":{"avenues":["Av. Rivadavia"],"sensors":[{"id":"48Q39G00+","name":"Av. Rivadavia / Av. Gaona","ave":"Av. Rivadavia","stops":3,"dist":302}],"stop_count":137,"coverage":"Cobertura parcial"},"57":{"avenues":["Av. Cabildo","Av. Libertador"],"sensors":[{"id":"48Q3CH00+","name":"Av. Cabildo / Av. Lacroze","ave":"Av. Cabildo","stops":1,"dist":234},{"id":"48Q3FG00+","name":"Av. Maipú / Av. Libertador","ave":"Av. Libertador","stops":1,"dist":447}],"stop_count":74,"coverage":"Cobertura parcial"},"64":{"avenues":["Av. 9 de Julio","Av. Cabildo"],"sensors":[{"id":"48Q39J00+","name":"Av. 9 de Julio / Microcentro","ave":"Av. 9 de Julio","stops":7,"dist":141},{"id":"48Q3CH00+","name":"Av. Cabildo / Av. Lacroze","ave":"Av. Cabildo","stops":3,"dist":196}],"stop_count":88,"coverage":"Cobertura parcial"},"65":{"avenues":[],"sensors":[],"stop_count":94,"coverage":"Sin sensores cercanos"},"67":{"avenues":["Av. Santa Fe","Av. Cabildo"],"sensors":[{"id":"48Q3CJ00+","name":"Av. Santa Fe / Av. 9 de Julio","ave":"Av. Santa Fe","stops":5,"dist":159},{"id":"48Q3CH00+","name":"Av. Cabildo / Av. Lacroze","ave":"Av. Cabildo","stops":4,"dist":210}],"stop_count":88,"coverage":"Cobertura parcial"},"68":{"avenues":["Av. Cabildo","Av. Libertador"],"sensors":[{"id":"48Q3CH00+","name":"Av. Cabildo / Av. Lacroze","ave":"Av. Cabildo","stops":4,"dist":196},{"id":"48Q3FG00+","name":"Av. Maipú / Av. Libertador","ave":"Av. Libertador","stops":1,"dist":464}],"stop_count":54,"coverage":"Cobertura parcial"},"74":{"avenues":["Av. 9 de Julio"],"sensors":[{"id":"48Q39J00+","name":"Av. 9 de Julio / Microcentro","ave":"Av. 9 de Julio","stops":2,"dist":373}],"stop_count":28,"coverage":"Cobertura parcial"},"79":{"avenues":[],"sensors":[],"stop_count":28,"coverage":"Sin sensores cercanos"},"92":{"avenues":["Av. Santa Fe","Av. Rivadavia"],"sensors":[{"id":"48Q3CJ00+","name":"Av. Santa Fe / Av. 9 de Julio","ave":"Av. Santa Fe","stops":6,"dist":128},{"id":"48Q39G00+","name":"Av. Rivadavia / Av. Gaona","ave":"Av. Rivadavia","stops":5,"dist":302}],"stop_count":127,"coverage":"Cobertura parcial"},"102":{"avenues":[],"sensors":[],"stop_count":57,"coverage":"Sin sensores cercanos"},"123":{"avenues":[],"sensors":[],"stop_count":50,"coverage":"Sin sensores cercanos"},"124":{"avenues":["Av. Santa Fe"],"sensors":[{"id":"48Q3CJ00+","name":"Av. Santa Fe / Av. 9 de Julio","ave":"Av. Santa Fe","stops":1,"dist":395}],"stop_count":116,"coverage":"Cobertura parcial"},"126":{"avenues":["Av. 9 de Julio","Av. Rivadavia"],"sensors":[{"id":"48Q39J00+","name":"Av. 9 de Julio / Microcentro","ave":"Av. 9 de Julio","stops":10,"dist":127},{"id":"48Q39G00+","name":"Av. Rivadavia / Av. Gaona","ave":"Av. Rivadavia","stops":3,"dist":118}],"stop_count":115,"coverage":"Cobertura parcial"},"136":{"avenues":["Av. Rivadavia"],"sensors":[{"id":"48Q39G00+","name":"Av. Rivadavia / Av. Gaona","ave":"Av. Rivadavia","stops":3,"dist":373}],"stop_count":30,"coverage":"Cobertura parcial"},"148":{"avenues":[],"sensors":[],"stop_count":20,"coverage":"Sin sensores cercanos"},"151":{"avenues":["Av. Libertador"],"sensors":[{"id":"48Q3FG00+","name":"Av. Maipú / Av. Libertador","ave":"Av. Libertador","stops":1,"dist":464}],"stop_count":113,"coverage":"Cobertura parcial"},"163":{"avenues":["Av. Rivadavia"],"sensors":[{"id":"48Q39G00+","name":"Av. Rivadavia / Av. Gaona","ave":"Av. Rivadavia","stops":3,"dist":373}],"stop_count":30,"coverage":"Cobertura parcial"},"166":{"avenues":["Av. Cabildo"],"sensors":[{"id":"48Q3CH00+","name":"Av. Cabildo / Av. Lacroze","ave":"Av. Cabildo","stops":4,"dist":240}],"stop_count":81,"coverage":"Cobertura parcial"},"176":{"avenues":[],"sensors":[],"stop_count":82,"coverage":"Sin sensores cercanos"},"177":{"avenues":[],"sensors":[],"stop_count":2,"coverage":"Sin sensores cercanos"},"182":{"avenues":[],"sensors":[],"stop_count":25,"coverage":"Sin sensores cercanos"},"194":{"avenues":["Av. Cabildo","Av. Libertador"],"sensors":[{"id":"48Q3CH00+","name":"Av. Cabildo / Av. Lacroze","ave":"Av. Cabildo","stops":2,"dist":234},{"id":"48Q3FG00+","name":"Av. Maipú / Av. Libertador","ave":"Av. Libertador","stops":1,"dist":454}],"stop_count":27,"coverage":"Cobertura parcial"},"195":{"avenues":["Av. 9 de Julio"],"sensors":[{"id":"48Q39J00+","name":"Av. 9 de Julio / Microcentro","ave":"Av. 9 de Julio","stops":2,"dist":345}],"stop_count":21,"coverage":"Cobertura parcial"}};
 
 const D={"12":{"p":420702,"t":122000,"z":["CABA"],"ts":"gcba"},"41":{"p":121416,"t":79000,"z":["CABA","Norte"],"ts":"gcba"},"42":{"p":181046,"t":84000,"z":["CABA"],"ts":"gcba"},"47":{"p":250000,"t":79000,"z":["CABA"],"ts":"gcba"},"51":{"p":25919,"t":20000,"z":["Sur"],"ts":"vialidad"},"53":{"p":22933,"t":84000,"z":["CABA","Oeste"],"ts":"gcba"},"57":{"p":250000,"t":184000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"64":{"p":72825,"t":122000,"z":["CABA"],"ts":"gcba"},"65":{"p":172572,"t":122000,"z":["CABA"],"ts":"gcba"},"67":{"p":75224,"t":122000,"z":["CABA"],"ts":"gcba"},"68":{"p":64240,"t":84000,"z":["CABA"],"ts":"gcba"},"74":{"p":16353,"t":20000,"z":["Sur"],"ts":"vialidad"},"79":{"p":250000,"t":20000,"z":["Sur"],"ts":"vialidad"},"92":{"p":250000,"t":84000,"z":["CABA"],"ts":"gcba"},"102":{"p":2324,"t":22000,"z":["CABA"],"ts":"gcba"},"123":{"p":250000,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"124":{"p":701959,"t":184000,"z":["CABA"],"ts":"gcba"},"126":{"p":1182005,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"136":{"p":440059,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"148":{"p":250000,"t":20000,"z":["Sur"],"ts":"vialidad"},"151":{"p":250000,"t":122000,"z":["CABA"],"ts":"gcba"},"163":{"p":277020,"t":84000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"166":{"p":894049,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"176":{"p":1597825,"t":184000,"z":["CABA","Norte"],"ts":"gcba"},"177":{"p":594679,"t":20000,"z":["Sur"],"ts":"vialidad"},"182":{"p":1113491,"t":184000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"194":{"p":530650,"t":40000,"z":["CABA","Norte"],"ts":"gcba"},"195":{"p":413138,"t":84000,"z":["CABA","Sur"],"ts":"gcba"},"203":{"p":2758179,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"204":{"p":174016,"t":20000,"z":["Norte"],"ts":"vialidad"},"218":{"p":636423,"t":20000,"z":["Oeste"],"ts":"vialidad"},"222":{"p":121223,"t":20000,"z":["Oeste"],"ts":"vialidad"},"236":{"p":1798120,"t":20000,"z":["Oeste"],"ts":"vialidad"},"237":{"p":1115632,"t":20000,"z":["Oeste"],"ts":"vialidad"},"263":{"p":904083,"t":20000,"z":["Sur"],"ts":"vialidad"},"264":{"p":324549,"t":20000,"z":["Norte"],"ts":"vialidad"},"269":{"p":1150960,"t":20000,"z":["Oeste"],"ts":"vialidad"},"276":{"p":800924,"t":20000,"z":["Norte"],"ts":"vialidad"},"283":{"p":689263,"t":20000,"z":["Sur"],"ts":"vialidad"},"284":{"p":114030,"t":20000,"z":["Oeste"],"ts":"vialidad"},"306":{"p":1172811,"t":20000,"z":["Oeste"],"ts":"vialidad"},"310":{"p":108849,"t":20000,"z":["Norte"],"ts":"vialidad"},"315":{"p":561302,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"322":{"p":384973,"t":20000,"z":["Oeste"],"ts":"vialidad"},"325":{"p":206873,"t":20000,"z":["Oeste"],"ts":"vialidad"},"326":{"p":86944,"t":20000,"z":["Oeste"],"ts":"vialidad"},"327":{"p":542051,"t":20000,"z":["Oeste"],"ts":"vialidad"},"336":{"p":163683,"t":20000,"z":["Oeste"],"ts":"vialidad"},"365":{"p":2566192,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"370":{"p":13749,"t":20000,"z":["Sur"],"ts":"vialidad"},"371":{"p":69118,"t":20000,"z":["Sur"],"ts":"vialidad"},"373":{"p":367710,"t":20000,"z":["Sur"],"ts":"vialidad"},"378":{"p":635943,"t":20000,"z":["Oeste"],"ts":"vialidad"},"382":{"p":624749,"t":20000,"z":["Oeste"],"ts":"vialidad"},"388":{"p":912547,"t":20000,"z":["Oeste"],"ts":"vialidad"},"396":{"p":879949,"t":20000,"z":["Oeste"],"ts":"vialidad"},"404":{"p":508901,"t":20000,"z":["Oeste"],"ts":"vialidad"},"410":{"p":92149,"t":20000,"z":["Sur"],"ts":"vialidad"},"422":{"p":355810,"t":20000,"z":["Sur"],"ts":"vialidad"},"423":{"p":701549,"t":20000,"z":["Sur"],"ts":"vialidad"},"426":{"p":242549,"t":20000,"z":["Sur"],"ts":"vialidad"},"428":{"p":352949,"t":20000,"z":["Sur"],"ts":"vialidad"},"435":{"p":62149,"t":20000,"z":["Sur"],"ts":"vialidad"},"436":{"p":148810,"t":20000,"z":["Sur"],"ts":"vialidad"},"440":{"p":639349,"t":20000,"z":["Sur"],"ts":"vialidad"},"442":{"p":378749,"t":20000,"z":["Sur"],"ts":"vialidad"},"500":{"p":374949,"t":20000,"z":["Sur"],"ts":"vialidad"},"501":{"p":28910,"t":20000,"z":["Sur"],"ts":"vialidad"},"503":{"p":546149,"t":20000,"z":["Sur"],"ts":"vialidad"},"505":{"p":53210,"t":20000,"z":["Sur"],"ts":"vialidad"},"511":{"p":648649,"t":20000,"z":["Sur"],"ts":"vialidad"},"520":{"p":823149,"t":20000,"z":["Sur"],"ts":"vialidad"}};
 
@@ -511,13 +535,44 @@ function uP(){
     document.getElementById('iM').innerText=f(ie);
     document.getElementById('iD').innerText=f(ied)+' OTS diarios';
     document.getElementById('placa').style.display='block';
+    
+    // Route section
+    const rDiv=document.getElementById('routeSection');
+    const rC=document.getElementById('routeContent');
+    const rt=ROUTES[l];
+    if(rt&&rt.sensors.length>0){
+        rDiv.style.display='block';
+        let h='';
+        if(rt.avenues.length>0){
+            h+='<div style="margin-bottom:8px"><span style="font-size:11px;color:#6b7280;text-transform:uppercase">Avenidas con sensor de tránsito:</span><br>';
+            h+=rt.avenues.map(a=>'<span class="route-ave">'+a+'</span>').join('');
+            h+='</div>';
+        }
+        h+='<div style="font-size:11px;color:#6b7280;margin-bottom:4px">Sensores Anillo Digital cercanos:</div>';
+        rt.sensors.forEach(s=>{
+            h+='<div class="route-sensor"><span class="sn">📡 '+s.name+'</span> <span class="sd">('+s.dist+'m)</span><br><span style="color:#d1d5db">'+s.stops+' paradas de la Línea '+l+' en rango de 500m</span></div>';
+        });
+        const covClass=rt.coverage.includes('parcial')?'':'full';
+        h+='<div class="route-cov '+covClass+'">⚠️ '+rt.coverage+'</div>';
+        h+='<div style="font-size:10px;color:#4b5563;margin-top:4px">'+rt.stop_count+' paradas GCBA en el dataset</div>';
+        rC.innerHTML=h;
+    } else if(rt&&rt.stop_count>0){
+        rDiv.style.display='block';
+        rC.innerHTML='<div class="route-nodata">📍 '+rt.stop_count+' paradas GCBA registradas — sin sensores Anillo Digital en su recorrido. Datos de tránsito por promedio GCBA.</div>';
+    } else {
+        rDiv.style.display='block';
+        rC.innerHTML='<div class="route-nodata">📍 Línea sin paradas registradas en dataset GCBA (probablemente GBA puro). Datos de tránsito por Vialidad Nacional.</div>';
+    }
 }
 
 function cpImp(){
     if(!cL)return;const i=D[cL],ie=impEfect(i);
     const srcLabel=i.ts==='gcba'?'GCBA Anillo Digital':'Vialidad';
     const srcUrl=i.ts==='gcba'?'data.buenosaires.gob.ar':'argentina.gob.ar/vialidad';
-    const txt=`🚌 *OTS OOH — Línea ${cL}*\n📍 ${i.z.join(', ')}\n\n👥 ${f(i.p)} pasajeros/mes (SUBE)\n🚗 ${f(i.t*30)} vehículos/mes (${srcLabel})\n👁 Factor visibilidad: 20% pasajeros + 20% tránsito\n\n🔥 *${f(ie)} OTS/mes* por luneta\n\n🔗 Fuentes: datos.transporte.gob.ar | ${srcUrl}`;
+    const rt=ROUTES[cL];
+    let routeTxt='';
+    if(rt&&rt.avenues.length>0){routeTxt='\n🗺️ *Recorrido:* '+rt.avenues.join(', ')+(rt.sensors.length?' ('+rt.sensors.length+' sensor(es) Anillo Digital)':' (sin sensores cercanos)');}
+    const txt=`🚌 *OTS OOH — Línea ${cL}*\n📍 ${i.z.join(', ')}\n\n👥 ${f(i.p)} pasajeros/mes (SUBE)\n🚗 ${f(i.t*30)} vehículos/mes (${srcLabel})\n👁 Factor visibilidad: 20% pasajeros + 20% tránsito\n\n🔥 *${f(ie)} OTS/mes* por luneta${routeTxt}\n\n🔗 Fuentes: datos.transporte.gob.ar | ${srcUrl}`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
