@@ -614,18 +614,34 @@ function genRep(){
     swTab('rep');
     const d=parseInt(document.getElementById('sD').value)||1,cl=document.getElementById('sC').value||'Cliente',dt=fdt();
     let ti=0,tinvPauta=0,tinvProd=0,tl=0;
-    const rows=camp.map(c=>{
-        const i=D[c.l];const im=impEfect(i)*c.n;const imT=im*d;const invP=c.pr*c.n*d;const prod=48000*c.n;
+    const lineDetail=camp.map(c=>{
+        const i=D[c.l];const im=impEfect(i)*c.n;const imT=im*d;const invP=c.pr*c.n*d;const prod=48000*c.n;const invL=invP+prod;
         ti+=imT;tinvPauta+=invP;tinvProd+=prod;tl+=c.n;
-        return`<tr><td style="font-weight:700;color:#1d4ed8">Línea ${c.l}</td><td>${i.z.join(', ')}</td><td>${c.n}</td><td>${fp(c.pr)}/mes</td><td>${fp(prod)} (pago único)</td><td>${f(im)}/mes</td><td>${f(imT)}</td></tr>`;
+        const cpmLine=imT>0?invL/imT*1e3:0;const otsDia=Math.round(imT/(d*30));
+        const rt=ROUTES[c.l];
+        const ruta=rt&&rt.avenues.length?rt.avenues.join(', '):i.z.join(', ');
+        const fuentes=[];
+        if(rt&&rt.sensors.length)fuentes.push('GCBA Anillo Digital');
+        else if(i.z.some(z=>z.includes('CABA')))fuentes.push('GCBA Anillo Digital (estimado)');
+        else fuentes.push('Vialidad Nacional (TMDA)');
+        fuentes.push('SUBE (Min. Transporte)');
+        return`<tr>
+            <td style="font-weight:700;color:#1d4ed8">Línea ${c.l}</td>
+            <td>${c.n}</td>
+            <td>${fp(c.pr)}/mes</td>
+            <td>${f(im)}/mes</td>
+            <td>${f(otsDia)}/día</td>
+            <td>${fp(cpmLine)}</td>
+        </tr>
+        <tr>
+            <td colspan="6" style="font-size:11px;color:#6b7280;background:#f9fafb;padding:4px 12px;border-bottom:2px solid #e5e7eb">
+                🗺️ <strong>Recorrido:</strong> ${ruta} &nbsp;|&nbsp; 📡 <strong>Datos:</strong> ${fuentes.join(' + ')} &nbsp;|&nbsp; 🏭 <strong>Prod.:</strong> ${fp(prod)}
+            </td>
+        </tr>`;
     }).join('');
     const tinv=tinvPauta+tinvProd;
     const ivaChk=document.getElementById('sIVA').checked,ivaAmt=ivaChk?tinv*0.21:0,totalIVA=tinv+ivaAmt;
-    const cpm=ti>0?tinv/ti*1e3:0,cpmIVA=ti>0?totalIVA/ti*1e3:0,cpi=ti>0?tinv/ti:0;
-    const cmpRows=[{n:"Media 500 (su campaña)",c:cpm,cl:"#1d4ed8"},...BM].map(m=>{
-        const rt=m.n.startsWith("Media 500")?"✅ Su campaña":(cpm>0?(m.c/cpm).toFixed(1)+"x más caro":"");
-        return`<tr><td>${m.n}</td><td style="font-weight:700">${fp(m.c)}</td><td style="color:${m.n.startsWith("Media 500")?'#1d4ed8':'#dc2626'};font-weight:700">${rt}</td></tr>`;
-    }).join('');
+    const cpm=ti>0?tinv/ti*1e3:0,cpmIVA=ti>0?totalIVA/ti*1e3:0;
     const rp=document.getElementById('repPV');
 
     rp.innerHTML=`
@@ -640,8 +656,8 @@ function genRep(){
         <div class="rs" style="background:#eff6ff;border-radius:6px;padding:10px;margin-top:10px">
             <div class="rl">📐 Metodología:</div> OTS (Opportunity to See) = Pasajeros SUBE × 20% + Tránsito vehicular × 20%. Factor de visibilidad basado en estándar FEPE/OUTSMART (federación europea de publicidad exterior). El término OTS es el estándar internacional: oportunidad de ver, no impacto.
         </div>
-        <div class="rs" style="margin-top:12px"><div class="rl">Detalle por Línea:</div>
-            <table><thead><tr><th>Línea</th><th>Zona</th><th>Lunetas</th><th>$ Luneta/mes</th><th>Producción</th><th>OTS/mes</th><th>Total OTS</th></tr></thead><tbody>${rows}</tbody></table>
+        <div class="rs" style="margin-top:12px"><div class="rl">Desglose por Línea:</div>
+            <table><thead><tr><th>Línea</th><th>Lunetas</th><th>$ Luneta/mes</th><th>OTS/mes</th><th>OTS/día</th><th>CPM</th></tr></thead><tbody>${lineDetail}</tbody></table>
         </div>
         <div style="background:#eff6ff;border-radius:6px;padding:16px;margin:16px 0;text-align:center">
             <div style="font-size:12px;color:#1d4ed8;font-weight:700;text-transform:uppercase">Desglose de Inversión</div>
@@ -659,19 +675,16 @@ function genRep(){
         <div class="rs"><div class="rl">Métricas de Eficiencia:</div>
             <table>
                 <tr><td style="font-weight:700">CPM (costo por 1.000 OTS)${ivaChk?' con IVA':''}</td><td>${fp(ivaChk?cpmIVA:cpm)}</td></tr>
-                <tr><td style="font-weight:700">Costo por OTS individual${ivaChk?' con IVA':''}</td><td>${fp(ivaChk?totalIVA/ti:tinv/ti)}</td></tr>
+                
                 <tr><td style="font-weight:700">OTS diarios promedio</td><td>${f(ti/(d*30))}</td></tr>
             </table>
-        </div>
-        <div class="rs"><div class="rl">Comparación con Otros Medios:</div>
-            <table><thead><tr><th>Medio</th><th>CPM</th><th>vs. Su Campaña</th></tr></thead><tbody>${cmpRows}</tbody></table>
         </div>
         <div class="rf">
             <strong>Media 500</strong> — Publicidad en Vía Pública<br>
             Fuentes: Ministerio de Transporte (Red SUBE), Dirección Nacional de Vialidad (TMDA), GCBA — Anillo Digital (tránsito CABA).<br>
             Factor de visibilidad: estándar FEPE/OUTSMART. Pasajeros × 20% + Tránsito × 20%.<br>
             Costo de producción: $48.000 por luneta (pago único, incluye ploteo e instalación). ${ivaChk?'Incluye IVA 21%.':'No incluye IVA.'}<br>
-            Los CPM de otros medios son promedios de mercado argentino (2026).<br>
+            
             Datos de pasajeros: promedio 2024. Datos de tránsito CABA: sensores GCBA Anillo Digital. Datos de tránsito GBA: TMDA Vialidad Nacional.
         </div>`;
     document.getElementById('repVacio').style.display='none';
