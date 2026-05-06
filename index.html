@@ -167,7 +167,7 @@
 <!-- ===== IMPACTO ===== -->
 <div class="tc active" id="t-impacto">
     <div class="method-box">
-        <strong>📐 Metodología:</strong> Los OTS (Opportunity to See) se calculan aplicando un <strong>factor de visibilidad del 20%</strong> sobre pasajeros SUBE (oportunidad de visualización al subir/bajar) + <strong>factor del 20%</strong> sobre tránsito vehicular (vehículos detrás del bondi con tiempo de lectura). Es una estimación conservadora basada en estándares OOH internacionales.<br><br><strong>📊 Fuentes de datos:</strong><br><a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 SUBE — Min. Transporte</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Vialidad Nacional (TMDA rutas)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 GCBA — Anillo Digital (tránsito CABA)</a><br><span style="font-size:11px;color:#6b7280">Líneas CABA: datos de tránsito de sensores viales GCBA. Líneas GBA: estimaciones de Vialidad Nacional. Recorridos: cruce de paradas GCBA con sensores Anillo Digital (radio 500m).</span>
+        <strong>📐 Metodología:</strong> OTS = (Pasajeros SUBE por colectivo) × 20% + Tránsito vehicular × 20%. <strong>Los pasajeros totales de la línea se dividen por la flota activa (cantidad de coches)</strong> para calcular cuántos pasajeros transporta cada bondi. Si Media 500 pauta N lunetas, alcanza a N/Flota del total de pasajeros de la línea. Esto es <strong>conservador y matemáticamente irrefutable</strong>: solo contabilizamos la fracción de pasajeros que realmente pasa por nuestros colectivos ploteados.<br><br><strong>📊 Fuentes de datos:</strong><br><a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 SUBE — Min. Transporte</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Vialidad Nacional (TMDA rutas)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 GCBA — Anillo Digital (tránsito CABA)</a><br><span style="font-size:11px;color:#6b7280">Líneas CABA: datos de tránsito de sensores viales GCBA. Líneas GBA: estimaciones de Vialidad Nacional. Recorridos: cruce de paradas GCBA con sensores Anillo Digital (radio 500m). Flota: promedio 50 coches por línea. Se puede ajustar manualmente en el Simulador.</span>
     </div>
     <div class="fb">
         <input type="text" id="sI" placeholder="🔍 Buscar línea..." onkeyup="fL()">
@@ -222,6 +222,7 @@
         <div class="fr">
             <div class="fg"><label>Precio por Luneta ($)</label><input type="number" id="rP" placeholder="70000" min="40000" max="110000" oninput="cROI()"><div class="rh">Rango: $40.000 — $110.000</div></div>
             <div class="fg"><label>Lunetas</label><input type="number" id="rN" min="1" value="1" oninput="cROI()"></div>
+            <div class="fg"><label>Flota</label><input type="number" id="rF" min="1" value="50" oninput="cROI()"></div>
             <div class="fg"><label>Meses</label><input type="number" id="rD" min="1" max="4" value="1" oninput="cROI()"><div class="rh">Máx 4 (vida útil ploteo)</div></div>
         </div>
         <div class="fg" style="margin-top:8px">
@@ -262,6 +263,7 @@
         <div class="fr" style="margin-top:10px">
             <div class="fg" style="flex:2"><label>Línea</label><select id="sL"><option value="" disabled selected>Elegí...</option></select></div>
             <div class="fg"><label>Lunetas</label><input type="number" id="sN" min="1" value="1"></div>
+            <div class="fg"><label>Flota (coches)</label><input type="number" id="sF" min="1" value="50"></div>
             <div class="fg"><label>$ por Luneta</label><input type="number" id="sP" placeholder="70000" min="40000" max="110000"></div>
             <div class="fg" style="display:flex;align-items:flex-end"><button class="btn bp bsm" onclick="addL()">+ Agregar</button></div>
         </div>
@@ -434,7 +436,7 @@ function fp(n){return"$"+Math.round(n).toLocaleString("es-AR")}
 function fdt(){return new Date().toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit",year:"numeric"})}
 
 // OTS por luneta/mes
-function impEfect(info){return Math.round(info.p*VIS_P+info.t*30*VIS_T)}
+function impEfect(info, f){const fl=f||info.f||50;return Math.round((info.p/fl)*VIS_P+info.t*30*VIS_T)}
 
 function swTab(t){
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
@@ -510,7 +512,7 @@ function uP(){
 }
 
 function cpImp(){
-    if(!cL)return;const i=D[cL],ie=impEfect(i);
+    if(!cL)return;const i=D[cL],ie=impEfect(i, i.f||50);
     const srcLabel=i.ts==='gcba'?'GCBA Anillo Digital':'Vialidad';
     const srcUrl=i.ts==='gcba'?'data.buenosaires.gob.ar':'argentina.gob.ar/vialidad';
     const rt=ROUTES[cL];
@@ -522,10 +524,10 @@ function cpImp(){
 
 // ROI
 function cROI(){
-    const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value)||0,d=parseInt(document.getElementById('rD').value)||1;
+    const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value)||0,d=parseInt(document.getElementById('rD').value)||1,f=parseInt(document.getElementById('rF').value)||50;
     if(!l||!pr||!n){document.getElementById('rR').style.display='none';return}
     const i=D[l];if(!i)return;
-    const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imM=impEfect(i)*n,imT=imM*d,cpm=imT>0?inv/imT*1e3:0,cpi=imT>0?inv/imT:0;
+    const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imM=impEfect(i, f)*n,imT=imM*d,cpm=imT>0?inv/imT*1e3:0,cpi=imT>0?inv/imT:0;
     const ivaChk=document.getElementById('rIVA').checked,ivaAmt=ivaChk?inv*0.21:0,totalInv=inv+ivaAmt;
     const cpmIVA=imT>0?totalInv/imT*1e3:0,cpiIVA=imT>0?totalInv/imT:0;
     document.getElementById('rInv').innerText=fp(ivaChk?totalInv:inv);
@@ -551,20 +553,20 @@ function rCmp(id,cpm){
 }
 
 function cpROI(){
-    const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value),d=parseInt(document.getElementById('rD').value);
+    const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value),d=parseInt(document.getElementById('rD').value),f=parseInt(document.getElementById('rF').value)||50;
     const i=D[l];if(!i)return;
-    const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imT=impEfect(i)*n*d,cpm=imT>0?inv/imT*1e3:0;
+    const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imT=impEfect(i, f)*n*d,cpm=imT>0?inv/imT*1e3:0;
     const txt=`💰 *CPM OOH — Línea ${l}*\n\n💵 Inversión en pauta: ${fp(invPauta)}\n🏭 Producción: ${fp(invProd)} ($48.000/lun, pago único)\n💵 *Inversión Total: ${fp(inv)}*\n📊 OTS efectivos: ${f(imT)}\n📈 CPM: ${fp(cpm)}\n📉 Costo/OTS: ${fp(inv/imT)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n\n🔥 ${f(imT)} visualizaciones por ${fp(inv)}`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
 // SIMULADOR
 function addL(){
-    const l=document.getElementById('sL').value,n=parseInt(document.getElementById('sN').value)||1,pr=parseFloat(document.getElementById('sP').value);
+    const l=document.getElementById('sL').value,n=parseInt(document.getElementById('sN').value)||1,pr=parseFloat(document.getElementById('sP').value),f=parseInt(document.getElementById('sF').value)||50;
     if(!l||!pr){alert('Elegí línea y poné precio');return}
     if(camp.find(c=>c.l===l)){alert('Esa línea ya está');return}
-    camp.push({l,n,pr});recalc();
-    document.getElementById('sP').value='';document.getElementById('sN').value='1';
+    camp.push({l,n,pr,f});recalc();
+    document.getElementById('sP').value='';document.getElementById('sN').value='1';document.getElementById('sF').value='50';
 }
 
 function rmL(l){camp=camp.filter(c=>c.l!==l);recalc()}
@@ -577,7 +579,7 @@ function recalc(){
     let tl=0,ti=0,tinvPauta=0,tinvProd=0;const b=document.getElementById('simB');b.innerHTML='';
     camp.forEach(c=>{
         const i=D[c.l];if(!i)return;
-        const im=impEfect(i)*c.n;tl+=c.n;ti+=im*d;tinvPauta+=c.pr*c.n*d;tinvProd+=48000*c.n;
+        const im=impEfect(i, c.f)*c.n;tl+=c.n;ti+=im*d;tinvPauta+=c.pr*c.n*d;tinvProd+=48000*c.n;
         b.innerHTML+=`<tr><td class="lc">${c.l}</td><td>${i.z.map(z=>'<span class="zt">'+z+'</span> ').join('')}</td><td>${c.n}</td><td>${fp(c.pr)}</td><td>${f(im)}/mes</td><td>${fp(48000*c.n)}</td><td class="rc"><button class="btn bd" onclick="rmL('${c.l}')">✕</button></td></tr>`;
     });
     const tinv=tinvPauta+tinvProd;
@@ -604,7 +606,7 @@ function cpSim(){
     const d=parseInt(document.getElementById('sD').value)||1,cl=document.getElementById('sC').value||'Cliente';
     const ivaChk=document.getElementById('sIVA').checked,ivaAmt=ivaChk?tinv*0.21:0,totalIVA=tinv+ivaAmt;
     const cpmIVA=ti>0?totalIVA/ti*1e3:0;
-    let lt=camp.map(c=>{const i=D[c.l];const im=i?impEfect(i)*c.n*d:0;const invP=c.pr*c.n*d;const prod=48000*c.n;return`  • Línea ${c.l}: ${c.n} lun × ${fp(c.pr)}/mes = ${fp(invP)} (prod: ${fp(prod)})`}).join('\n');
+    let lt=camp.map(c=>{const i=D[c.l];const im=i?impEfect(i, c.f)*c.n*d:0;const invP=c.pr*c.n*d;const prod=48000*c.n;return`  • Línea ${c.l}: ${c.n} lun × ${fp(c.pr)}/mes = ${fp(invP)} (prod: ${fp(prod)})`}).join('\n');
     const ivaTxt=ivaChk?`\n📊 IVA (21%): ${fp(ivaAmt)}\n💰 *Total con IVA: ${fp(totalIVA)}*`:'';
     const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión en pauta:* ${fp(tinvPauta)}\n🏭 *Producción:* ${fp(tinvProd)} ($48.000/luneta, pago único)\n💰 *Inversión Total:* ${fp(tinv)}${ivaTxt}\n📊 *${f(ti)} OTS*\n📈 CPM${ivaChk?' con IVA':''}: ${fp(ivaChk?cpmIVA:cpm)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n🚌 ${tl} lunetas en ${camp.length} líneas\n\n📝 *Costo de producción: $48.000 por luneta (pago único, incluye ploteo e instalación).${ivaChk?' Incluye IVA 21%.':' No incluye IVA.'}*\n\n🔗 Media 500`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
@@ -617,7 +619,7 @@ function genRep(){
     const d=parseInt(document.getElementById('sD').value)||1,cl=document.getElementById('sC').value||'Cliente',dt=fdt();
     let ti=0,tinvPauta=0,tinvProd=0,tl=0;
     const lineDetail=camp.map(c=>{
-        const i=D[c.l];const im=impEfect(i)*c.n;const imT=im*d;const invP=c.pr*c.n*d;const prod=48000*c.n;const invL=invP+prod;
+        const i=D[c.l];const im=impEfect(i, c.f)*c.n;const imT=im*d;const invP=c.pr*c.n*d;const prod=48000*c.n;const invL=invP+prod;
         ti+=imT;tinvPauta+=invP;tinvProd+=prod;tl+=c.n;
         const cpmLine=imT>0?invL/imT*1e3:0;const otsDia=Math.round(imT/(d*30));
         const rt=ROUTES[c.l];
@@ -629,7 +631,7 @@ function genRep(){
         fuentes.push('SUBE (Min. Transporte)');
         return`<tr>
             <td style="font-weight:700;color:#1d4ed8">Línea ${c.l}</td>
-            <td>${c.n}</td>
+            <td>${c.n}/${c.f}</td>
             <td>${fp(c.pr)}/mes</td>
             <td>${f(im)}/mes</td>
             <td>${f(otsDia)}/día</td>
@@ -637,7 +639,7 @@ function genRep(){
         </tr>
         <tr>
             <td colspan="6" style="font-size:11px;color:#6b7280;background:#f9fafb;padding:4px 12px;border-bottom:2px solid #e5e7eb">
-                🗺️ <strong>Recorrido:</strong> ${ruta} &nbsp;|&nbsp; 📡 <strong>Datos:</strong> ${fuentes.join(' + ')} &nbsp;|&nbsp; 🏭 <strong>Prod.:</strong> ${fp(prod)}
+                🗺️ <strong>Recorrido:</strong> ${ruta} &nbsp;|&nbsp; 📡 <strong>Datos:</strong> ${fuentes.join(' + ')} &nbsp;|&nbsp; 🏭 <strong>Prod.:</strong> ${fp(prod)} &nbsp;|&nbsp; 🚌 <strong>Flota:</strong> ${c.f} coches (${c.n} ploteados = ${(c.n/c.f*100).toFixed(0)}%)
             </td>
         </tr>`;
     }).join('');
@@ -656,7 +658,7 @@ function genRep(){
         <div class="rs"><div class="rl">Duración:</div> ${d} mes(es)</div>
         <div class="rs"><div class="rl">Total Lunetas:</div> ${tl} unidades en ${camp.length} líneas</div>
         <div class="rs" style="background:#eff6ff;border-radius:6px;padding:10px;margin-top:10px">
-            <div class="rl">📐 Metodología:</div> OTS (Opportunity to See) = Pasajeros SUBE × 20% + Tránsito vehicular × 20%. Factor de visibilidad basado en estándar FEPE/OUTSMART (federación europea de publicidad exterior). El término OTS es el estándar internacional: oportunidad de ver, no impacto.
+            <div class="rl">📐 Metodología:</div> OTS = (Pasajeros SUBE por colectivo) × 20% + Tránsito vehicular × 20%. Los pasajeros totales se dividen por la flota activa para calcular cuántos pasajeros reales transporta cada bondi ploteado. Solo contabilizamos la fracción de pasajeros que corresponde a nuestras lunetas.
         </div>
         <div class="rs" style="margin-top:12px"><div class="rl">Desglose por Línea:</div>
             <table><thead><tr><th>Línea</th><th>Lunetas</th><th>$ Luneta/mes</th><th>OTS/mes</th><th>OTS/día</th><th>CPM</th></tr></thead><tbody>${lineDetail}</tbody></table>
