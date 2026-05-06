@@ -524,10 +524,10 @@ function cpImp(){
 
 // ROI
 function cROI(){
-    const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value)||0,d=parseInt(document.getElementById('rD').value)||1,f=parseInt(document.getElementById('rF').value)||50;
+    const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value)||0,d=parseInt(document.getElementById('rD').value)||1,flota=parseInt(document.getElementById('rF').value)||50;
     if(!l||!pr||!n){document.getElementById('rR').style.display='none';return}
     const i=D[l];if(!i)return;
-    const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imM=impEfect(i, f)*n,imT=imM*d,cpm=imT>0?inv/imT*1e3:0,cpi=imT>0?inv/imT:0;
+    const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imM=impEfect(i, flota)*n,imT=imM*d,cpm=imT>0?inv/imT*1e3:0,cpi=imT>0?inv/imT:0;
     const ivaChk=document.getElementById('rIVA').checked,ivaAmt=ivaChk?inv*0.21:0,totalInv=inv+ivaAmt;
     const cpmIVA=imT>0?totalInv/imT*1e3:0,cpiIVA=imT>0?totalInv/imT:0;
     document.getElementById('rInv').innerText=fp(ivaChk?totalInv:inv);
@@ -553,19 +553,19 @@ function rCmp(id,cpm){
 }
 
 function cpROI(){
-    const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value),d=parseInt(document.getElementById('rD').value),f=parseInt(document.getElementById('rF').value)||50;
+    const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value),d=parseInt(document.getElementById('rD').value),flota=parseInt(document.getElementById('rF').value)||50;
     const i=D[l];if(!i)return;
-    const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imT=impEfect(i, f)*n*d,cpm=imT>0?inv/imT*1e3:0;
+    const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imT=impEfect(i, flota)*n*d,cpm=imT>0?inv/imT*1e3:0;
     const txt=`💰 *CPM OOH — Línea ${l}*\n\n💵 Inversión en pauta: ${fp(invPauta)}\n🏭 Producción: ${fp(invProd)} ($48.000/lun, pago único)\n💵 *Inversión Total: ${fp(inv)}*\n📊 OTS efectivos: ${f(imT)}\n📈 CPM: ${fp(cpm)}\n📉 Costo/OTS: ${fp(inv/imT)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n\n🔥 ${f(imT)} visualizaciones por ${fp(inv)}`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
 // SIMULADOR
 function addL(){
-    const l=document.getElementById('sL').value,n=parseInt(document.getElementById('sN').value)||1,pr=parseFloat(document.getElementById('sP').value),f=parseInt(document.getElementById('sF').value)||50;
+    const l=document.getElementById('sL').value,n=parseInt(document.getElementById('sN').value)||1,pr=parseFloat(document.getElementById('sP').value),flota=parseInt(document.getElementById('sF').value)||50;
     if(!l||!pr){alert('Elegí línea y poné precio');return}
     if(camp.find(c=>c.l===l)){alert('Esa línea ya está');return}
-    camp.push({l,n,pr,f});recalc();
+    camp.push({l,n,pr,f:flota});recalc();
     document.getElementById('sP').value='';document.getElementById('sN').value='1';document.getElementById('sF').value='50';
 }
 
