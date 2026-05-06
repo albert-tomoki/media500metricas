@@ -167,7 +167,7 @@
 <!-- ===== IMPACTO ===== -->
 <div class="tc active" id="t-impacto">
     <div class="method-box">
-        <strong>📐 Metodología:</strong> OTS = (Pasajeros SUBE por colectivo) × 20% + Tránsito vehicular × 20%. <strong>Los pasajeros totales de la línea se dividen por la flota activa (cantidad de coches)</strong> para calcular cuántos pasajeros transporta cada bondi. Si Media 500 pauta N lunetas, alcanza a N/Flota del total de pasajeros de la línea. Esto es <strong>conservador y matemáticamente irrefutable</strong>: solo contabilizamos la fracción de pasajeros que realmente pasa por nuestros colectivos ploteados.<br><br><strong>📊 Fuentes de datos:</strong><br><a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 SUBE — Min. Transporte</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Vialidad Nacional (TMDA rutas)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 GCBA — Anillo Digital (tránsito CABA)</a><br><span style="font-size:11px;color:#6b7280">Líneas CABA: datos de tránsito de sensores viales GCBA. Líneas GBA: estimaciones de Vialidad Nacional. Recorridos: cruce de paradas GCBA con sensores Anillo Digital (radio 500m). Flota: promedio 50 coches por línea. Se puede ajustar manualmente en el Simulador.</span>
+        <strong>📐 Metodología:</strong> OTS = (Pasajeros SUBE por colectivo) × 25% + Tránsito vehicular × 25%. <strong>Los pasajeros totales de la línea se dividen por la flota activa (cantidad de coches)</strong> para calcular cuántos pasajeros transporta cada bondi. Si Media 500 pauta N lunetas, alcanza a N/Flota del total de pasajeros de la línea. Esto es <strong>conservador y matemáticamente irrefutable</strong>: solo contabilizamos la fracción de pasajeros que realmente pasa por nuestros colectivos ploteados.<br><br><strong>📊 Fuentes de datos:</strong><br><a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 SUBE — Min. Transporte</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Vialidad Nacional (TMDA rutas)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 GCBA — Anillo Digital (tránsito CABA)</a><br><span style="font-size:11px;color:#6b7280">Líneas CABA: datos de tránsito de sensores viales GCBA. Líneas GBA: estimaciones de Vialidad Nacional. Recorridos: cruce de paradas GCBA con sensores Anillo Digital (radio 500m). Flota: promedio 50 coches por línea. Se puede ajustar manualmente en el Simulador.</span>
     </div>
     <div class="fb">
         <input type="text" id="sI" placeholder="🔍 Buscar línea..." onkeyup="fL()">
@@ -196,13 +196,13 @@
             </div>
         </div>
         <div class="vis-factor">
-            <strong>👁 Factor de visibilidad aplicado:</strong> 20% pasajeros + 20% tránsito → Solo contabilizamos las oportunidades reales de visualización (OTS). Esto hace que nuestros números sean <strong>conservadores y defendibles</strong> ante cualquier cliente.
+            <strong>👁 Factor de visibilidad aplicado:</strong> 25% pasajeros + 25% tránsito → Solo contabilizamos las oportunidades reales de visualización (OTS). Esto hace que nuestros números sean <strong>conservadores y defendibles</strong> ante cualquier cliente.
         </div>
         <div class="hc">
             <div class="l">OTS (Opportunity to See) (por luneta/mes)</div>
             <div class="v" id="iM">0</div>
             <div class="s" id="iD">0 OTS diarios</div>
-            <div class="method">Pasajeros × 20% + Tránsito × 20% = OTS</div>
+            <div class="method">Pasajeros × 25% + Tránsito × 25% = OTS</div>
         </div>
         <div id="routeSection" style="display:none">
             <div style="border-top:2px solid #374151;padding-top:16px;margin-top:16px;margin-bottom:16px">
@@ -245,7 +245,7 @@
             <div class="l">OTS (Opportunity to See) de la Campaña</div>
             <div class="v" id="rImp">0</div>
             <div class="s" id="rImpD"></div>
-            <div class="method">Calculado con factor de visibilidad 20%/20%</div>
+            <div class="method">Calculado con factor de visibilidad 25%/25%</div>
         </div>
         <div class="pnl"><h3>📊 Comparación CPM con Otros Medios</h3><div id="rCmp"></div></div>
         <div style="text-align:center;margin-top:12px"><button class="btn bs" onclick="cpROI()">📲 Copiar para WhatsApp</button></div>
@@ -303,7 +303,7 @@
             <div class="l">OTS (Opportunity to See) Totales</div>
             <div class="v" id="sImp">0</div>
             <div class="s" id="sImpD"></div>
-            <div class="method">Con factor de visibilidad 20%/20%</div>
+            <div class="method">Con factor de visibilidad 25%/25%</div>
         </div>
         <div class="pnl"><h3>📊 Comparación CPM</h3><div id="sCmp"></div></div>
 
@@ -366,7 +366,7 @@
 
                 <div class="src-card" style="border-color:#a78bfa">
                     <h4 style="color:#a78bfa">👁 Factor de Visibilidad</h4>
-                    <div class="src-val">20% pasaj. / 20% tráns.</div>
+                    <div class="src-val">25% pasaj. / 25% tráns.</div>
                     <p>Estimación propia basada en estudios de OOH internacional. No existen estudios específicos para lunetas traseras de colectivos en Argentina.</p>
                     <a href="https://www.outsmart.org.uk/route/" target="_blank">🔗 OUTSMART ROUTE Study</a><br>
                     <a href="https://www.fepemarketing.com/knowledge-hub/" target="_blank">🔗 FEPE Knowledge Hub</a>
@@ -388,7 +388,7 @@
                 <strong>OUTSMART/ROUTE (Reino Unido):</strong> Encontró que solo el 30-40% de las personas que pasan por un cartel OOH lo "ven" efectivamente (opportunity to see vs. actual visibility). Fuente: outsmart.org.uk/route<br><br>
                 <strong>FEPE (Europa):</strong> Estableció el estándar europeo de medición OOH (EUROHOHP), que distingue entre exposición (pasar cerca) y visibilidad (mirar efectivamente). Sugiere factores de 25-45% según formato y posición. Fuente: fepemarketing.com<br><br>
                 <strong>GfK/Nielsen OOH:</strong> Estudios de eye-tracking en vía pública muestran tasas de atención de 25-45% según formato. Los formatos en movimiento (como lunetas de colectivos) tienden al extremo inferior.<br><br>
-                Tomando estos estudios sobre medicion en la publicidad OOH como base, usamos un Opportunity to see del 20% para el total de pasajeros por linea y un 20% para el total del transito vehicular. El término OTS (Opportunity to See) es el estándar internacional OOH: no decimos "impacto" sino "oportunidad de ver".
+                Tomando estos estudios sobre medicion en la publicidad OOH como base, usamos un Opportunity to see del 25% para el total de pasajeros por linea y un 25% para el total del transito vehicular. El término OTS (Opportunity to See) es el estándar internacional OOH: no decimos "impacto" sino "oportunidad de ver".
             </div>
         </div>
 
@@ -428,7 +428,7 @@ const D={"12":{"p":420702,"t":122000,"z":["CABA"],"ts":"gcba"},"41":{"p":121416,
 
 const BM=[{n:"Meta Ads (Facebook/Instagram)",c:6500,cl:"#1877F2"},{n:"Google Display/Video Ads",c:9500,cl:"#34A853"}];
 
-const VIS_P=0.20,VIS_T=0.20; // visibilidad factores
+const VIS_P=0.25,VIS_T=0.25; // visibilidad factores
 let cL=null,camp=[];
 
 function f(n){return n>=1e6?(n/1e6).toFixed(1)+"M":n>=1e3?Math.round(n).toLocaleString("es-AR"):n.toString()}
@@ -518,7 +518,7 @@ function cpImp(){
     const rt=ROUTES[cL];
     let routeTxt='';
     if(rt&&rt.avenues.length>0){routeTxt='\n🗺️ *Recorrido:* '+rt.avenues.join(', ')+(rt.sensors.length?' ('+rt.sensors.length+' sensor(es) Anillo Digital)':' (sin sensores cercanos)');}
-    const txt=`🚌 *OTS OOH — Línea ${cL}*\n📍 ${i.z.join(', ')}\n\n👥 ${f(i.p)} pasajeros/mes (SUBE)\n🚗 ${f(i.t*30)} vehículos/mes (${srcLabel})\n👁 Factor visibilidad: 20% pasajeros + 20% tránsito\n\n🔥 *${f(ie)} OTS/mes* por luneta${routeTxt}\n\n🔗 Fuentes: datos.transporte.gob.ar | ${srcUrl}`;
+    const txt=`🚌 *OTS OOH — Línea ${cL}*\n📍 ${i.z.join(', ')}\n\n👥 ${f(i.p)} pasajeros/mes (SUBE)\n🚗 ${f(i.t*30)} vehículos/mes (${srcLabel})\n👁 Factor visibilidad: 25% pasajeros + 25% tránsito\n\n🔥 *${f(ie)} OTS/mes* por luneta${routeTxt}\n\n🔗 Fuentes: datos.transporte.gob.ar | ${srcUrl}`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -556,7 +556,7 @@ function cpROI(){
     const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value),d=parseInt(document.getElementById('rD').value),flota=parseInt(document.getElementById('rF').value)||50;
     const i=D[l];if(!i)return;
     const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imT=impEfect(i, flota)*n*d,cpm=imT>0?inv/imT*1e3:0;
-    const txt=`💰 *CPM OOH — Línea ${l}*\n\n💵 Inversión en pauta: ${fp(invPauta)}\n🏭 Producción: ${fp(invProd)} ($48.000/lun, pago único)\n💵 *Inversión Total: ${fp(inv)}*\n📊 OTS efectivos: ${f(imT)}\n📈 CPM: ${fp(cpm)}\n📉 Costo/OTS: ${fp(inv/imT)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n\n🔥 ${f(imT)} visualizaciones por ${fp(inv)}`;
+    const txt=`💰 *CPM OOH — Línea ${l}*\n\n💵 Inversión en pauta: ${fp(invPauta)}\n🏭 Producción: ${fp(invProd)} ($48.000/lun, pago único)\n💵 *Inversión Total: ${fp(inv)}*\n📊 OTS efectivos: ${f(imT)}\n📈 CPM: ${fp(cpm)}\n📉 Costo/OTS: ${fp(inv/imT)}\n👁 Visibilidad: 25% pasajeros + 25% tránsito\n\n🔥 ${f(imT)} visualizaciones por ${fp(inv)}`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -611,7 +611,7 @@ function cpSim(){
     const cpm=ti>0?tinv/ti*1e3:0,cpmIVA=ti>0?totalIVA/ti*1e3:0;
     let lt=camp.map(c=>{const invP=c.pr*c.n*d;const prod=48000*c.n;return`  • Línea ${c.l}: ${c.n} lun × ${fp(c.pr)}/mes = ${fp(invP)} (prod: ${fp(prod)})`}).join('\n');
     const ivaTxt=ivaChk?`\n📊 IVA (21%): ${fp(ivaAmt)}\n💰 *Total con IVA: ${fp(totalIVA)}*`:'';
-    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión en pauta:* ${fp(tinvPauta)}\n🏭 *Producción:* ${fp(tinvProd)} ($48.000/luneta, pago único)\n💰 *Inversión Total:* ${fp(tinv)}${ivaTxt}\n📊 *${f(ti)} OTS*\n📈 CPM${ivaChk?' con IVA':''}: ${fp(ivaChk?cpmIVA:cpm)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n🚌 ${tl} lunetas en ${camp.length} líneas\n\n📝 *Costo de producción: $48.000 por luneta (pago único, incluye ploteo e instalación).${ivaChk?' Incluye IVA 21%.':' No incluye IVA.'}*\n\n🔗 Media 500`;
+    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión en pauta:* ${fp(tinvPauta)}\n🏭 *Producción:* ${fp(tinvProd)} ($48.000/luneta, pago único)\n💰 *Inversión Total:* ${fp(tinv)}${ivaTxt}\n📊 *${f(ti)} OTS*\n📈 CPM${ivaChk?' con IVA':''}: ${fp(ivaChk?cpmIVA:cpm)}\n👁 Visibilidad: 25% pasajeros + 25% tránsito\n🚌 ${tl} lunetas en ${camp.length} líneas\n\n📝 *Costo de producción: $48.000 por luneta (pago único, incluye ploteo e instalación).${ivaChk?' Incluye IVA 21%.':' No incluye IVA.'}*\n\n🔗 Media 500`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -661,7 +661,7 @@ function genRep(){
         <div class="rs"><div class="rl">Duración:</div> ${d} mes(es)</div>
         <div class="rs"><div class="rl">Total Lunetas:</div> ${tl} unidades en ${camp.length} líneas</div>
         <div class="rs" style="background:#eff6ff;border-radius:6px;padding:10px;margin-top:10px">
-            <div class="rl">📐 Metodología:</div> OTS = (Pasajeros SUBE por colectivo) × 20% + Tránsito vehicular × 20%. Los pasajeros totales se dividen por la flota activa para calcular cuántos pasajeros reales transporta cada bondi ploteado. Solo contabilizamos la fracción de pasajeros que corresponde a nuestras lunetas.
+            <div class="rl">📐 Metodología:</div> OTS = (Pasajeros SUBE por colectivo) × 25% + Tránsito vehicular × 25%. Los pasajeros totales se dividen por la flota activa para calcular cuántos pasajeros reales transporta cada bondi ploteado. Solo contabilizamos la fracción de pasajeros que corresponde a nuestras lunetas.
         </div>
         <div class="rs" style="margin-top:12px"><div class="rl">Desglose por Línea:</div>
             <table><thead><tr><th>Línea</th><th>Lunetas</th><th>$ Luneta/mes</th><th>OTS/mes</th><th>OTS/día</th><th>CPM</th></tr></thead><tbody>${lineDetail}</tbody></table>
@@ -689,7 +689,7 @@ function genRep(){
         <div class="rf">
             <strong>Media 500</strong> — Publicidad en Vía Pública<br>
             Fuentes: Ministerio de Transporte (Red SUBE), Dirección Nacional de Vialidad (TMDA), GCBA — Anillo Digital (tránsito CABA).<br>
-            Factor de visibilidad: estándar FEPE/OUTSMART. Pasajeros × 20% + Tránsito × 20%.<br>
+            Factor de visibilidad: estándar FEPE/OUTSMART. Pasajeros × 25% + Tránsito × 25%.<br>
             Costo de producción: $48.000 por luneta (pago único, incluye ploteo e instalación). ${ivaChk?'Incluye IVA 21%.':'No incluye IVA.'}<br>
             
             Datos de pasajeros: promedio 2024. Datos de tránsito CABA: sensores GCBA Anillo Digital. Datos de tránsito GBA: TMDA Vialidad Nacional.
