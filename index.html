@@ -436,7 +436,7 @@ function fp(n){return"$"+Math.round(n).toLocaleString("es-AR")}
 function fdt(){return new Date().toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit",year:"numeric"})}
 
 // OTS por luneta/mes
-function impEfect(info, f){const fl=f||info.f||50;return Math.round((info.p/fl)*VIS_P+info.t*30*VIS_T)}
+function impEfect(info, flota){const fl=flota||info.f||50;return Math.round((info.p/fl)*VIS_P+(info.t*30/fl)*VIS_T)}
 
 function swTab(t){
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
