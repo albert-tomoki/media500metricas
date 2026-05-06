@@ -604,9 +604,12 @@ function recalc(){
 
 function cpSim(){
     const d=parseInt(document.getElementById('sD').value)||1,cl=document.getElementById('sC').value||'Cliente';
+    let ti=0,tinvPauta=0,tinvProd=0,tl=0;
+    camp.forEach(c=>{const i=D[c.l];if(!i)return;const im=impEfect(i, c.f)*c.n;tl+=c.n;ti+=im*d;tinvPauta+=c.pr*c.n*d;tinvProd+=48000*c.n;});
+    const tinv=tinvPauta+tinvProd;
     const ivaChk=document.getElementById('sIVA').checked,ivaAmt=ivaChk?tinv*0.21:0,totalIVA=tinv+ivaAmt;
-    const cpmIVA=ti>0?totalIVA/ti*1e3:0;
-    let lt=camp.map(c=>{const i=D[c.l];const im=i?impEfect(i, c.f)*c.n*d:0;const invP=c.pr*c.n*d;const prod=48000*c.n;return`  • Línea ${c.l}: ${c.n} lun × ${fp(c.pr)}/mes = ${fp(invP)} (prod: ${fp(prod)})`}).join('\n');
+    const cpm=ti>0?tinv/ti*1e3:0,cpmIVA=ti>0?totalIVA/ti*1e3:0;
+    let lt=camp.map(c=>{const invP=c.pr*c.n*d;const prod=48000*c.n;return`  • Línea ${c.l}: ${c.n} lun × ${fp(c.pr)}/mes = ${fp(invP)} (prod: ${fp(prod)})`}).join('\n');
     const ivaTxt=ivaChk?`\n📊 IVA (21%): ${fp(ivaAmt)}\n💰 *Total con IVA: ${fp(totalIVA)}*`:'';
     const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión en pauta:* ${fp(tinvPauta)}\n🏭 *Producción:* ${fp(tinvProd)} ($48.000/luneta, pago único)\n💰 *Inversión Total:* ${fp(tinv)}${ivaTxt}\n📊 *${f(ti)} OTS*\n📈 CPM${ivaChk?' con IVA':''}: ${fp(ivaChk?cpmIVA:cpm)}\n👁 Visibilidad: 20% pasajeros + 20% tránsito\n🚌 ${tl} lunetas en ${camp.length} líneas\n\n📝 *Costo de producción: $48.000 por luneta (pago único, incluye ploteo e instalación).${ivaChk?' Incluye IVA 21%.':' No incluye IVA.'}*\n\n🔗 Media 500`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
