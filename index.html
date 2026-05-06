@@ -220,14 +220,14 @@
     <div class="pnl">
         <div class="fb" style="margin-bottom:12px"><select id="rL" onchange="cROI()" style="min-width:100%"><option value="" disabled selected>Elegí una Línea...</option></select></div>
         <div class="fr">
-            <div class="fg"><label>Precio por Luneta ($)</label><input type="number" id="rP" placeholder="70000" min="40000" max="110000" oninput="cROI()"><div class="rh">Rango: $40.000 — $110.000</div></div>
-            <div class="fg"><label>Lunetas</label><input type="number" id="rN" min="1" value="1" oninput="cROI()"></div>
-            <div class="fg"><label>Flota</label><input type="number" id="rF" min="1" value="50" oninput="cROI()"></div>
-            <div class="fg"><label>Meses</label><input type="number" id="rD" min="1" max="4" value="1" oninput="cROI()"><div class="rh">Máx 4 (vida útil ploteo)</div></div>
+            <div class="fg"><label>Precio por Luneta ($)</label><input type="number" id="rP" placeholder="70000" min="40000" max="110000" oninput="cROI()" onchange="cROI()"><div class="rh">Rango: $40.000 — $110.000</div></div>
+            <div class="fg"><label>Lunetas</label><input type="number" id="rN" min="1" value="1" oninput="cROI()" onchange="cROI()"></div>
+            <div class="fg"><label>Flota</label><input type="number" id="rF" min="1" value="50" oninput="cROI()" onchange="cROI()"></div>
+            <div class="fg"><label>Meses</label><input type="number" id="rD" min="1" max="4" value="1" oninput="cROI()" onchange="cROI()"><div class="rh">Máx 4 (vida útil ploteo)</div></div>
         </div>
         <div class="fg" style="margin-top:8px">
             <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                <input type="checkbox" id="rIVA" onchange="cROI()" style="width:auto;margin:0">
+                <input type="checkbox" id="rIVA" onchange="cROI()" onclick="cROI()" style="width:auto;margin:0">
                 <span>Incluir IVA (21%)</span>
             </label>
         </div>
