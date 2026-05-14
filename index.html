@@ -219,9 +219,9 @@
 <div class="tc" id="t-roi">
     <div class="st">💰 Calculadora de CPM por Línea</div>
     <div class="pnl">
-        <div class="fb" style="margin-bottom:12px"><select id="rL" onchange="cROI()" style="min-width:100%"><option value="" disabled selected>Elegí una Línea...</option></select><select id="rFmt" onchange="const f=FORMATOS.find(x=>x.id===this.value);if(f){document.getElementById('rP').value=f.precio;document.getElementById('rP').setAttribute('data-fmt-price',f.precio);}cROI()" style="min-width:100%;margin-top:6px"><option value="">Seleccioná Formato</option></select></div>
+        <div class="fb" style="margin-bottom:12px"><select id="rL" onchange="cROI()" style="min-width:100%"><option value="" disabled selected>Elegí una Línea...</option></select><select id="rFmt" onchange="const f=FORMATOS.find(x=>x.id===this.value);if(f){document.getElementById('rP').value=f.precio_min;document.getElementById('rP').placeholder='Desde '+fp(f.precio_min)+' — '+fp(f.precio_max);document.getElementById('rP').setAttribute('data-fmt-price',f.precio_min);}cROI()" style="min-width:100%;margin-top:6px"><option value="">Seleccioná Formato</option></select></div>
         <div class="fr">
-            <div class="fg"><label>Precio por Unidad ($)</label><input type="number" id="rP" placeholder="70000" oninput="cROI()" onchange="cROI()"></div>
+            <div class="fg"><label>Precio por Unidad ($)</label><input type="number" id="rP" placeholder="Rango según formato" oninput="cROI()" onchange="cROI()"></div>
             <div class="fg"><label>Unidades</label><input type="number" id="rN" min="1" value="1" oninput="cROI()" onchange="cROI()"></div>
             <div class="fg"><label>Flota</label><input type="number" id="rF" min="1" value="50" oninput="cROI()" onchange="cROI()"></div>
             <div class="fg"><label>Meses</label><input type="number" id="rD" min="1" max="4" value="1" oninput="cROI()" onchange="cROI()"><div class="rh">Máx 4 (vida útil ploteo)</div></div>
@@ -239,8 +239,8 @@
             <div class="sc"><div class="l">CPM</div><div class="v" id="rCPM">$0</div><div class="u">Costo cada 1.000 OTS</div></div>
             <div class="sc"><div class="l">Costo por OTS</div><div class="v" id="rCPI">$0</div><div class="u">Por visualización</div></div>
         </div>
-        <div class="method-box" style="margin-bottom:16px">
-            <strong>🏭 Costo de producción incluido:</strong> $48.000 por unidad (pago único, incluye ploteo e instalación). IVA según checkbox. Este costo se suma a la inversión en pauta para calcular el CPM total.
+        <div class="method-box" style="margin-bottom:16px" id="roiMethodBox">
+            <strong>🏭 Costo de producción:</strong> Seleccioná un formato para ver el costo de producción.
         </div>
         <div class="hc">
             <div class="l">OTS (Opportunity to See) de la Campaña</div>
@@ -255,17 +255,17 @@
 <!-- ===== SIMULADOR ===== -->
 <div class="tc" id="t-sim">
     <div class="st">🎯 Simulador de Campaña</div>
-    <div class="method-box">
-        <strong>🏭 Costo de producción:</strong> $48.000 por unidad (pago único, incluye ploteo e instalación). No incluye IVA. Este costo se suma a la inversión en pauta para calcular el CPM total.
+    <div class="method-box" id="simMethodBox">
+        <strong>🏭 Costo de producción:</strong> $48.000 por luneta (pago único, incluye ploteo e instalación). Varía según el formato. Seleccioná un formato en cada línea para ver el costo real.
     </div>
     <div class="pnl">
         <h3>Agregar Línea</h3>
         <div class="fr" style="margin-top:10px">
             <div class="fg" style="flex:2"><label>Línea</label><select id="sL"><option value="" disabled selected>Elegí...</option></select></div>
-            <div class="fg"><label>Formato</label><select id="sFmt" onchange="const f=FORMATOS.find(x=>x.id===this.value);if(f)document.getElementById('sP').value=f.precio"><option value="">Formato</option></select></div>
+            <div class="fg"><label>Formato</label><select id="sFmt" onchange="const f=FORMATOS.find(x=>x.id===this.value);if(f){document.getElementById('sP').value=f.precio_min;document.getElementById('sP').placeholder='Desde '+fp(f.precio_min)+' — '+fp(f.precio_max)}"><option value="">Formato</option></select></div>
             <div class="fg"><label>Unidades</label><input type="number" id="sN" min="1" value="1"></div>
             <div class="fg"><label>Flota (coches)</label><input type="number" id="sF" min="1" value="50"></div>
-            <div class="fg"><label>$ por Unidad</label><input type="number" id="sP" placeholder="70000"></div>
+            <div class="fg"><label>$ por Unidad</label><input type="number" id="sP" placeholder="Rango según formato"></div>
             <div class="fg" style="display:flex;align-items:flex-end"><button class="btn bp bsm" onclick="addL()">+ Agregar</button></div>
         </div>
         <div class="fr">
@@ -285,7 +285,7 @@
         <div class="pnl" style="overflow-x:auto"><h3>Líneas en la Campaña</h3><table class="ct" style="margin-top:10px"><thead><tr><th>Línea</th><th>Formato</th><th>Zona</th><th>Unidades</th><th>$ Unidad</th><th>OTS/mes</th><th>Producción</th><th></th></tr></thead><tbody id="simB"></tbody></table></div>
         <div class="g4" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px">
             <div class="sc"><div class="l">Inversión en Pauta</div><div class="v" id="sInvPauta">$0</div><div class="u" id="sInvPautaD"></div></div>
-            <div class="sc"><div class="l">Producción (pago único)</div><div class="v" id="sInvProd">$0</div><div class="u">$48.000/unidad</div></div>
+            <div class="sc"><div class="l">Producción (pago único)</div><div class="v" id="sInvProd">$0</div><div class="u" id="sInvProdU">Varía según formato</div></div>
             <div class="sc"><div class="l">Inversión Total</div><div class="v" id="sInv">$0</div><div class="u" id="sInvD"></div></div>
             <div class="sc"><div class="l">CPM Campaña</div><div class="v" id="sCPM">$0</div></div>
         </div>
@@ -298,7 +298,7 @@
         </div>
         <div class="g2" style="margin-bottom:16px">
             <div class="sc"><div class="l">Total Unidades</div><div class="v" id="sTL">0</div></div>
-            <div class="sc"><div class="l">Producción: $48.000/unidad (pago único)</div><div class="v" style="font-size:14px;color:#f59e0b">Incluye ploteo e instalación</div></div>
+            <div class="sc" id="simProdCard"><div class="l">Producción: varía según formato</div><div class="v" style="font-size:14px;color:#f59e0b">Incluye ploteo e instalación</div></div>
         </div>
         <div class="hc">
             <div class="l">OTS (Opportunity to See) Totales</div>
@@ -418,12 +418,12 @@ const ROUTES={"12":{"avenues":["Av. Cabildo"],"sensors":[{"id":"48Q3CH00+","name
 const D={"12":{"p":420702,"t":122000,"z":["CABA"],"ts":"gcba"},"41":{"p":121416,"t":79000,"z":["CABA","Norte"],"ts":"gcba"},"42":{"p":181046,"t":84000,"z":["CABA"],"ts":"gcba"},"47":{"p":250000,"t":79000,"z":["CABA"],"ts":"gcba"},"51":{"p":25919,"t":20000,"z":["Sur"],"ts":"vialidad"},"53":{"p":22933,"t":84000,"z":["CABA","Oeste"],"ts":"gcba"},"57":{"p":250000,"t":184000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"64":{"p":72825,"t":122000,"z":["CABA"],"ts":"gcba"},"65":{"p":172572,"t":122000,"z":["CABA"],"ts":"gcba"},"67":{"p":75224,"t":122000,"z":["CABA"],"ts":"gcba"},"68":{"p":64240,"t":84000,"z":["CABA"],"ts":"gcba"},"74":{"p":16353,"t":20000,"z":["Sur"],"ts":"vialidad"},"79":{"p":250000,"t":20000,"z":["Sur"],"ts":"vialidad"},"92":{"p":250000,"t":84000,"z":["CABA"],"ts":"gcba"},"102":{"p":2324,"t":22000,"z":["CABA"],"ts":"gcba"},"123":{"p":250000,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"124":{"p":701959,"t":184000,"z":["CABA"],"ts":"gcba"},"126":{"p":1182005,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"136":{"p":440059,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"148":{"p":250000,"t":20000,"z":["Sur"],"ts":"vialidad"},"151":{"p":250000,"t":122000,"z":["CABA"],"ts":"gcba"},"163":{"p":277020,"t":84000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"166":{"p":894049,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"176":{"p":1597825,"t":184000,"z":["CABA","Norte"],"ts":"gcba"},"177":{"p":594679,"t":20000,"z":["Sur"],"ts":"vialidad"},"182":{"p":1113491,"t":184000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"194":{"p":530650,"t":40000,"z":["CABA","Norte"],"ts":"gcba"},"195":{"p":413138,"t":84000,"z":["CABA","Sur"],"ts":"gcba"},"203":{"p":2758179,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"204":{"p":174016,"t":20000,"z":["Norte"],"ts":"vialidad"},"218":{"p":636423,"t":20000,"z":["Oeste"],"ts":"vialidad"},"222":{"p":121223,"t":20000,"z":["Oeste"],"ts":"vialidad"},"236":{"p":1798120,"t":20000,"z":["Oeste"],"ts":"vialidad"},"237":{"p":1115632,"t":20000,"z":["Oeste"],"ts":"vialidad"},"263":{"p":904083,"t":20000,"z":["Sur"],"ts":"vialidad"},"264":{"p":324549,"t":20000,"z":["Norte"],"ts":"vialidad"},"269":{"p":1150960,"t":20000,"z":["Oeste"],"ts":"vialidad"},"276":{"p":800924,"t":20000,"z":["Norte"],"ts":"vialidad"},"283":{"p":689263,"t":20000,"z":["Sur"],"ts":"vialidad"},"284":{"p":114030,"t":20000,"z":["Oeste"],"ts":"vialidad"},"306":{"p":1172811,"t":20000,"z":["Oeste"],"ts":"vialidad"},"310":{"p":108849,"t":20000,"z":["Norte"],"ts":"vialidad"},"315":{"p":561302,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"322":{"p":384973,"t":20000,"z":["Oeste"],"ts":"vialidad"},"325":{"p":206873,"t":20000,"z":["Oeste"],"ts":"vialidad"},"326":{"p":86944,"t":20000,"z":["Oeste"],"ts":"vialidad"},"327":{"p":542051,"t":20000,"z":["Oeste"],"ts":"vialidad"},"336":{"p":163683,"t":20000,"z":["Oeste"],"ts":"vialidad"},"365":{"p":2566192,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"370":{"p":13749,"t":20000,"z":["Sur"],"ts":"vialidad"},"371":{"p":69118,"t":20000,"z":["Sur"],"ts":"vialidad"},"373":{"p":367710,"t":20000,"z":["Sur"],"ts":"vialidad"},"378":{"p":635943,"t":20000,"z":["Oeste"],"ts":"vialidad"},"382":{"p":624749,"t":20000,"z":["Oeste"],"ts":"vialidad"},"388":{"p":912547,"t":20000,"z":["Oeste"],"ts":"vialidad"},"396":{"p":879949,"t":20000,"z":["Oeste"],"ts":"vialidad"},"404":{"p":508901,"t":20000,"z":["Oeste"],"ts":"vialidad"},"410":{"p":92149,"t":20000,"z":["Sur"],"ts":"vialidad"},"422":{"p":355810,"t":20000,"z":["Sur"],"ts":"vialidad"},"423":{"p":701549,"t":20000,"z":["Sur"],"ts":"vialidad"},"426":{"p":242549,"t":20000,"z":["Sur"],"ts":"vialidad"},"428":{"p":352949,"t":20000,"z":["Sur"],"ts":"vialidad"},"435":{"p":62149,"t":20000,"z":["Sur"],"ts":"vialidad"},"436":{"p":148810,"t":20000,"z":["Sur"],"ts":"vialidad"},"440":{"p":639349,"t":20000,"z":["Sur"],"ts":"vialidad"},"442":{"p":378749,"t":20000,"z":["Sur"],"ts":"vialidad"},"500":{"p":374949,"t":20000,"z":["Sur"],"ts":"vialidad"},"501":{"p":28910,"t":20000,"z":["Sur"],"ts":"vialidad"},"503":{"p":546149,"t":20000,"z":["Sur"],"ts":"vialidad"},"505":{"p":53210,"t":20000,"z":["Sur"],"ts":"vialidad"},"511":{"p":648649,"t":20000,"z":["Sur"],"ts":"vialidad"},"520":{"p":823149,"t":20000,"z":["Sur"],"ts":"vialidad"}};
 
 const FORMATOS=[
-    {id:"diferencial",nombre:"Diferencial",vp:0.40,vt:0.40,precio:1500000,emoji:"👑"},
-    {id:"panoramico",nombre:"Panorámico",vp:0.35,vt:0.35,precio:900000,emoji:"🖼️"},
-    {id:"lunetaled",nombre:"Luneta LED",vp:0.30,vt:0.30,precio:300000,emoji:"💡"},
-    {id:"backfull",nombre:"Backfull",vp:0.30,vt:0.30,precio:150000,emoji:"🚌"},
-    {id:"luneta",nombre:"Luneta",vp:0.25,vt:0.25,precio:70000,emoji:"🏷️"},
-    {id:"cenefa",nombre:"Cenefa",vp:0.30,vt:0.00,precio:70000,emoji:"📐"}
+    {id:"diferencial",nombre:"Diferencial",vp:0.40,vt:0.40,precio_min:1500000,precio_max:2200000,produccion:1100000,emoji:"👑"},
+    {id:"panoramico",nombre:"Panorámico",vp:0.35,vt:0.35,precio_min:900000,precio_max:1300000,produccion:800000,emoji:"🖼️"},
+    {id:"lunetaled",nombre:"Luneta LED",vp:0.30,vt:0.30,precio_min:300000,precio_max:450000,produccion:0,emoji:"💡"},
+    {id:"backfull",nombre:"Backfull",vp:0.30,vt:0.30,precio_min:150000,precio_max:300000,produccion:150000,emoji:"🚌"},
+    {id:"luneta",nombre:"Luneta",vp:0.25,vt:0.25,precio_min:70000,precio_max:130000,produccion:48000,emoji:"🏷️"},
+    {id:"cenefa",nombre:"Cenefa",vp:0.30,vt:0.00,precio_min:70000,precio_max:110000,produccion:38000,emoji:"📐"}
 ];
 let cL=null,camp=[];
 
@@ -529,9 +529,10 @@ function cpImp(){
 function cROI(){
     const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value)||0,d=parseInt(document.getElementById('rD').value)||1,flota=parseInt(document.getElementById('rF').value)||50;
     const fmtId=document.getElementById('rFmt').value||'luneta';
+    const fmt=FORMATOS.find(f=>f.id===fmtId)||FORMATOS.find(f=>f.id==='luneta');
     if(!l||!pr||!n){document.getElementById('rR').style.display='none';return}
     const i=D[l];if(!i)return;
-    const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imM=impEfect(i, flota, fmtId)*n,imT=imM*d,cpm=imT>0?inv/imT*1e3:0,cpi=imT>0?inv/imT:0;
+    const invPauta=pr*n*d,invProd=fmt.produccion*n,inv=invPauta+invProd,imM=impEfect(i, flota, fmtId)*n,imT=imM*d,cpm=imT>0?inv/imT*1e3:0,cpi=imT>0?inv/imT:0;
     const ivaChk=document.getElementById('rIVA').checked,ivaAmt=ivaChk?inv*0.21:0,totalInv=inv+ivaAmt;
     const cpmIVA=imT>0?totalInv/imT*1e3:0,cpiIVA=imT>0?totalInv/imT:0;
     document.getElementById('rInv').innerText=fp(ivaChk?totalInv:inv);
@@ -541,6 +542,9 @@ function cROI(){
     document.getElementById('rImp').innerText=f(imT);
     document.getElementById('rImpD').innerText=f(imM)+'/mes × '+n+' unidades';
     document.getElementById('rR').style.display='block';
+    // Update method box
+    const prodLabel=fmt.produccion===0?'Sin costo de producción':fp(fmt.produccion)+' por '+fmt.nombre.toLowerCase();
+    document.getElementById('roiMethodBox').innerHTML='<strong>🏭 Costo de producción ('+fmt.emoji+' '+fmt.nombre+'):</strong> '+prodLabel+' (pago único, incluye ploteo e instalación). IVA según checkbox.';
 }
 
 
@@ -549,8 +553,9 @@ function cpROI(){
     const fmtId=document.getElementById('rFmt').value||'luneta';
     const fmt=FORMATOS.find(f=>f.id===fmtId)||FORMATOS.find(f=>f.id==='luneta');
     const i=D[l];if(!i)return;
-    const invPauta=pr*n*d,invProd=48000*n,inv=invPauta+invProd,imT=impEfect(i, flota, fmtId)*n*d,cpm=imT>0?inv/imT*1e3:0;
-    const txt=`💰 *CPM OOH — Línea ${l}*\n🎯 Formato: ${fmt.emoji} ${fmt.nombre}\n\n💵 Inversión en pauta: ${fp(invPauta)}\n🏭 Producción: ${fp(invProd)} ($48.000/unidad, pago único)\n💵 *Inversión Total: ${fp(inv)}*\n📊 OTS efectivos: ${f(imT)}\n📈 CPM: ${fp(cpm)}\n📉 Costo/OTS: ${fp(inv/imT)}\n👁 Visibilidad: ${(fmt.vp*100).toFixed(0)}% pasajeros + ${(fmt.vt*100).toFixed(0)}% tránsito\n\n🔥 ${f(imT)} visualizaciones por ${fp(inv)}`;
+    const invPauta=pr*n*d,invProd=fmt.produccion*n,inv=invPauta+invProd,imT=impEfect(i, flota, fmtId)*n*d,cpm=imT>0?inv/imT*1e3:0;
+    const prodLabel=fmt.produccion===0?'Sin costo de producción':fp(fmt.produccion)+'/'+fmt.nombre.toLowerCase()+' (pago único)';
+    const txt=`💰 *CPM OOH — Línea ${l}*\n🎯 Formato: ${fmt.emoji} ${fmt.nombre}\n\n💵 Inversión en pauta: ${fp(invPauta)}\n🏭 Producción: ${fp(invProd)} (${prodLabel})\n💵 *Inversión Total: ${fp(inv)}*\n📊 OTS efectivos: ${f(imT)}\n📈 CPM: ${fp(cpm)}\n📉 Costo/OTS: ${fp(inv/imT)}\n👁 Visibilidad: ${(fmt.vp*100).toFixed(0)}% pasajeros + ${(fmt.vt*100).toFixed(0)}% tránsito\n\n🔥 ${f(imT)} visualizaciones por ${fp(inv)}`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -575,8 +580,9 @@ function recalc(){
     camp.forEach(c=>{
         const i=D[c.l];if(!i)return;
         const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');
-        const im=impEfect(i, c.f, c.fmt)*c.n;tl+=c.n;ti+=im*d;tinvPauta+=c.pr*c.n*d;tinvProd+=48000*c.n;
-        b.innerHTML+=`<tr><td class="lc">${c.l}</td><td>${fmt.emoji} ${fmt.nombre}</td><td>${i.z.map(z=>'<span class="zt">'+z+'</span> ').join('')}</td><td>${c.n}</td><td>${fp(c.pr)}</td><td>${f(im)}/mes</td><td>${fp(48000*c.n)}</td><td class="rc"><button class="btn bd" onclick="rmL('${c.l}')">✕</button></td></tr>`;
+        const im=impEfect(i, c.f, c.fmt)*c.n;tl+=c.n;ti+=im*d;tinvPauta+=c.pr*c.n*d;
+        const prodLinea=fmt.produccion*c.n;tinvProd+=prodLinea;
+        b.innerHTML+=`<tr><td class="lc">${c.l}</td><td>${fmt.emoji} ${fmt.nombre}</td><td>${i.z.map(z=>'<span class="zt">'+z+'</span> ').join('')}</td><td>${c.n}</td><td>${fp(c.pr)}</td><td>${f(im)}/mes</td><td>${fp(prodLinea)}</td><td class="rc"><button class="btn bd" onclick="rmL('${c.l}')">✕</button></td></tr>`;
     });
     const tinv=tinvPauta+tinvProd;
     const cpm=ti>0?tinv/ti*1e3:0;
@@ -587,6 +593,13 @@ function recalc(){
     document.getElementById('sInvProd').innerText=fp(tinvProd);
     document.getElementById('sInv').innerText=fp(tinv);
     document.getElementById('sInvD').innerText=iva>0?'Pauta + Prod. + IVA':'Pauta + Producción';
+    // Update production unit text
+    const productLabels=camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');return fmt.produccion===0?'sin costo':fp(fmt.produccion);}).join('/');
+    document.getElementById('sInvProdU').innerText=productLabels+'/unidad';
+    // Update production card
+    const prodCard=document.getElementById('simProdCard');
+    const prodBreakdown=camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');return fmt.emoji+' '+fp(fmt.produccion);}).join(' | ');
+    prodCard.innerHTML='<div class="l">Producción por formato</div><div style="font-size:12px;color:#9ca3af">'+prodBreakdown+'</div><div class="v" style="font-size:14px;color:#f59e0b">Incluye ploteo e instalación</div>';
     if(document.getElementById('sIVABox'))document.getElementById('sIVABox').innerText=iva>0?fp(iva):'—';
     if(document.getElementById('sTotalIVA'))document.getElementById('sTotalIVA').innerText=fp(totalConIVA);
     const cpmBase=ti>0?tinv/ti*1e3:0;
@@ -600,13 +613,14 @@ function recalc(){
 function cpSim(){
     const d=parseInt(document.getElementById('sD').value)||1,cl=document.getElementById('sC').value||'Cliente';
     let ti=0,tinvPauta=0,tinvProd=0,tl=0;
-    camp.forEach(c=>{const i=D[c.l];if(!i)return;const im=impEfect(i, c.f, c.fmt)*c.n;tl+=c.n;ti+=im*d;tinvPauta+=c.pr*c.n*d;tinvProd+=48000*c.n;});
+    camp.forEach(c=>{const i=D[c.l];if(!i)return;const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');const im=impEfect(i, c.f, c.fmt)*c.n;tl+=c.n;ti+=im*d;tinvPauta+=c.pr*c.n*d;tinvProd+=fmt.produccion*c.n;});
     const tinv=tinvPauta+tinvProd;
     const ivaChk=document.getElementById('sIVA').checked,ivaAmt=ivaChk?tinv*0.21:0,totalIVA=tinv+ivaAmt;
     const cpm=ti>0?tinv/ti*1e3:0,cpmIVA=ti>0?totalIVA/ti*1e3:0;
-    let lt=camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');const invP=c.pr*c.n*d;const prod=48000*c.n;return`  • Línea ${c.l} (${fmt.emoji} ${fmt.nombre}): ${c.n} unid. × ${fp(c.pr)}/mes = ${fp(invP)} (prod: ${fp(prod)})`}).join('\n');
+    let lt=camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');const invP=c.pr*c.n*d;const prod=fmt.produccion*c.n;const prodLabel=fmt.produccion===0?'sin costo':fp(prod);return`  • Línea ${c.l} (${fmt.emoji} ${fmt.nombre}): ${c.n} unid. × ${fp(c.pr)}/mes = ${fp(invP)} (prod: ${prodLabel})`}).join('\n');
+    const prodBreakdown=camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');return fmt.nombre+': '+fp(fmt.produccion);}).join(', ');
     const ivaTxt=ivaChk?`\n📊 IVA (21%): ${fp(ivaAmt)}\n💰 *Total con IVA: ${fp(totalIVA)}*`:'';
-    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión en pauta:* ${fp(tinvPauta)}\n🏭 *Producción:* ${fp(tinvProd)} ($48.000/unidad, pago único)\n💰 *Inversión Total:* ${fp(tinv)}${ivaTxt}\n📊 *${f(ti)} OTS*\n📈 CPM${ivaChk?' con IVA':''}: ${fp(ivaChk?cpmIVA:cpm)}\n👁 Visibilidad: según formato\n🚌 ${tl} unidades en ${camp.length} líneas\n\n📝 *Costo de producción: $48.000 por unidad (pago único, incluye ploteo e instalación).${ivaChk?' Incluye IVA 21%.':' No incluye IVA.'}*\n\n🔗 Media 500`;
+    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión en pauta:* ${fp(tinvPauta)}\n🏭 *Producción:* ${fp(tinvProd)} (${prodBreakdown})\n💰 *Inversión Total:* ${fp(tinv)}${ivaTxt}\n📊 *${f(ti)} OTS*\n📈 CPM${ivaChk?' con IVA':''}: ${fp(ivaChk?cpmIVA:cpm)}\n👁 Visibilidad: según formato\n🚌 ${tl} unidades en ${camp.length} líneas\n\n📝 *Costo de producción: varía por formato (${prodBreakdown}).${ivaChk?' Incluye IVA 21%.':' No incluye IVA.'}*\n\n🔗 Media 500`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
@@ -619,7 +633,7 @@ function genRep(){
     const lineDetail=camp.map(c=>{
         const i=D[c.l];
         const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');
-        const im=impEfect(i, c.f, c.fmt)*c.n;const imT=im*d;const invP=c.pr*c.n*d;const prod=48000*c.n;const invL=invP+prod;
+        const im=impEfect(i, c.f, c.fmt)*c.n;const imT=im*d;const invP=c.pr*c.n*d;const prod=fmt.produccion*c.n;const invL=invP+prod;
         ti+=imT;tinvPauta+=invP;tinvProd+=prod;tl+=c.n;
         const cpmLine=imT>0?invL/imT*1e3:0;const otsDia=Math.round(imT/(d*30));
         const rt=ROUTES[c.l];
@@ -629,6 +643,7 @@ function genRep(){
         else if(i.z.some(z=>z.includes('CABA')))fuentes.push('GCBA Anillo Digital (estimado)');
         else fuentes.push('Vialidad Nacional (TMDA)');
         fuentes.push('SUBE (Min. Transporte)');
+        const prodLabel=fmt.produccion===0?'Sin costo':fp(prod);
         return`<tr>
             <td style="font-weight:700;color:#1d4ed8">Línea ${c.l}</td>
             <td>${fmt.emoji} ${fmt.nombre}</td>
@@ -640,7 +655,7 @@ function genRep(){
         </tr>
         <tr>
             <td colspan="7" style="font-size:11px;color:#6b7280;background:#f9fafb;padding:4px 12px;border-bottom:2px solid #e5e7eb">
-                👁 Visibilidad: ${(fmt.vp*100).toFixed(0)}% pasajeros + ${(fmt.vt*100).toFixed(0)}% tránsito · 🗺️ <strong>Recorrido:</strong> ${ruta} &nbsp;|&nbsp; 📡 <strong>Datos:</strong> ${fuentes.join(' + ')} &nbsp;|&nbsp; 🏭 <strong>Prod.:</strong> ${fp(prod)} &nbsp;|&nbsp; 🚌 <strong>Flota:</strong> ${c.f} coches (${c.n} ploteados = ${(c.n/c.f*100).toFixed(0)}%)
+                👁 Visibilidad: ${(fmt.vp*100).toFixed(0)}% pasajeros + ${(fmt.vt*100).toFixed(0)}% tránsito · 🗺️ <strong>Recorrido:</strong> ${ruta} &nbsp;|&nbsp; 📡 <strong>Datos:</strong> ${fuentes.join(' + ')} &nbsp;|&nbsp; 🏭 <strong>Prod.:</strong> ${prodLabel} &nbsp;|&nbsp; 🚌 <strong>Flota:</strong> ${c.f} coches (${c.n} ploteados = ${(c.n/c.f*100).toFixed(0)}%)
             </td>
         </tr>`;
     }).join('');
@@ -648,6 +663,10 @@ function genRep(){
     const ivaChk=document.getElementById('sIVA').checked,ivaAmt=ivaChk?tinv*0.21:0,totalIVA=tinv+ivaAmt;
     const cpm=ti>0?tinv/ti*1e3:0,cpmIVA=ti>0?totalIVA/ti*1e3:0;
     const rp=document.getElementById('repPV');
+    // Build production breakdown for report
+    const prodDetail=camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');const p=fmt.produccion*c.n;return c.n+' '+fmt.nombre.toLowerCase()+' × '+fp(fmt.produccion)+' = '+fp(p);}).join(', ');
+    const prodLabel=prodDetail||fp(tinvProd);
+    const produccionNota="Costo de producción: varía por formato ("+camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');return fmt.nombre+': '+fp(fmt.produccion);}).join(', ')+")";
 
     rp.innerHTML=`
         <div style="text-align:center;margin-bottom:16px">
@@ -668,14 +687,15 @@ function genRep(){
             <div style="font-size:12px;color:#1d4ed8;font-weight:700;text-transform:uppercase">Desglose de Inversión</div>
             <table style="width:60%;margin:8px auto 0">
                 <tr><td style="font-weight:700;text-align:right;padding:4px 8px">Inversión en Pauta (${d} mes(es)):</td><td style="font-weight:700;padding:4px 8px">${fp(tinvPauta)}</td></tr>
-                <tr><td style="font-weight:700;text-align:right;padding:4px 8px">Producción (${tl} unid. × $48.000):</td><td style="font-weight:700;padding:4px 8px">${fp(tinvProd)}</td></tr>
+                <tr><td style="font-weight:700;text-align:right;padding:4px 8px">Producción:</td><td style="font-weight:700;padding:4px 8px">${fp(tinvProd)}</td></tr>
+                <tr><td colspan="2" style="font-size:10px;color:#6b7280;padding:2px 8px">${prodDetail}</td></tr>
                 ${ivaChk?`<tr><td style="font-weight:700;text-align:right;padding:4px 8px">IVA (21%):</td><td style="font-weight:700;padding:4px 8px">${fp(ivaAmt)}</td></tr>`:''}
                 <tr style="border-top:2px solid #1d4ed8"><td style="font-weight:700;text-align:right;padding:6px 8px;font-size:14px;color:#1d4ed8">INVERSIÓN TOTAL${ivaChk?' (con IVA)':''}:</td><td style="font-weight:700;padding:6px 8px;font-size:14px;color:#1d4ed8">${fp(ivaChk?totalIVA:tinv)}</td></tr>
             </table>
             <div style="font-size:12px;color:#374151;margin-top:8px">${f(ti)} OTS</div>
         </div>
         <div class="rs" style="background:#fefce8;border-radius:6px;padding:10px;margin-top:10px;font-size:12px;color:#92400e;line-height:1.5">
-            <strong>📝 Costo de producción:</strong> $48.000 por unidad (pago único, incluye ploteo e instalación). No incluye IVA.
+            <strong>📝 ${produccionNota}</strong> (pago único, incluye ploteo e instalación). No incluye IVA.
         </div>
         <div class="rs"><div class="rl">Métricas de Eficiencia:</div>
             <table>
@@ -687,7 +707,7 @@ function genRep(){
             <strong>Media 500</strong> — Publicidad en Vía Pública<br>
             Fuentes: Ministerio de Transporte (Red SUBE), Dirección Nacional de Vialidad (TMDA), GCBA — Anillo Digital (tránsito CABA).<br>
             Factor de visibilidad: estándar FEPE/OUTSMART. Varía según el formato elegido.<br>
-            Costo de producción: $48.000 por unidad (pago único, incluye ploteo e instalación). ${ivaChk?'Incluye IVA 21%.':'No incluye IVA.'}<br>
+            ${produccionNota} (pago único, incluye ploteo e instalación). ${ivaChk?'Incluye IVA 21%.':'No incluye IVA.'}<br>
             Datos de pasajeros: promedio 2024. Datos de tránsito CABA: sensores GCBA Anillo Digital. Datos de tránsito GBA: TMDA Vialidad Nacional.
         </div>`;
     document.getElementById('repVacio').style.display='none';
@@ -705,7 +725,7 @@ function init(){
     document.getElementById('rL').innerHTML=o;
     document.getElementById('sL').innerHTML=o;
     // Format selectors
-    const fOpts=FORMATOS.map(f=>'<option value="'+f.id+'">'+f.emoji+' '+f.nombre+' — '+fp(f.precio)+'/mes</option>').join('');
+    const fOpts=FORMATOS.map(f=>'<option value="'+f.id+'">'+f.emoji+' '+f.nombre+' — Desde '+fp(f.precio_min)+'</option>').join('');
     document.getElementById('fmtSelect').innerHTML+='<option value="luneta">🏷️ Luneta</option>'+FORMATOS.filter(f=>f.id!=='luneta').map(f=>'<option value="'+f.id+'">'+f.emoji+' '+f.nombre+'</option>').join('');
     document.getElementById('rFmt').innerHTML+='<option value="luneta">🏷️ Luneta</option>'+FORMATOS.filter(f=>f.id!=='luneta').map(f=>'<option value="'+f.id+'">'+f.emoji+' '+f.nombre+'</option>').join('');
     document.getElementById('sFmt').innerHTML+='<option value="luneta">🏷️ Luneta</option>'+FORMATOS.filter(f=>f.id!=='luneta').map(f=>'<option value="'+f.id+'">'+f.emoji+' '+f.nombre+'</option>').join('');
