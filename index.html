@@ -169,6 +169,18 @@
         <select id="sF" onchange="fL()"><option value="NUM">Nro.</option><option value="IMP">Mayor OTS</option></select>
         <select id="lS" onchange="uP()" style="width:100%;min-width:100%"><option value="" disabled selected>Elegí una Línea...</option></select>
     </div>
+    <div class="fb" style="margin-bottom:8px;align-items:flex-end">
+        <div class="fg" style="flex:1;min-width:120px;margin-bottom:0">
+            <label>Bondis pautados</label>
+            <input type="number" id="bondisI" min="1" value="1" oninput="uP()">
+        </div>
+        <button class="btn bs bsm" onclick="addToReport()" style="flex-shrink:0">＋ Agregar al reporte</button>
+    </div>
+    <div class="pnl" id="repTbl" style="display:none">
+        <h3>📋 Líneas en el reporte</h3>
+        <table class="ct" id="repTblBody"></table>
+        <div style="text-align:center;margin-top:8px"><button class="btn bs bb" onclick="genReporteOTS()">📄 Generar Reporte (todas las líneas)</button></div>
+    </div>
     <div class="pnl" id="placa" style="display:none">
         <div style="border-bottom:2px solid #374151;padding-bottom:10px;margin-bottom:16px;text-align:center">
             <h2 id="pT" style="color:#60a5fa;font-size:22px"></h2>
@@ -194,6 +206,11 @@
             <div class="range-v" id="iRange">0 — 0</div>
             <div class="range-s" id="iRangeD">0 — 0 OTS/día</div>
         </div>
+        <div class="range-box" id="rangeBoxTotal" style="display:none;background:linear-gradient(135deg,#1e3a5f,#1d4ed8);border-color:#2563eb">
+            <div class="range-label" style="color:#93c5fd">📊 OTS Totales con Bondis Pautados</div>
+            <div class="range-v" id="iRangeTotal" style="color:#60a5fa">0 — 0</div>
+            <div class="range-s" id="iRangeTotalD" style="color:#93c5fd"></div>
+        </div>
         <div class="vis-factor" id="visInfo">
             <strong>👁 Rango de visibilidad 25%–45%:</strong> según estudios FEPE/OUTSMART, la visibilidad real en OOH va del 25% al 45%. Mostramos ambos extremos para que puedas estimar conservadoramente o con expectativa optimista.
         </div>
@@ -209,7 +226,7 @@
                 <div id="routeContent"></div>
             </div>
         </div>
-        <div style="text-align:center"><button class="btn bs" onclick="genReporteOTS()">📄 Generar Reporte</button></div>
+        <div style="text-align:center"><button class="btn bs" onclick="genReporteOTS()">📄 Generar Reporte (esta línea)</button></div>
     </div>
 </div>
 
@@ -344,6 +361,7 @@ const ROUTES={"12":{"avenues":["Av. Cabildo"],"sensors":[{"id":"48Q3CH00+","name
 const D={"12":{"f":79,"p":420702,"t":122000,"z":["CABA"],"ts":"gcba"},"41":{"f":67,"p":121416,"t":79000,"z":["CABA","Norte"],"ts":"gcba"},"42":{"f":50,"p":181046,"t":84000,"z":["CABA"],"ts":"gcba"},"47":{"f":48,"p":250000,"t":79000,"z":["CABA"],"ts":"gcba"},"51":{"f":53,"p":25919,"t":20000,"z":["Sur"],"ts":"vialidad"},"53":{"f":108,"p":22933,"t":84000,"z":["CABA","Oeste"],"ts":"gcba"},"57":{"f":145,"p":250000,"t":184000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"64":{"f":58,"p":72825,"t":122000,"z":["CABA"],"ts":"gcba"},"65":{"f":25,"p":172572,"t":122000,"z":["CABA"],"ts":"gcba"},"67":{"f":67,"p":75224,"t":122000,"z":["CABA"],"ts":"gcba"},"68":{"f":82,"p":64240,"t":84000,"z":["CABA"],"ts":"gcba"},"74":{"f":53,"p":16353,"t":20000,"z":["Sur"],"ts":"vialidad"},"79":{"f":53,"p":250000,"t":20000,"z":["Sur"],"ts":"vialidad"},"92":{"f":89,"p":250000,"t":84000,"z":["CABA"],"ts":"gcba"},"102":{"f":50,"p":2324,"t":22000,"z":["CABA"],"ts":"gcba"},"123":{"f":32,"p":250000,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"124":{"f":60,"p":701959,"t":184000,"z":["CABA"],"ts":"gcba"},"126":{"f":79,"p":1182005,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"136":{"f":48,"p":440059,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"148":{"f":50,"p":250000,"t":20000,"z":["Sur"],"ts":"vialidad"},"151":{"f":74,"p":250000,"t":122000,"z":["CABA"],"ts":"gcba"},"163":{"f":28,"p":277020,"t":84000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"166":{"f":75,"p":894049,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"176":{"f":151,"p":1597825,"t":184000,"z":["CABA","Norte"],"ts":"gcba"},"177":{"f":53,"p":594679,"t":20000,"z":["Sur"],"ts":"vialidad"},"182":{"f":80,"p":1113491,"t":184000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"194":{"f":92,"p":530650,"t":40000,"z":["CABA","Norte"],"ts":"gcba"},"195":{"f":61,"p":413138,"t":84000,"z":["CABA","Sur"],"ts":"gcba"},"203":{"f":244,"p":2758179,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"204":{"f":33,"p":174016,"t":20000,"z":["Norte"],"ts":"vialidad"},"218":{"f":33,"p":636423,"t":20000,"z":["Oeste"],"ts":"vialidad"},"222":{"f":59,"p":121223,"t":20000,"z":["Oeste"],"ts":"vialidad"},"236":{"f":160,"p":1798120,"t":20000,"z":["Oeste"],"ts":"vialidad"},"237":{"f":96,"p":1115632,"t":20000,"z":["Oeste"],"ts":"vialidad"},"263":{"f":13,"p":904083,"t":20000,"z":["Sur"],"ts":"vialidad"},"264":{"f":25,"p":324549,"t":20000,"z":["Norte"],"ts":"vialidad"},"269":{"f":125,"p":1150960,"t":20000,"z":["Oeste"],"ts":"vialidad"},"276":{"f":73,"p":800924,"t":20000,"z":["Norte"],"ts":"vialidad"},"283":{"f":31,"p":689263,"t":20000,"z":["Sur"],"ts":"vialidad"},"284":{"f":33,"p":114030,"t":20000,"z":["Oeste"],"ts":"vialidad"},"306":{"f":59,"p":1172811,"t":20000,"z":["Oeste"],"ts":"vialidad"},"310":{"f":11,"p":108849,"t":20000,"z":["Norte"],"ts":"vialidad"},"315":{"f":93,"p":561302,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"322":{"f":32,"p":384973,"t":20000,"z":["Oeste"],"ts":"vialidad"},"325":{"f":33,"p":206873,"t":20000,"z":["Oeste"],"ts":"vialidad"},"326":{"f":10,"p":86944,"t":20000,"z":["Oeste"],"ts":"vialidad"},"327":{"f":20,"p":542051,"t":20000,"z":["Oeste"],"ts":"vialidad"},"336":{"f":20,"p":163683,"t":20000,"z":["Oeste"],"ts":"vialidad"},"365":{"f":194,"p":2566192,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"370":{"f":13,"p":13749,"t":20000,"z":["Sur"],"ts":"vialidad"},"371":{"f":54,"p":69118,"t":20000,"z":["Sur"],"ts":"vialidad"},"373":{"f":50,"p":367710,"t":20000,"z":["Sur"],"ts":"vialidad"},"378":{"f":33,"p":635943,"t":20000,"z":["Oeste"],"ts":"vialidad"},"382":{"f":50,"p":624749,"t":20000,"z":["Oeste"],"ts":"vialidad"},"388":{"f":50,"p":912547,"t":20000,"z":["Oeste"],"ts":"vialidad"},"396":{"f":50,"p":879949,"t":20000,"z":["Oeste"],"ts":"vialidad"},"404":{"f":50,"p":508901,"t":20000,"z":["Oeste"],"ts":"vialidad"},"410":{"f":28,"p":92149,"t":20000,"z":["Sur"],"ts":"vialidad"},"422":{"f":50,"p":355810,"t":20000,"z":["Sur"],"ts":"vialidad"},"423":{"f":50,"p":701549,"t":20000,"z":["Sur"],"ts":"vialidad"},"426":{"f":50,"p":242549,"t":20000,"z":["Sur"],"ts":"vialidad"},"428":{"f":50,"p":352949,"t":20000,"z":["Sur"],"ts":"vialidad"},"435":{"f":13,"p":62149,"t":20000,"z":["Sur"],"ts":"vialidad"},"436":{"f":50,"p":148810,"t":20000,"z":["Sur"],"ts":"vialidad"},"440":{"f":93,"p":639349,"t":20000,"z":["Sur"],"ts":"vialidad"},"442":{"f":50,"p":378749,"t":20000,"z":["Sur"],"ts":"vialidad"},"500":{"f":50,"p":374949,"t":20000,"z":["Sur"],"ts":"vialidad"},"501":{"f":50,"p":28910,"t":20000,"z":["Sur"],"ts":"vialidad"},"503":{"f":69,"p":546149,"t":20000,"z":["Sur"],"ts":"vialidad"},"505":{"f":50,"p":53210,"t":20000,"z":["Sur"],"ts":"vialidad"},"511":{"f":50,"p":648649,"t":20000,"z":["Sur"],"ts":"vialidad"},"520":{"f":50,"p":823149,"t":20000,"z":["Sur"],"ts":"vialidad"}};
 
 let cL=null;
+let repList=[]; // {line, zonaLabel, bondis, rangeMin, rangeMax}
 
 function f(n){return n>=1e6?(n/1e6).toFixed(1)+"M":n>=1e3?Math.round(n).toLocaleString("es-AR"):n.toString()}
 function fp(n){return"$"+Math.round(n).toLocaleString("es-AR")}
@@ -366,6 +384,41 @@ function swTab(t){
     document.getElementById('t-'+t).classList.add('active');
 }
 
+// === REPORT LIST ===
+function addToReport(){
+    const l=cL; if(!l) return;
+    if(repList.find(r=>r.line===l)){alert('Esa línea ya está en el reporte.'); return;}
+    const i=D[l], fl=i.f||50;
+    const bondis=parseInt(document.getElementById('bondisI').value)||1;
+    if(bondis<1){alert('Ingresá al menos 1 bondi.'); return;}
+    const range=impEfect(i, fl);
+    repList.push({line:l, zonaLabel:i.z.join(', '), bondis:bondis, rangeMin:range.min, rangeMax:range.max, flota:fl, ts:i.ts, data:i});
+    renderRepTable();
+}
+
+function removeFromReport(line){
+    repList=repList.filter(r=>r.line!==line);
+    renderRepTable();
+}
+
+function renderRepTable(){
+    const tbl=document.getElementById('repTbl');
+    const body=document.getElementById('repTblBody');
+    if(repList.length===0){tbl.style.display='none'; return;}
+    tbl.style.display='block';
+    let totalB=0, totalMin=0, totalMax=0;
+    let h='<thead><tr><th>Línea</th><th>Zona</th><th class="rc">Bondis</th><th class="rc">OTS/mes (rango)</th><th style="width:40px">✕</th></tr></thead><tbody>';
+    repList.forEach(r=>{
+        totalB+=r.bondis; totalMin+=r.rangeMin*r.bondis; totalMax+=r.rangeMax*r.bondis;
+        h+='<tr><td class="lc">'+r.line+'</td><td>'+r.zonaLabel+'</td><td class="rc">'+r.bondis+'</td><td class="rc">'+f(r.rangeMin*r.bondis)+' — '+f(r.rangeMax*r.bondis)+'</td><td style="text-align:center"><span onclick="removeFromReport(\''+r.line+'\')" style="cursor:pointer;color:#ef4444;font-weight:700;font-size:16px">✕</span></td></tr>';
+    });
+    h+='<tr style="border-top:2px solid #60a5fa;font-weight:700"><td colspan="2" class="rc" style="color:#60a5fa">Total</td><td class="rc">'+totalB+'</td><td class="rc">'+f(totalMin)+' — '+f(totalMax)+'</td><td></td></tr>';
+    h+='</tbody>';
+    body.innerHTML=h;
+    // Update the button text
+    document.getElementById('repTbl').querySelector('.btn').innerText='📄 Generar Reporte ('+repList.length+' línea'+(repList.length>1?'s':'')+')';
+}
+
 // === OTS TAB ===
 function fL(){
     const s=document.getElementById('sI').value.toLowerCase(),z=document.getElementById('zF').value,so=document.getElementById('sF').value,sel=document.getElementById('lS');
@@ -384,6 +437,7 @@ function uP(){
     const l=document.getElementById('lS').value;if(!l)return;cL=l;
     const i=D[l];if(!i)return;
     const fl=i.f||50;
+    const bondis=parseInt(document.getElementById('bondisI').value)||1;
     const range=impEfect(i, fl);
     const pBus=Math.round(i.p/fl);
     const tBus=Math.round(i.t*30/fl);
@@ -403,9 +457,17 @@ function uP(){
     document.getElementById('pD').innerText=f(i.p/30)+' / día';
     document.getElementById('vM').innerText=f(i.t*30);
     document.getElementById('vD').innerText=f(i.t)+' / día';
-    // OTS range
+    // OTS range per bondi
     document.getElementById('iRange').innerText=f(range.min)+' — '+f(range.max);
     document.getElementById('iRangeD').innerText=f(Math.round(range.min/30))+' — '+f(Math.round(range.max/30))+' OTS/día';
+    // OTS total with bondis
+    if(bondis>1){
+        document.getElementById('rangeBoxTotal').style.display='block';
+        document.getElementById('iRangeTotal').innerText=f(range.min*bondis)+' — '+f(range.max*bondis);
+        document.getElementById('iRangeTotalD').innerText='Entre '+f(range.min)+' y '+f(range.max)+' OTS/mes por bondi × '+bondis+' bondis = '+bondis+'/'+fl+' de la flota';
+    } else {
+        document.getElementById('rangeBoxTotal').style.display='none';
+    }
     // Audiencia por bondi
     document.getElementById('pBus').innerText=f(pBus);
     document.getElementById('pBusD').innerText='pasajeros por bondi / mes ('+f(tBus)+' vehículos/mes por bondi)';
@@ -447,13 +509,22 @@ function uROILine(){
 }
 
 function genReporteOTS(){
-    if(!cL)return;
-    const l=cL,i=D[l],fl=i.f||50;
-    const range=impEfect(i,fl);
-    const srcLabel=i.ts==='gcba'?'GCBA — Anillo Digital':'Vialidad Nacional';
-    const rt=ROUTES[l];
     const now=new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
-    var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reporte OOH Linea '+l+'</title>';
+    const items=repList.length>0?repList:[];
+    // Fallback to current selection if no items in list
+    if(items.length===0){
+        if(!cL)return;
+        const i=D[cL], fl=i.f||50;
+        const bondis=parseInt(document.getElementById('bondisI').value)||1;
+        const range=impEfect(i,fl);
+        items.push({line:cL, zonaLabel:i.z.join(', '), bondis:bondis, rangeMin:range.min, rangeMax:range.max, flota:fl, ts:i.ts, data:i});
+    }
+
+    // compute totals
+    let totalB=0, totalMin=0, totalMax=0;
+    items.forEach(r=>{totalB+=r.bondis; totalMin+=r.rangeMin*r.bondis; totalMax+=r.rangeMax*r.bondis;});
+
+    var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reporte OOH Audiencia</title>';
     h+='<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;color:#111827;margin:30px;line-height:1.5}';
     h+='.hd{display:flex;align-items:center;border-bottom:2px solid #1d4ed8;padding-bottom:16px;margin-bottom:24px}';
     h+='.hd img{width:64px;border-radius:50%;margin-right:16px}.hd h1{color:#1d4ed8;font-size:18px;margin-bottom:2px}';
@@ -462,6 +533,7 @@ function genReporteOTS(){
     h+='table{width:100%;border-collapse:collapse;margin:18px 0;border:1px solid #e5e7eb}';
     h+='table th{background:#1d4ed8;color:#fff;padding:10px 12px;text-align:left;font-size:12px;text-transform:uppercase}';
     h+='table td{padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:13px}tr:nth-child(even){background:#f8fafc}';
+    h+='tr.hl{background:#dbeafe!important;font-weight:700}';
     h+='.ots{background:linear-gradient(135deg,#dbeafe,#eff6ff);border:2px solid #1d4ed8;padding:24px;border-radius:10px;text-align:center;margin:24px 0}';
     h+='.ots .big{font-size:32px;font-weight:700;color:#1d4ed8}.ots .sub{font-size:13px;color:#4b5563;margin-top:6px}';
     h+='.vis{background:#fef9c3;border-left:4px solid #eab308;padding:14px 16px;border-radius:6px;font-size:12px;margin:18px 0;line-height:1.6}';
@@ -470,29 +542,73 @@ function genReporteOTS(){
     h+='.src{border-top:1px solid #e5e7eb;margin-top:24px;padding-top:14px;font-size:11px;color:#6b7280;line-height:1.8}';
     h+='.src a{color:#1d4ed8;text-decoration:none}';
     h+='.ft{text-align:center;font-size:10px;color:#9ca3af;margin-top:32px;border-top:1px solid #e5e7eb;padding-top:14px;line-height:1.6}';
+    h+='.line-section{border:1px solid #d1d5db;padding:16px;border-radius:8px;margin:16px 0;page-break-inside:avoid}';
+    h+='.line-section h3{color:#1d4ed8;font-size:14px;margin-bottom:8px}';
     h+='@media print{body{margin:12mm}}</style></head><body>';
-    h+='<div class="hd"><img src="https://i.ibb.co/N29Ts7WX/Logo-media-500-CIRCULAR-jpg.jpg"><div><h1>Media 500 — Metricas OOH</h1><span>'+now+'</span></div></div>';
-    h+='<h2>Reporte de Audiencia OOH — Linea '+l+'</h2>';
-    h+='<div class="badge">📍 '+i.z.join(', ')+' | '+srcLabel+'</div>';
-    h+='<table><thead><tr><th>Indicador</th><th>Valor</th></tr></thead><tbody>';
-    h+='<tr><td>Audiencia Interna (pasajeros/mes SUBE)</td><td style="font-weight:700">'+f(i.p)+'</td></tr>';
-    h+='<tr><td>Audiencia Interna por bondi/dia</td><td>'+f(Math.round(i.p/30/fl))+'</td></tr>';
-    h+='<tr><td>Audiencia Externa (transito/mes)</td><td style="font-weight:700">'+f(i.t*30)+'</td></tr>';
-    h+='<tr><td>Audiencia Externa por bondi/dia</td><td>'+f(Math.round(i.t/fl))+'</td></tr>';
-    h+='<tr><td>Flota de la linea</td><td style="font-weight:700">'+fl+' coches</td></tr>';
+    h+='<div class="hd"><img src="https://i.ibb.co/N29Ts7WX/Logo-media-500-CIRCULAR-jpg.jpg"><div><h1>Media 500 — Métricas OOH</h1><span>'+now+'</span></div></div>';
+    h+='<h2>Reporte de Audiencia OOH</h2>';
+    h+='<div class="badge">📋 '+items.length+' línea'+(items.length>1?'s':'')+' | Total: '+totalB+' bondis</div>';
+
+    // Summary table with all lines
+    h+='<table><thead><tr><th>Línea</th><th>Zona</th><th class="rc">Bondis</th><th class="rc">OTS/mes (rango)</th></tr></thead><tbody>';
+    items.forEach(function(r){
+        h+='<tr><td style="font-weight:700;color:#1d4ed8">'+r.line+'</td><td>'+r.zonaLabel+'</td><td class="rc">'+r.bondis+'</td><td class="rc" style="font-weight:700">'+f(r.rangeMin*r.bondis)+' — '+f(r.rangeMax*r.bondis)+'</td></tr>';
+    });
+    h+='<tr class="hl"><td colspan="2" class="rc">TOTAL</td><td class="rc">'+totalB+'</td><td class="rc" style="font-weight:700">'+f(totalMin)+' — '+f(totalMax)+'</td></tr>';
     h+='</tbody></table>';
-    h+='<div class="ots"><div style="font-size:12px;color:#4b5563;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">OTS Aproximados por bondi/mes</div><div class="big">'+f(range.min)+' — '+f(range.max)+'</div><div class="sub">'+f(Math.round(range.min/30))+' — '+f(Math.round(range.max/30))+' OTS/dia</div></div>';
-    h+='<div class="vis"><strong>👁 Rango de visibilidad 25%—45%</strong> segun estudios internacionales FEPE/OUTSMART. La visibilidad real en OOH depende de factores como formato, posicion, transito y clima. Este rango ofrece una estimacion conservadora a optimista con respaldo de estandares de la industria.</div>';
-    if(rt&&rt.sensors&&rt.sensors.length>0){
-        h+='<div style="margin:18px 0"><h3 style="font-size:14px;color:#1d4ed8;margin-bottom:8px">🗺 Recorrido y cobertura</h3>';
-        if(rt.avenues&&rt.avenues.length>0){h+='<div style="margin-bottom:8px"><strong style="font-size:12px">Avenidas con sensor de transito:</strong><br>'+rt.avenues.map(function(a){return'<span class="ave">'+a+'</span>'}).join('')+'</div>';}
-        h+='<div style="font-size:12px;margin-top:10px;margin-bottom:4px;font-weight:600">Sensores Anillo Digital:</div>';
-        rt.sensors.forEach(function(s){h+='<div class="sr">📡 <strong>'+s.name+'</strong> — '+s.dist+'m — '+s.stops+' paradas en rango 500m</div>';});
-        h+='<div style="font-size:11px;color:#6b7280;margin-top:6px">'+rt.stop_count+' paradas registradas en dataset GCBA</div></div>';
+
+    // OTS box
+    h+='<div class="ots"><div style="font-size:12px;color:#4b5563;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">OTS Totales del Reporte</div><div class="big">'+f(totalMin)+' — '+f(totalMax)+'</div><div class="sub">OTS/mes con '+totalB+' bondis pautados</div></div>';
+
+    h+='<div class="vis"><strong>👁 Rango de visibilidad 25%—45%</strong> según estudios internacionales FEPE/OUTSMART. La visibilidad real en OOH depende de factores como formato, posición, tránsito y clima. Este rango ofrece una estimación conservadora a optimista con respaldo de estándares de la industria.</div>';
+
+    // Detail per line (compact)
+    if(items.length===1){
+        // Single line: full detail like before
+        const r=items[0], i=r.data, fl=i.f||50, rt=ROUTES[r.line];
+        const srcLabel=i.ts==='gcba'?'GCBA — Anillo Digital':'Vialidad Nacional';
+        h+='<div class="line-section"><h3>Detalle — Línea '+r.line+'</h3>';
+        h+='<table><thead><tr><th>Indicador</th><th>Valor</th></tr></thead><tbody>';
+        h+='<tr><td>Audiencia Interna (pasajeros/mes SUBE)</td><td style="font-weight:700">'+f(i.p)+'</td></tr>';
+        h+='<tr><td>Audiencia Interna por bondi/día</td><td>'+f(Math.round(i.p/30/fl))+'</td></tr>';
+        h+='<tr><td>Audiencia Externa (tránsito/mes)</td><td style="font-weight:700">'+f(i.t*30)+'</td></tr>';
+        h+='<tr><td>Audiencia Externa por bondi/día</td><td>'+f(Math.round(i.t/fl))+'</td></tr>';
+        h+='<tr><td>Flota de la línea</td><td style="font-weight:700">'+fl+' coches</td></tr>';
+        h+='<tr><td>Bondis pautados</td><td style="font-weight:700">'+r.bondis+'</td></tr>';
+        h+='</tbody></table>';
+        h+='<div class="ots"><div style="font-size:12px;color:#4b5563;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">OTS por bondi/mes</div><div class="big">'+f(r.rangeMin)+' — '+f(r.rangeMax)+'</div><div class="sub">'+f(Math.round(r.rangeMin/30))+' — '+f(Math.round(r.rangeMax/30))+' OTS/día</div></div>';
+        if(rt&&rt.sensors&&rt.sensors.length>0){
+            h+='<div style="margin:18px 0"><h3 style="font-size:12px;color:#1d4ed8;margin-bottom:6px">🗺 Recorrido y cobertura</h3>';
+            if(rt.avenues&&rt.avenues.length>0){h+='<div style="margin-bottom:6px"><strong style="font-size:11px">Avenidas con sensor:</strong><br>'+rt.avenues.map(function(a){return'<span class="ave">'+a+'</span>'}).join('')+'</div>';}
+            rt.sensors.forEach(function(s){h+='<div class="sr">📡 <strong>'+s.name+'</strong> — '+s.dist+'m — '+s.stops+' paradas en rango 500m</div>';});
+            h+='<div style="font-size:11px;color:#6b7280;margin-top:4px">'+rt.stop_count+' paradas registradas GCBA</div></div>';
+        }
+        var srcUrl=i.ts==='gcba'?'https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital':'https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos';
+        h+='<div class="src"><strong>Fuentes:</strong><br>🔗 <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha">SUBE — Ministerio de Transporte</a><br>🔗 <a href="'+srcUrl+'">'+srcLabel+'</a><br>📚 Rango de visibilidad: FEPE / OUTSMART</div>';
+        h+='</div>';
+    } else {
+        // Multiple lines: compact detail per line
+        items.forEach(function(r){
+            const i=r.data, fl=i.f||50, rt=ROUTES[r.line];
+            const srcLabel=i.ts==='gcba'?'GCBA — Anillo Digital':'Vialidad Nacional';
+            h+='<div class="line-section"><h3>Línea '+r.line+' — '+r.bondis+' bondi'+(r.bondis>1?'s':'')+' ('+r.zonaLabel+')</h3>';
+            h+='<table><tbody>';
+            h+='<tr><td>Pasajeros/mes (SUBE)</td><td style="font-weight:700">'+f(i.p)+'</td></tr>';
+            h+='<tr><td>Tránsito/mes</td><td style="font-weight:700">'+f(i.t*30)+'</td></tr>';
+            h+='<tr><td>Flota</td><td>'+fl+' coches</td></tr>';
+            h+='<tr><td>OTS por bondi/mes</td><td style="font-weight:700">'+f(r.rangeMin)+' — '+f(r.rangeMax)+'</td></tr>';
+            h+='<tr class="hl"><td>OTS totales/mes</td><td style="font-weight:700">'+f(r.rangeMin*r.bondis)+' — '+f(r.rangeMax*r.bondis)+'</td></tr>';
+            h+='</tbody></table>';
+            if(rt&&rt.sensors&&rt.sensors.length>0){
+                h+='<div style="font-size:11px;color:#6b7280;margin-top:8px">📡 '+rt.sensors.length+' sensor(es) Anillo Digital | '+rt.stop_count+' paradas GCBA</div>';
+            }
+            h+='<div style="font-size:10px;color:#60a5fa;margin-top:4px">Fuente tránsito: '+srcLabel+'</div>';
+            h+='</div>';
+        });
+        h+='<div class="src"><strong>Fuentes:</strong><br>🔗 <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha">SUBE — Ministerio de Transporte</a><br>🔗 <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital">GCBA — Anillo Digital</a><br>🔗 <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos">Vialidad Nacional</a><br>📚 Rango de visibilidad: FEPE / OUTSMART</div>';
     }
-    var srcUrl=i.ts==='gcba'?'https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital':'https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos';
-    h+='<div class="src"><strong>Fuentes:</strong><br>🔗 <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha">SUBE — Ministerio de Transporte</a><br>🔗 <a href="'+srcUrl+'">'+srcLabel+'</a><br>📚 Rango de visibilidad: FEPE / OUTSMART</div>';
-    h+='<div class="ft">Media 500 — Publicidad en Via Publica<br>Fuentes: SUBE (Min. Transporte) | Anillo Digital (GCBA) | Vialidad Nacional | FEPE/OUTSMART</div>';
+
+    h+='<div class="ft">Media 500 — Publicidad en Vía Pública<br>Fuentes: SUBE (Min. Transporte) | Anillo Digital (GCBA) | Vialidad Nacional | FEPE/OUTSMART</div>';
     h+='</body></html>';
     var w=window.open('','_blank','width=800,height=700');
     w.document.write(h);w.document.close();w.focus();
