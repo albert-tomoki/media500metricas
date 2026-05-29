@@ -91,16 +91,6 @@
         .cr .cb{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;transition:width .5s}
         .cr .cv{font-size:12px;color:#f9fafb;font-weight:600;min-width:80px;text-align:right;margin-left:8px}
 
-        .rp{background:#fff;color:#111;padding:28px;border-radius:8px;margin-bottom:16px;font-size:13px;line-height:1.6}
-        .rp h2{color:#1d4ed8;font-size:18px;margin-bottom:10px}
-        .rp .rs{margin-bottom:14px}
-        .rp .rl{font-weight:700;color:#374151}
-        .rp .rh2{font-size:24px;font-weight:700;color:#1d4ed8}
-        .rp table{width:100%;border-collapse:collapse;margin:10px 0}
-        .rp table th{background:#f3f4f6;padding:6px;text-align:left;font-size:11px;color:#374151}
-        .rp table td{padding:6px;border-bottom:1px solid #e5e7eb;font-size:12px}
-        .rp .rf{margin-top:16px;padding-top:10px;border-top:2px solid #1d4ed8;font-size:10px;color:#6b7280}
-
         .src-section{max-width:900px;margin:0 auto;padding:16px}
         .src-section h2{font-size:17px;color:#60a5fa;margin-bottom:16px;font-weight:700}
         .src-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
@@ -132,6 +122,11 @@
         .route-cov{font-size:11px;color:#f59e0b;background:#422006;padding:6px 12px;border-radius:6px;margin-top:8px;line-height:1.4 }
         .route-cov.full{color:#34d399;background:#064e3b }
         .route-nodata{font-size:12px;color:#6b7280;font-style:italic }
+
+        .range-box{background:linear-gradient(135deg,#064e3b,#065f46);padding:16px 20px;border-radius:10px;text-align:center;margin-bottom:16px;border:1px solid #065f46}
+        .range-box .range-label{font-size:11px;color:#6ee7b7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+        .range-box .range-v{font-size:32px;font-weight:700;color:#34d399}
+        .range-box .range-s{font-size:12px;color:#6ee7b7;margin-top:4px}
     </style>
 </head>
 <body>
@@ -160,21 +155,19 @@
 <div class="tabs">
     <div class="tab active" onclick="swTab('impacto')"><span class="ti">📊</span>OTS</div>
     <div class="tab" onclick="swTab('roi')"><span class="ti">💰</span>CPM</div>
-    <div class="tab" onclick="swTab('sim')"><span class="ti">🎯</span>Simulador</div>
-    <div class="tab" onclick="swTab('rep')"><span class="ti">📈</span>Reportes</div>
+    <div class="tab" onclick="swTab('info')"><span class="ti">📚</span>Info</div>
 </div>
 
-<!-- ===== IMPACTO ===== -->
+<!-- ===== OTS ===== -->
 <div class="tc active" id="t-impacto">
     <div class="method-box">
-        <strong>📐 Metodología:</strong> OTS = (Pasajeros SUBE por colectivo) × visibilidad pasajeros + Tránsito vehicular × visibilidad tránsito. <strong>Los pasajeros totales de la línea se dividen por la flota activa (cantidad de coches)</strong> para calcular cuántos pasajeros transporta cada bondi. Si Media 500 pauta N unidades, alcanza a N/Flota del total de pasajeros de la línea. Esto es <strong>conservador y matemáticamente irrefutable</strong>: solo contabilizamos la fracción de pasajeros que realmente pasa por nuestros colectivos ploteados.<br><br><strong>📊 Fuentes de datos:</strong><br><a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 SUBE — Min. Transporte</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Vialidad Nacional (TMDA rutas)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 GCBA — Anillo Digital (tránsito CABA)</a><br><span style="font-size:11px;color:#6b7280">Líneas CABA: datos de tránsito de sensores viales GCBA. Líneas GBA: estimaciones de Vialidad Nacional. Recorridos: cruce de paradas GCBA con sensores Anillo Digital (radio 500m). Flota: datos reales por línea (fuente interna Media 500). Se puede ajustar manualmente en el Simulador.</span>
+        <strong>📐 Metodología:</strong> OTS = (Pasajeros SUBE por colectivo) × visibilidad pasajeros + Tránsito vehicular × visibilidad tránsito. <strong>Los pasajeros totales de la línea se dividen por la flota activa (cantidad de coches)</strong> para calcular cuántos pasajeros transporta cada bondi. Si Media 500 pauta N unidades, alcanza a N/Flota del total de pasajeros de la línea.<br><br><strong>👁 Rango de visibilidad 25%–45%:</strong> según estudios FEPE/OUTSMART, la visibilidad real en OOH va de 25% a 45% de la audiencia expuesta. Mostramos el rango completo para ser transparentes: los OTS reales se ubican entre estos dos valores. Esto hace que nuestros números sean <strong>conservadores y defendibles</strong> ante cualquier cliente.<br><br><strong>📊 Fuentes de datos:</strong><br><a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 SUBE — Min. Transporte</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Vialidad Nacional (TMDA rutas)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 GCBA — Anillo Digital (tránsito CABA)</a><br><span style="font-size:11px;color:#6b7280">Líneas CABA: datos de tránsito de sensores viales GCBA. Líneas GBA: estimaciones de Vialidad Nacional. Recorridos: cruce de paradas GCBA con sensores Anillo Digital (radio 500m). Flota: datos reales por línea (fuente interna Media 500).</span>
     </div>
     <div class="fb">
         <input type="text" id="sI" placeholder="🔍 Buscar línea..." onkeyup="fL()">
         <select id="zF" onchange="fL()"><option value="ALL">Todas</option><option value="CABA">CABA</option><option value="Norte">GBA Norte</option><option value="Oeste">GBA Oeste</option><option value="Sur">GBA Sur</option></select>
         <select id="sF" onchange="fL()"><option value="NUM">Nro.</option><option value="IMP">Mayor OTS</option></select>
         <select id="lS" onchange="uP()" style="width:100%;min-width:100%"><option value="" disabled selected>Elegí una Línea...</option></select>
-        <select id="fmtSelect" onchange="uP()" style="width:100%;min-width:100%;margin-top:8px"><option value="">Seleccioná Formato</option></select>
     </div>
     <div class="pnl" id="placa" style="display:none">
         <div style="border-bottom:2px solid #374151;padding-bottom:10px;margin-bottom:16px;text-align:center">
@@ -196,14 +189,19 @@
                 <a class="src-link" id="vSrc" href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 Ver fuente</a>
             </div>
         </div>
+        <div class="range-box" id="rangeBox">
+            <div class="range-label">👁 OTS Aproximados por bondi/mes</div>
+            <div class="range-v" id="iRange">0 — 0</div>
+            <div class="range-s" id="iRangeD">0 — 0 OTS/día</div>
+        </div>
         <div class="vis-factor" id="visInfo">
-            <strong>👁 Factor de visibilidad:</strong> Elegí un formato para ver los factores de visibilidad. Solo contabilizamos las oportunidades reales de visualización (OTS).
+            <strong>👁 Rango de visibilidad 25%–45%:</strong> según estudios FEPE/OUTSMART, la visibilidad real en OOH va del 25% al 45%. Mostramos ambos extremos para que puedas estimar conservadoramente o con expectativa optimista.
         </div>
         <div class="hc">
-            <div class="l">OTS (Opportunity to See) por unidad/mes</div>
-            <div class="v" id="iM">0</div>
-            <div class="s" id="iD">0 OTS diarios</div>
-            <div class="method">Pasajeros × 25% + Tránsito × 25% = OTS</div>
+            <div class="l">Audiencia por Colectivo/Bondi</div>
+            <div class="v" id="pBus">0</div>
+            <div class="s" id="pBusD">pasajeros por bondi / mes</div>
+            <div class="method">Pasajeros totales ÷ Flota = Audiencia real por cada coche ploteado</div>
         </div>
         <div id="routeSection" style="display:none">
             <div style="border-top:2px solid #374151;padding-top:16px;margin-top:16px;margin-bottom:16px">
@@ -215,15 +213,18 @@
     </div>
 </div>
 
-<!-- ===== ROI ===== -->
+<!-- ===== CPM ===== -->
 <div class="tc" id="t-roi">
     <div class="st">💰 Calculadora de CPM por Línea</div>
     <div class="pnl">
-        <div class="fb" style="margin-bottom:12px"><select id="rL" onchange="cROI()" style="min-width:100%"><option value="" disabled selected>Elegí una Línea...</option></select><select id="rFmt" onchange="const f=FORMATOS.find(x=>x.id===this.value);if(f){document.getElementById('rP').value=f.precio_min;document.getElementById('rP').placeholder='Desde '+fp(f.precio_min)+' — '+fp(f.precio_max);document.getElementById('rP').setAttribute('data-fmt-price',f.precio_min);}cROI()" style="min-width:100%;margin-top:6px"><option value="">Seleccioná Formato</option></select></div>
+        <div class="fb" style="margin-bottom:12px"><select id="rL" onchange="cROI()" style="min-width:100%"><option value="" disabled selected>Elegí una Línea...</option></select></div>
         <div class="fr">
-            <div class="fg"><label>Precio por Unidad ($)</label><input type="number" id="rP" placeholder="Rango según formato" oninput="cROI()" onchange="cROI()"></div>
+            <div class="fg"><label>Precio por Exhibición ($)</label><input type="number" id="rP" placeholder="Precio por unidad" oninput="cROI()" onchange="cROI()"></div>
+            <div class="fg"><label>Producción ($)</label><input type="number" id="rProd" placeholder="Costo de producción" oninput="cROI()" onchange="cROI()"></div>
+        </div>
+        <div class="fr">
             <div class="fg"><label>Unidades</label><input type="number" id="rN" min="1" value="1" oninput="cROI()" onchange="cROI()"></div>
-            <div class="fg"><label>Flota</label><input type="number" id="rF" min="1" id="sF" value="50" oninput="cROI()" onchange="cROI()"></div>
+            <div class="fg"><label>Flota</label><input type="number" id="rF" min="1" value="50" oninput="cROI()" onchange="cROI()"></div>
             <div class="fg"><label>Meses</label><input type="number" id="rD" min="1" max="4" value="1" oninput="cROI()" onchange="cROI()"><div class="rh">Máx 4 (vida útil ploteo)</div></div>
         </div>
         <div class="fg" style="margin-top:8px">
@@ -236,155 +237,80 @@
     <div id="rR" style="display:none">
         <div class="g3" style="margin-bottom:16px">
             <div class="sc"><div class="l">Inversión Total</div><div class="v" id="rInv">$0</div><div class="u" id="rInvD"></div></div>
-            <div class="sc"><div class="l">CPM</div><div class="v" id="rCPM">$0</div><div class="u">Costo cada 1.000 OTS</div></div>
+            <div class="sc"><div class="l">CPM Estimado</div><div class="v" id="rCPM">$0</div><div class="u" id="rCPMRange"></div></div>
             <div class="sc"><div class="l">Costo por OTS</div><div class="v" id="rCPI">$0</div><div class="u">Por visualización</div></div>
         </div>
-        <div class="method-box" style="margin-bottom:16px" id="roiMethodBox">
-            <strong>🏭 Costo de producción:</strong> Seleccioná un formato para ver el costo de producción.
-        </div>
-        <div class="hc">
-            <div class="l">OTS (Opportunity to See) de la Campaña</div>
-            <div class="v" id="rImp">0</div>
-            <div class="s" id="rImpD"></div>
-            <div class="method">Calculado con factores de visibilidad según formato</div>
+        <div class="range-box" id="roiRangeBox">
+            <div class="range-label">📊 OTS Estimados de la Campaña</div>
+            <div class="range-v" style="font-size:28px" id="rImp">0</div>
+            <div class="range-s" id="rImpD"></div>
         </div>
         <div style="text-align:center;margin-top:12px"><button class="btn bs" onclick="cpROI()">📲 Copiar para WhatsApp</button></div>
     </div>
 </div>
 
-<!-- ===== SIMULADOR ===== -->
-<div class="tc" id="t-sim">
-    <div class="st">🎯 Simulador de Campaña</div>
-    <div class="method-box" id="simMethodBox">
-        <strong>🏭 Costo de producción:</strong> $48.000 por luneta (pago único, incluye ploteo e instalación). Varía según el formato. Seleccioná un formato en cada línea para ver el costo real.
-    </div>
-    <div class="pnl">
-        <h3>Agregar Línea</h3>
-        <div class="fr" style="margin-top:10px">
-            <div class="fg" style="flex:2"><label>Línea</label><select id="sL"><option value="" disabled selected>Elegí...</option></select></div>
-            <div class="fg"><label>Formato</label><select id="sFmt" onchange="const f=FORMATOS.find(x=>x.id===this.value);if(f){document.getElementById('sP').value=f.precio_min;document.getElementById('sP').placeholder='Desde '+fp(f.precio_min)+' — '+fp(f.precio_max)}"><option value="">Formato</option></select></div>
-            <div class="fg"><label>Unidades</label><input type="number" id="sN" min="1" value="1"></div>
-            <div class="fg"><label>Flota (coches)</label><input type="number" id="sF" min="1" value="50"></div>
-            <div class="fg"><label>$ por Unidad</label><input type="number" id="sP" placeholder="Rango según formato"></div>
-            <div class="fg" style="display:flex;align-items:flex-end"><button class="btn bp bsm" onclick="addL()">+ Agregar</button></div>
-        </div>
-        <div class="fr">
-            <div class="fg"><label>Duración (meses)</label><input type="number" id="sD" min="1" max="4" value="1" oninput="recalc()"><div class="rh">Máx 4</div></div>
-            <div class="fg"><label>Cliente</label><input type="text" id="sC" placeholder="Ej: Coca-Cola"></div>
-        </div>
-        <div class="fg" style="margin-top:8px">
-            <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-                <input type="checkbox" id="sIVA" onchange="recalc()" style="width:auto;margin:0">
-                <span>Incluir IVA (21%)</span>
-            </label>
-        </div>
-        </div>
-    </div>
-    <div id="simVacia" class="es"><div class="ei">🎯</div><div>Agregá líneas para armar tu campaña</div></div>
-    <div id="simCont" style="display:none">
-        <div class="pnl" style="overflow-x:auto"><h3>Líneas en la Campaña</h3><table class="ct" style="margin-top:10px"><thead><tr><th>Línea</th><th>Formato</th><th>Zona</th><th>Unidades</th><th>$ Unidad</th><th>OTS/mes</th><th>Producción</th><th></th></tr></thead><tbody id="simB"></tbody></table></div>
-        <div class="g4" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px">
-            <div class="sc"><div class="l">Inversión en Pauta</div><div class="v" id="sInvPauta">$0</div><div class="u" id="sInvPautaD"></div></div>
-            <div class="sc"><div class="l">Producción (pago único)</div><div class="v" id="sInvProd">$0</div><div class="u" id="sInvProdU">Varía según formato</div></div>
-            <div class="sc"><div class="l">Inversión Total</div><div class="v" id="sInv">$0</div><div class="u" id="sInvD"></div></div>
-            <div class="sc"><div class="l">CPM Campaña</div><div class="v" id="sCPM">$0</div></div>
-        </div>
-        <div id="sIVARow" style="display:none;margin-bottom:16px">
-            <div class="g4" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px">
-                <div class="sc"><div class="l">IVA (21%)</div><div class="v" id="sIVABox">—</div><div class="u">Sobre inversión total</div></div>
-                <div class="sc"><div class="l" style="color:#f59e0b">Total con IVA</div><div class="v" id="sTotalIVA" style="color:#f59e0b">$0</div><div class="u">Pauta + Prod. + IVA</div></div>
-                <div class="sc" style="grid-column:span 2"></div>
+<!-- ===== INFO ===== -->
+<div class="tc" id="t-info">
+    <div class="src-section">
+        <h2>📚 Fuentes y Metodología</h2>
+
+        <div class="src-grid">
+            <div class="src-card" style="border-color:#34d399">
+                <h4 style="color:#34d399">🚌 Pasajeros — SUBE</h4>
+                <div class="src-val">Datos reales</div>
+                <p>Boletos cortados con tarjeta SUBE por línea de colectivo, por mes. Fuente oficial del Ministerio de Transporte de la Nación.</p>
+                <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 datos.transporte.gob.ar</a>
+                <div class="src-tag">Período: Promedio 2024</div>
+            </div>
+
+            <div class="src-card" style="border-color:#60a5fa">
+                <h4 style="color:#60a5fa">🚗 Tránsito CABA — Anillo Digital</h4>
+                <div class="src-val">Sensores reales</div>
+                <p>Flujo vehicular horario medido por sensores del GCBA en avenidas de la Ciudad. Incluye lat/long, volumen por hora y sentido. Datos por avenida específica.</p>
+                <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 data.buenosaires.gob.ar</a>
+                <div class="src-tag">Período: 2020-2024</div>
+            </div>
+
+            <div class="src-card" style="border-color:#f59e0b">
+                <h4 style="color:#f59e0b">🛣️ Tránsito GBA — Vialidad Nacional</h4>
+                <div class="src-val">TMDA estimado</div>
+                <p>Tránsito Medio Diario Anual en rutas nacionales del conurbano. Datos del Ministerio de Obras Públicas. Para líneas que circulan fuera de CABA.</p>
+                <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 argentina.gob.ar/vialidad</a>
+                <div class="src-tag">Período: 2022-2023</div>
+            </div>
+
+            <div class="src-card" style="border-color:#a78bfa">
+                <h4 style="color:#a78bfa">👁 Rango de Visibilidad</h4>
+                <div class="src-val">25%–45%</div>
+                <p>Rango basado en estudios de OOH internacional (FEPE/OUTSMART/GfK/Nielsen). La visibilidad real de formatos en vía pública va del 25% al 45% de la audiencia expuesta. No existe un número fijo: depende del contexto, formato y condiciones.</p>
+                <a href="https://www.outsmart.org.uk/route/" target="_blank">🔗 OUTSMART ROUTE Study</a><br>
+                <a href="https://www.fepemarketing.com/knowledge-hub/" target="_blank">🔗 FEPE Knowledge Hub</a>
+                <div class="src-tag">Estándar internacional adaptado</div>
+            </div>
+
+            <div class="src-card" style="border-color:#ec4899">
+                <h4 style="color:#ec4899">🚏 Recorridos de Líneas — Paradas GCBA</h4>
+                <div class="src-val">6.963 paradas</div>
+                <p>Dataset de paradas de colectivo de la Ciudad con coordenadas, líneas que pasan y barrios. Se cruzó con sensores Anillo Digital para determinar qué avenidas del recorrido tienen datos reales de tránsito.</p>
+                <a href="https://data.buenosaires.gob.ar/dataset/colectivos-paradas" target="_blank">🔗 data.buenosaires.gob.ar</a>
+                <div class="src-tag">Cruce: paradas ↔ sensores (radio 500m)</div>
             </div>
         </div>
-        <div class="g2" style="margin-bottom:16px">
-            <div class="sc"><div class="l">Total Unidades</div><div class="v" id="sTL">0</div></div>
-            <div class="sc" id="simProdCard"><div class="l">Producción: varía según formato</div><div class="v" style="font-size:14px;color:#f59e0b">Incluye ploteo e instalación</div></div>
-        </div>
-        <div class="hc">
-            <div class="l">OTS (Opportunity to See) Totales</div>
-            <div class="v" id="sImp">0</div>
-            <div class="s" id="sImpD"></div>
-            <div class="method">Con factores de visibilidad según formato</div>
-        </div>
 
-        <div style="text-align:center;margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-            <button class="btn bs" onclick="cpSim()">📲 Copiar WhatsApp</button>
-            <button class="btn bp" onclick="genRep()">📈 Generar Reporte</button>
+        <div class="src-note">
+            <strong>⚠️ Sobre el rango de visibilidad 25%–45%:</strong><br><br>
+            Estudios realizados por FEPE/OUTSMART, especialistas en medición de audiencia para el Out Of Home, nos brindan la siguiente información:<br><br>
+            <strong>OUTSMART/ROUTE (Reino Unido):</strong> Encontró que solo el 30-40% de las personas que pasan por un cartel OOH lo "ven" efectivamente (opportunity to see vs. actual visibility). Fuente: outsmart.org.uk/route<br><br>
+            <strong>FEPE (Europa):</strong> Estableció el estándar europeo de medición OOH (EUROHOHP), que distingue entre exposición (pasar cerca) y visibilidad (mirar efectivamente). Sugiere factores de 25-45% según formato y posición. Fuente: fepemarketing.com<br><br>
+            <strong>GfK/Nielsen OOH:</strong> Estudios de eye-tracking en vía pública muestran tasas de atención de 25-45% según formato. Los formatos en movimiento (como colectivos) tienden al extremo inferior del rango.<br><br>
+            <strong>¿Por qué mostramos un rango y no un número fijo?</strong> Porque la visibilidad real depende de múltiples factores: hora del día, condiciones de tránsito, posición del cartel, clima, etc. Un rango 25%–45% es <strong>transparente y honesto</strong>: no te decimos "esto es exactamente lo que vas a obtener", te mostramos el abanico de resultados posibles según los estudios internacionales más rigurosos.<br><br>
+            El término OTS (Opportunity to See) es el estándar internacional OOH: no decimos "impacto" sino "oportunidad de ver".
         </div>
     </div>
 </div>
 
-<!-- ===== REPORTES ===== -->
-<div class="tc" id="t-rep">
-    <div class="st">📈 Reporte de Campaña</div>
-    <div id="repVacio" class="es"><div class="ei">📈</div><div>Armá la campaña en el Simulador y generá el reporte</div></div>
-    <div id="repCont" style="display:none">
-        <div class="rp" id="repPV"></div>
-        <div style="text-align:center;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-            <button class="btn bs" onclick="cpRep()">📋 Copiar Texto</button>
-            <button class="btn bp" onclick="prRep()">🖨️ Imprimir / PDF</button>
-        </div>
-    </div>
-</div>
-
-        <div class="src-section">
-            <h2>📚 Fuentes y Metodología</h2>
-
-            <div class="src-grid">
-                <div class="src-card" style="border-color:#34d399">
-                    <h4 style="color:#34d399">🚌 Pasajeros — SUBE</h4>
-                    <div class="src-val">Datos reales</div>
-                    <p>Boletos cortados con tarjeta SUBE por línea de colectivo, por mes. Fuente oficial del Ministerio de Transporte de la Nación.</p>
-                    <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">🔗 datos.transporte.gob.ar</a>
-                    <div class="src-tag">Período: Promedio 2024</div>
-                </div>
-
-                <div class="src-card" style="border-color:#60a5fa">
-                    <h4 style="color:#60a5fa">🚗 Tránsito CABA — Anillo Digital</h4>
-                    <div class="src-val">Sensores reales</div>
-                    <p>Flujo vehicular horario medido por sensores del GCBA en avenidas de la Ciudad. Incluye lat/long, volumen por hora y sentido. Datos por avenida específica.</p>
-                    <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">🔗 data.buenosaires.gob.ar</a>
-                    <div class="src-tag">Período: 2020-2024</div>
-                </div>
-
-                <div class="src-card" style="border-color:#f59e0b">
-                    <h4 style="color:#f59e0b">🛣️ Tránsito GBA — Vialidad Nacional</h4>
-                    <div class="src-val">TMDA estimado</div>
-                    <p>Tránsito Medio Diario Anual en rutas nacionales del conurbano. Datos del Ministerio de Obras Públicas. Para líneas que circulan fuera de CABA.</p>
-                    <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">🔗 argentina.gob.ar/vialidad</a>
-                    <div class="src-tag">Período: 2022-2023</div>
-                </div>
-
-                <div class="src-card" style="border-color:#a78bfa">
-                    <h4 style="color:#a78bfa">👁 Factor de Visibilidad</h4>
-                    <div class="src-val">Según formato</div>
-                    <p>Estimación propia basada en estudios de OOH internacional. Cada formato tiene su propio factor de visibilidad para pasajeros y tránsito. No existen estudios específicos para todos los formatos de colectivos en Argentina.</p>
-                    <a href="https://www.outsmart.org.uk/route/" target="_blank">🔗 OUTSMART ROUTE Study</a><br>
-                    <a href="https://www.fepemarketing.com/knowledge-hub/" target="_blank">🔗 FEPE Knowledge Hub</a>
-                    <div class="src-tag">Estándar internacional adaptado</div>
-                </div>
-
-                <div class="src-card" style="border-color:#ec4899">
-                    <h4 style="color:#ec4899">🚏 Recorridos de Líneas — Paradas GCBA</h4>
-                    <div class="src-val">6.963 paradas</div>
-                    <p>Dataset de paradas de colectivo de la Ciudad con coordenadas, líneas que pasan y barrios. Se cruzó con sensores Anillo Digital para determinar qué avenidas del recorrido tienen datos reales de tránsito.</p>
-                    <a href="https://data.buenosaires.gob.ar/dataset/colectivos-paradas" target="_blank">🔗 data.buenosaires.gob.ar</a>
-                    <div class="src-tag">Cruce: paradas ↔ sensores (radio 500m)</div>
-                </div>
-            </div>
-
-            <div class="src-note">
-                <strong>⚠️ Sobre los porcentajes de visibilidad:</strong><br><br>
-                Estudios realizados por FEPE/OUTSMART, especialistas en medicion de audiencia para el Out Of Home, nos brindan la siguiente informacion:<br><br>
-                <strong>OUTSMART/ROUTE (Reino Unido):</strong> Encontró que solo el 30-40% de las personas que pasan por un cartel OOH lo "ven" efectivamente (opportunity to see vs. actual visibility). Fuente: outsmart.org.uk/route<br><br>
-                <strong>FEPE (Europa):</strong> Estableció el estándar europeo de medición OOH (EUROHOHP), que distingue entre exposición (pasar cerca) y visibilidad (mirar efectivamente). Sugiere factores de 25-45% según formato y posición. Fuente: fepemarketing.com<br><br>
-                <strong>GfK/Nielsen OOH:</strong> Estudios de eye-tracking en vía pública muestran tasas de atención de 25-45% según formato. Los formatos en movimiento (como lunetas de colectivos) tienden al extremo inferior.<br><br>
-                Tomando estos estudios sobre medicion en la publicidad OOH como base, usamos un Opportunity to see del 25% para el total de pasajeros por linea y un 25% para el total del transito vehicular. El término OTS (Opportunity to See) es el estándar internacional OOH: no decimos "impacto" sino "oportunidad de ver".
-            </div>
-        </div>
-
-<div class="ft">
-    Fuentes: <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank">Min. Transporte (SUBE)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank">GCBA Anillo Digital</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank">Dir. Nal. Vialidad</a> | <a href="https://data.buenosaires.gob.ar/dataset/colectivos-paradas" target="_blank">GCBA Paradas de Colectivo</a> | Factor visibilidad: estimación propia basada en FEPE/OUTSMART
+<div class="ft" style="text-align:center;padding:16px;font-size:11px;color:#6b7280;border-top:1px solid #1f2937;margin-top:16px">
+    Fuentes: <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha" target="_blank" style="color:#60a5fa">Min. Transporte (SUBE)</a> | <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital" target="_blank" style="color:#60a5fa">GCBA Anillo Digital</a> | <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos" target="_blank" style="color:#60a5fa">Dir. Nal. Vialidad</a> | <a href="https://data.buenosaires.gob.ar/dataset/colectivos-paradas" target="_blank" style="color:#60a5fa">GCBA Paradas de Colectivo</a> | Rango visibilidad 25%–45% según FEPE/OUTSMART
     <br><span style="cursor:pointer;color:#6b7280;font-size:10px;margin-left:8px" onclick="doLogout()">Cerrar sesión</span>
 </div>
 
@@ -417,36 +343,37 @@ const ROUTES={"12":{"avenues":["Av. Cabildo"],"sensors":[{"id":"48Q3CH00+","name
 
 const D={"12":{"f":79,"p":420702,"t":122000,"z":["CABA"],"ts":"gcba"},"41":{"f":67,"p":121416,"t":79000,"z":["CABA","Norte"],"ts":"gcba"},"42":{"f":50,"p":181046,"t":84000,"z":["CABA"],"ts":"gcba"},"47":{"f":48,"p":250000,"t":79000,"z":["CABA"],"ts":"gcba"},"51":{"f":53,"p":25919,"t":20000,"z":["Sur"],"ts":"vialidad"},"53":{"f":108,"p":22933,"t":84000,"z":["CABA","Oeste"],"ts":"gcba"},"57":{"f":145,"p":250000,"t":184000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"64":{"f":58,"p":72825,"t":122000,"z":["CABA"],"ts":"gcba"},"65":{"f":25,"p":172572,"t":122000,"z":["CABA"],"ts":"gcba"},"67":{"f":67,"p":75224,"t":122000,"z":["CABA"],"ts":"gcba"},"68":{"f":82,"p":64240,"t":84000,"z":["CABA"],"ts":"gcba"},"74":{"f":53,"p":16353,"t":20000,"z":["Sur"],"ts":"vialidad"},"79":{"f":53,"p":250000,"t":20000,"z":["Sur"],"ts":"vialidad"},"92":{"f":89,"p":250000,"t":84000,"z":["CABA"],"ts":"gcba"},"102":{"f":50,"p":2324,"t":22000,"z":["CABA"],"ts":"gcba"},"123":{"f":32,"p":250000,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"124":{"f":60,"p":701959,"t":184000,"z":["CABA"],"ts":"gcba"},"126":{"f":79,"p":1182005,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"136":{"f":48,"p":440059,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"148":{"f":50,"p":250000,"t":20000,"z":["Sur"],"ts":"vialidad"},"151":{"f":74,"p":250000,"t":122000,"z":["CABA"],"ts":"gcba"},"163":{"f":28,"p":277020,"t":84000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"166":{"f":75,"p":894049,"t":184000,"z":["CABA","Oeste"],"ts":"gcba"},"176":{"f":151,"p":1597825,"t":184000,"z":["CABA","Norte"],"ts":"gcba"},"177":{"f":53,"p":594679,"t":20000,"z":["Sur"],"ts":"vialidad"},"182":{"f":80,"p":1113491,"t":184000,"z":["CABA","Norte","Oeste"],"ts":"gcba"},"194":{"f":92,"p":530650,"t":40000,"z":["CABA","Norte"],"ts":"gcba"},"195":{"f":61,"p":413138,"t":84000,"z":["CABA","Sur"],"ts":"gcba"},"203":{"f":244,"p":2758179,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"204":{"f":33,"p":174016,"t":20000,"z":["Norte"],"ts":"vialidad"},"218":{"f":33,"p":636423,"t":20000,"z":["Oeste"],"ts":"vialidad"},"222":{"f":59,"p":121223,"t":20000,"z":["Oeste"],"ts":"vialidad"},"236":{"f":160,"p":1798120,"t":20000,"z":["Oeste"],"ts":"vialidad"},"237":{"f":96,"p":1115632,"t":20000,"z":["Oeste"],"ts":"vialidad"},"263":{"f":13,"p":904083,"t":20000,"z":["Sur"],"ts":"vialidad"},"264":{"f":25,"p":324549,"t":20000,"z":["Norte"],"ts":"vialidad"},"269":{"f":125,"p":1150960,"t":20000,"z":["Oeste"],"ts":"vialidad"},"276":{"f":73,"p":800924,"t":20000,"z":["Norte"],"ts":"vialidad"},"283":{"f":31,"p":689263,"t":20000,"z":["Sur"],"ts":"vialidad"},"284":{"f":33,"p":114030,"t":20000,"z":["Oeste"],"ts":"vialidad"},"306":{"f":59,"p":1172811,"t":20000,"z":["Oeste"],"ts":"vialidad"},"310":{"f":11,"p":108849,"t":20000,"z":["Norte"],"ts":"vialidad"},"315":{"f":93,"p":561302,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"322":{"f":32,"p":384973,"t":20000,"z":["Oeste"],"ts":"vialidad"},"325":{"f":33,"p":206873,"t":20000,"z":["Oeste"],"ts":"vialidad"},"326":{"f":10,"p":86944,"t":20000,"z":["Oeste"],"ts":"vialidad"},"327":{"f":20,"p":542051,"t":20000,"z":["Oeste"],"ts":"vialidad"},"336":{"f":20,"p":163683,"t":20000,"z":["Oeste"],"ts":"vialidad"},"365":{"f":194,"p":2566192,"t":20000,"z":["Norte","Oeste"],"ts":"vialidad"},"370":{"f":13,"p":13749,"t":20000,"z":["Sur"],"ts":"vialidad"},"371":{"f":54,"p":69118,"t":20000,"z":["Sur"],"ts":"vialidad"},"373":{"f":50,"p":367710,"t":20000,"z":["Sur"],"ts":"vialidad"},"378":{"f":33,"p":635943,"t":20000,"z":["Oeste"],"ts":"vialidad"},"382":{"f":50,"p":624749,"t":20000,"z":["Oeste"],"ts":"vialidad"},"388":{"f":50,"p":912547,"t":20000,"z":["Oeste"],"ts":"vialidad"},"396":{"f":50,"p":879949,"t":20000,"z":["Oeste"],"ts":"vialidad"},"404":{"f":50,"p":508901,"t":20000,"z":["Oeste"],"ts":"vialidad"},"410":{"f":28,"p":92149,"t":20000,"z":["Sur"],"ts":"vialidad"},"422":{"f":50,"p":355810,"t":20000,"z":["Sur"],"ts":"vialidad"},"423":{"f":50,"p":701549,"t":20000,"z":["Sur"],"ts":"vialidad"},"426":{"f":50,"p":242549,"t":20000,"z":["Sur"],"ts":"vialidad"},"428":{"f":50,"p":352949,"t":20000,"z":["Sur"],"ts":"vialidad"},"435":{"f":13,"p":62149,"t":20000,"z":["Sur"],"ts":"vialidad"},"436":{"f":50,"p":148810,"t":20000,"z":["Sur"],"ts":"vialidad"},"440":{"f":93,"p":639349,"t":20000,"z":["Sur"],"ts":"vialidad"},"442":{"f":50,"p":378749,"t":20000,"z":["Sur"],"ts":"vialidad"},"500":{"f":50,"p":374949,"t":20000,"z":["Sur"],"ts":"vialidad"},"501":{"f":50,"p":28910,"t":20000,"z":["Sur"],"ts":"vialidad"},"503":{"f":69,"p":546149,"t":20000,"z":["Sur"],"ts":"vialidad"},"505":{"f":50,"p":53210,"t":20000,"z":["Sur"],"ts":"vialidad"},"511":{"f":50,"p":648649,"t":20000,"z":["Sur"],"ts":"vialidad"},"520":{"f":50,"p":823149,"t":20000,"z":["Sur"],"ts":"vialidad"}};
 
-const FORMATOS=[
-    {id:"diferencial",nombre:"Diferencial",vp:0.40,vt:0.40,precio_min:1500000,precio_max:2200000,produccion:1100000,emoji:"👑"},
-    {id:"panoramico",nombre:"Panorámico",vp:0.35,vt:0.35,precio_min:900000,precio_max:1300000,produccion:800000,emoji:"🖼️"},
-    {id:"lunetaled",nombre:"Luneta LED",vp:0.30,vt:0.30,precio_min:300000,precio_max:450000,produccion:0,emoji:"💡"},
-    {id:"backfull",nombre:"Backfull",vp:0.30,vt:0.30,precio_min:150000,precio_max:300000,produccion:150000,emoji:"🚌"},
-    {id:"luneta",nombre:"Luneta",vp:0.25,vt:0.25,precio_min:70000,precio_max:130000,produccion:48000,emoji:"🏷️"},
-    {id:"cenefa",nombre:"Cenefa",vp:0.30,vt:0.00,precio_min:70000,precio_max:110000,produccion:38000,emoji:"📐"}
-];
-let cL=null,camp=[];
+let cL=null;
 
 function f(n){return n>=1e6?(n/1e6).toFixed(1)+"M":n>=1e3?Math.round(n).toLocaleString("es-AR"):n.toString()}
 function fp(n){return"$"+Math.round(n).toLocaleString("es-AR")}
-function fdt(){return new Date().toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit",year:"numeric"})}
 
-// OTS por unidad/mes
-function impEfect(info, flota, formatoId){const fl=flota||info.f||50;const fmt=FORMATOS.find(f=>f.id===formatoId)||FORMATOS.find(f=>f.id==='luneta');return Math.round((info.p/fl)*fmt.vp+(info.t*30/fl)*fmt.vt)}
+// OTS por unidad/mes — devuelve rango {min, max}
+function impEfect(info, flota){
+    const fl=flota||info.f||50;
+    const pBus=info.p/fl;
+    const tBus=info.t*30/fl;
+    const min=Math.round(pBus*0.25+tBus*0.25);
+    const max=Math.round(pBus*0.45+tBus*0.45);
+    return{min,max};
+}
 
 function swTab(t){
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
     document.querySelectorAll('.tc').forEach(x=>x.classList.remove('active'));
-    const idx={impacto:1,roi:2,sim:3,rep:4}[t];
+    const idx={impacto:1,roi:2,info:3}[t];
     document.querySelector('.tab:nth-child('+idx+')').classList.add('active');
     document.getElementById('t-'+t).classList.add('active');
 }
 
-// IMPACTO
+// === OTS TAB ===
 function fL(){
     const s=document.getElementById('sI').value.toLowerCase(),z=document.getElementById('zF').value,so=document.getElementById('sF').value,sel=document.getElementById('lS');
     let k=Object.keys(D).filter(l=>{const i=D[l];return l.toLowerCase().includes(s)&&(z==='ALL'||i.z.includes(z))});
-    if(so==='IMP')k.sort((a,b)=>impEfect(D[b])-impEfect(D[a]));
+    if(so==='IMP')k.sort((a,b)=>{
+        const ra=impEfect(D[a]),rb=impEfect(D[b]);
+        return (rb.min+rb.max)-(ra.min+ra.max);
+    });
     else k.sort((a,b)=>(parseInt(a)||0)-(parseInt(b)||0));
     sel.innerHTML='<option value="" disabled selected>Elegí Línea ('+k.length+')...</option>';
     k.forEach(l=>{sel.innerHTML+='<option value="'+l+'">Línea '+l+'</option>'});
@@ -456,10 +383,11 @@ function fL(){
 function uP(){
     const l=document.getElementById('lS').value;if(!l)return;cL=l;
     const i=D[l];if(!i)return;
-    const fmtSel=document.getElementById('fmtSelect').value;
-    const fmt=FORMATOS.find(f=>f.id===fmtSel)||FORMATOS.find(f=>f.id==='luneta');
-    const ie=impEfect(i, i.f||50, fmtSel),ied=ie/30;
-    // Update traffic source link based on data provenance
+    const fl=i.f||50;
+    const range=impEfect(i, fl);
+    const pBus=Math.round(i.p/fl);
+    const tBus=Math.round(i.t*30/fl);
+    // Traffic source
     const srcEl=document.getElementById('vSrc');
     if(i.ts==='gcba'){
         srcEl.href='https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital';
@@ -469,19 +397,20 @@ function uP(){
         srcEl.innerHTML='🔗 Vialidad Nacional';
     }
     let tg=i.z.map(z=>'<span class="zt">'+z+'</span>').join(' ');
-    // Add source badge for traffic data
     const srcBadge=i.ts==='gcba'?'<span style="display:inline-block;font-size:10px;background:#dcfce7;color:#166534;padding:1px 6px;border-radius:8px;margin-left:6px;font-weight:600">GCBA Anillo Digital</span>':'<span style="display:inline-block;font-size:10px;background:#dbeafe;color:#1e40af;padding:1px 6px;border-radius:8px;margin-left:6px;font-weight:600">Vialidad Nacional</span>';
-    document.getElementById('pT').innerHTML='Línea '+l+' '+tg+srcBadge+' — '+fmt.emoji+' '+fmt.nombre;
+    document.getElementById('pT').innerHTML='Línea '+l+' '+tg+srcBadge;
     document.getElementById('pM').innerText=f(i.p);
     document.getElementById('pD').innerText=f(i.p/30)+' / día';
     document.getElementById('vM').innerText=f(i.t*30);
     document.getElementById('vD').innerText=f(i.t)+' / día';
-    document.getElementById('iM').innerText=f(ie);
-    document.getElementById('iD').innerText=f(ied)+' OTS diarios';
+    // OTS range
+    document.getElementById('iRange').innerText=f(range.min)+' — '+f(range.max);
+    document.getElementById('iRangeD').innerText=f(Math.round(range.min/30))+' — '+f(Math.round(range.max/30))+' OTS/día';
+    // Audiencia por bondi
+    document.getElementById('pBus').innerText=f(pBus);
+    document.getElementById('pBusD').innerText='pasajeros por bondi / mes ('+f(tBus)+' vehículos/mes por bondi)';
     document.getElementById('placa').style.display='block';
-    // Vis info
-    document.getElementById('visInfo').innerHTML='<strong>👁 Factor de visibilidad ('+fmt.emoji+' '+fmt.nombre+'):</strong> '+(fmt.vp*100).toFixed(0)+'% pasajeros + '+(fmt.vt*100).toFixed(0)+'% tránsito → Solo contabilizamos las oportunidades reales de visualización (OTS). Esto hace que nuestros números sean <strong>conservadores y defendibles</strong> ante cualquier cliente.';
-    
+
     // Route section
     const rDiv=document.getElementById('routeSection');
     const rC=document.getElementById('routeContent');
@@ -512,223 +441,72 @@ function uP(){
 }
 
 function cpImp(){
-    if(!cL)return;const i=D[cL];
-    const fmtId=document.getElementById('fmtSelect').value;
-    const fmt=FORMATOS.find(f=>f.id===fmtId)||FORMATOS.find(f=>f.id==='luneta');
-    const ie=impEfect(i, i.f||50, fmtId);
+    if(!cL)return;const i=D[cL];const fl=i.f||50;
+    const range=impEfect(i, fl);
+    const pBus=Math.round(i.p/fl);
     const srcLabel=i.ts==='gcba'?'GCBA Anillo Digital':'Vialidad';
     const srcUrl=i.ts==='gcba'?'data.buenosaires.gob.ar':'argentina.gob.ar/vialidad';
     const rt=ROUTES[cL];
     let routeTxt='';
     if(rt&&rt.avenues.length>0){routeTxt='\n🗺️ *Recorrido:* '+rt.avenues.join(', ')+(rt.sensors.length?' ('+rt.sensors.length+' sensor(es) Anillo Digital)':' (sin sensores cercanos)');}
-    const txt=`🚌 *OTS OOH — Línea ${cL}*\n📍 ${i.z.join(', ')}\n🎯 Formato: ${fmt.emoji} ${fmt.nombre}\n\n👥 ${f(i.p)} pasajeros/mes (SUBE)\n🚗 ${f(i.t*30)} vehículos/mes (${srcLabel})\n👁 Factor visibilidad: ${(fmt.vp*100).toFixed(0)}% pasajeros + ${(fmt.vt*100).toFixed(0)}% tránsito\n\n🔥 *${f(ie)} OTS/mes* por unidad${routeTxt}\n\n🔗 Fuentes: datos.transporte.gob.ar | ${srcUrl}`;
+    const txt=`🚌 *OTS OOH — Línea ${cL}*\n📍 ${i.z.join(', ')}\n\n👥 ${f(i.p)} pasajeros/mes (SUBE)\n🚗 ${f(i.t*30)} vehículos/mes (${srcLabel})\n🚌 ${f(pBus)} pasajeros por bondi/mes\n👁 Rango visibilidad 25%–45% (FEPE/OUTSMART)\n\n🔥 *OTS: entre ${f(range.min)} y ${f(range.max)} por bondi/mes*${routeTxt}\n\n🔗 Fuentes: datos.transporte.gob.ar | ${srcUrl}`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
-// ROI
+// === CPM TAB ===
 function cROI(){
-    const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value)||0,d=parseInt(document.getElementById('rD').value)||1,flota=parseInt(document.getElementById('rF').value)||50;
-    const fmtId=document.getElementById('rFmt').value||'luneta';
-    const fmt=FORMATOS.find(f=>f.id===fmtId)||FORMATOS.find(f=>f.id==='luneta');
-    if(!l||!pr||!n){document.getElementById('rR').style.display='none';return}
+    const l=document.getElementById('rL').value,
+        pr=parseFloat(document.getElementById('rP').value),
+        prod=parseFloat(document.getElementById('rProd').value)||0,
+        n=parseInt(document.getElementById('rN').value)||0,
+        d=parseInt(document.getElementById('rD').value)||1,
+        flota=parseInt(document.getElementById('rF').value)||50;
+    if(!l||isNaN(pr)||!n){document.getElementById('rR').style.display='none';return}
     const i=D[l];if(!i)return;
-    const invPauta=pr*n*d,invProd=fmt.produccion*n,inv=invPauta+invProd,imM=impEfect(i, flota, fmtId)*n,imT=imM*d,cpm=imT>0?inv/imT*1e3:0,cpi=imT>0?inv/imT:0;
+    const invPauta=pr*n*d,invProd=prod*n,inv=invPauta+invProd;
+    const range=impEfect(i, flota);
+    const imMin=range.min*n,imMax=range.max*n;
+    const imTMin=imMin*d,imTMax=imMax*d;
+    const cpmMin=imTMax>0?inv/imTMax*1e3:0;
+    const cpmMax=imTMin>0?inv/imTMin*1e3:0;
+    const cpiMin=imTMax>0?inv/imTMax:0;
+    const cpiMax=imTMin>0?inv/imTMin:0;
     const ivaChk=document.getElementById('rIVA').checked,ivaAmt=ivaChk?inv*0.21:0,totalInv=inv+ivaAmt;
-    const cpmIVA=imT>0?totalInv/imT*1e3:0,cpiIVA=imT>0?totalInv/imT:0;
+    const cpmMinIVA=imTMax>0?totalInv/imTMax*1e3:0;
+    const cpmMaxIVA=imTMin>0?totalInv/imTMin*1e3:0;
     document.getElementById('rInv').innerText=fp(ivaChk?totalInv:inv);
     document.getElementById('rInvD').innerText=ivaChk?'Pauta '+fp(invPauta)+' + Prod. '+fp(invProd)+' + IVA '+fp(ivaAmt):'Pauta '+fp(invPauta)+' + Prod. '+fp(invProd);
-    document.getElementById('rCPM').innerText=fp(ivaChk?cpmIVA:cpm);
-    document.getElementById('rCPI').innerText=fp(ivaChk?cpiIVA:cpi);
-    document.getElementById('rImp').innerText=f(imT);
-    document.getElementById('rImpD').innerText=f(imM)+'/mes × '+n+' unidades';
+    document.getElementById('rCPM').innerText=ivaChk?fp(cpmMinIVA):fp(cpmMin);
+    document.getElementById('rCPMRange').innerText='CPM entre '+fp(ivaChk?cpmMinIVA:cpmMin)+' y '+fp(ivaChk?cpmMaxIVA:cpmMax)+' (según visibilidad)';
+    document.getElementById('rCPI').innerText=fp(ivaChk?cpiMin:cpiMin);
+    document.getElementById('rImp').innerText=f(imTMin)+' — '+f(imTMax);
+    document.getElementById('rImpD').innerText=f(range.min)+'—'+f(range.max)+'/mes × '+n+' un. × '+d+' mes(es)';
     document.getElementById('rR').style.display='block';
-    // Update method box
-    const prodLabel=fmt.produccion===0?'Sin costo de producción':fp(fmt.produccion)+' por '+fmt.nombre.toLowerCase();
-    document.getElementById('roiMethodBox').innerHTML='<strong>🏭 Costo de producción ('+fmt.emoji+' '+fmt.nombre+'):</strong> '+prodLabel+' (pago único, incluye ploteo e instalación). IVA según checkbox.';
 }
-
 
 function cpROI(){
-    const l=document.getElementById('rL').value,pr=parseFloat(document.getElementById('rP').value),n=parseInt(document.getElementById('rN').value),d=parseInt(document.getElementById('rD').value),flota=parseInt(document.getElementById('rF').value)||50;
-    const fmtId=document.getElementById('rFmt').value||'luneta';
-    const fmt=FORMATOS.find(f=>f.id===fmtId)||FORMATOS.find(f=>f.id==='luneta');
+    const l=document.getElementById('rL').value,
+        pr=parseFloat(document.getElementById('rP').value),
+        prod=parseFloat(document.getElementById('rProd').value)||0,
+        n=parseInt(document.getElementById('rN').value),
+        d=parseInt(document.getElementById('rD').value),
+        flota=parseInt(document.getElementById('rF').value)||50;
     const i=D[l];if(!i)return;
-    const invPauta=pr*n*d,invProd=fmt.produccion*n,inv=invPauta+invProd,imT=impEfect(i, flota, fmtId)*n*d,cpm=imT>0?inv/imT*1e3:0;
-    const prodLabel=fmt.produccion===0?'Sin costo de producción':fp(fmt.produccion)+'/'+fmt.nombre.toLowerCase()+' (pago único)';
-    const txt=`💰 *CPM OOH — Línea ${l}*\n🎯 Formato: ${fmt.emoji} ${fmt.nombre}\n\n💵 Inversión en pauta: ${fp(invPauta)}\n🏭 Producción: ${fp(invProd)} (${prodLabel})\n💵 *Inversión Total: ${fp(inv)}*\n📊 OTS efectivos: ${f(imT)}\n📈 CPM: ${fp(cpm)}\n📉 Costo/OTS: ${fp(inv/imT)}\n👁 Visibilidad: ${(fmt.vp*100).toFixed(0)}% pasajeros + ${(fmt.vt*100).toFixed(0)}% tránsito\n\n🔥 ${f(imT)} visualizaciones por ${fp(inv)}`;
+    const invPauta=pr*n*d,invProd=prod*n,inv=invPauta+invProd;
+    const range=impEfect(i, flota);
+    const imTMin=range.min*n*d,imTMax=range.max*n*d;
+    const cpmMin=imTMax>0?inv/imTMax*1e3:0;
+    const cpmMax=imTMin>0?inv/imTMin*1e3:0;
+    const txt=`💰 *CPM OOH — Línea ${l}*\n\n💵 Precio por exhibición: ${fp(pr)}\n🏭 Producción: ${fp(invProd)}\n💵 *Inversión Total: ${fp(inv)}*\n📊 *OTS: entre ${f(imTMin)} y ${f(imTMax)}*\n📈 *CPM: entre ${fp(cpmMin)} y ${fp(cpmMax)}*\n👁 Rango visibilidad 25%–45% (FEPE/OUTSMART)\n🚌 ${n} unidades × ${flota} flota × ${d} mes(es)\n\n🔥 OTS entre ${f(range.min)} y ${f(range.max)} por bondi/mes`;
     navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
 }
 
-// SIMULADOR
-function addL(){
-    const l=document.getElementById('sL').value,n=parseInt(document.getElementById('sN').value)||1,pr=parseFloat(document.getElementById('sP').value),flota=parseInt(document.getElementById('sF').value)||50;
-    const fmtId=document.getElementById('sFmt').value||'luneta';
-    if(!l||!pr){alert('Elegí línea y poné precio');return}
-    if(camp.find(c=>c.l===l)){alert('Esa línea ya está');return}
-    camp.push({l,n,pr,f:flota,fmt:fmtId});recalc();
-    document.getElementById('sP').value='';document.getElementById('sN').value='1';document.getElementById('sF').value='50';
-}
-
-function rmL(l){camp=camp.filter(c=>c.l!==l);recalc()}
-
-function recalc(){
-    const d=parseInt(document.getElementById('sD').value)||1,emp=camp.length===0;
-    document.getElementById('simVacia').style.display=emp?'block':'none';
-    document.getElementById('simCont').style.display=emp?'none':'block';
-    if(emp)return;
-    let tl=0,ti=0,tinvPauta=0,tinvProd=0;const b=document.getElementById('simB');b.innerHTML='';
-    camp.forEach(c=>{
-        const i=D[c.l];if(!i)return;
-        const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');
-        const im=impEfect(i, c.f, c.fmt)*c.n;tl+=c.n;ti+=im*d;tinvPauta+=c.pr*c.n*d;
-        const prodLinea=fmt.produccion*c.n;tinvProd+=prodLinea;
-        b.innerHTML+=`<tr><td class="lc">${c.l}</td><td>${fmt.emoji} ${fmt.nombre}</td><td>${i.z.map(z=>'<span class="zt">'+z+'</span> ').join('')}</td><td>${c.n}</td><td>${fp(c.pr)}</td><td>${f(im)}/mes</td><td>${fp(prodLinea)}</td><td class="rc"><button class="btn bd" onclick="rmL('${c.l}')">✕</button></td></tr>`;
-    });
-    const tinv=tinvPauta+tinvProd;
-    const cpm=ti>0?tinv/ti*1e3:0;
-    const iva=document.getElementById('sIVA').checked?tinv*0.21:0;
-    const totalConIVA=tinv+iva;
-    document.getElementById('sInvPauta').innerText=fp(tinvPauta);
-    document.getElementById('sInvPautaD').innerText='Pauta mensual × '+d+' mes(es)';
-    document.getElementById('sInvProd').innerText=fp(tinvProd);
-    document.getElementById('sInv').innerText=fp(tinv);
-    document.getElementById('sInvD').innerText=iva>0?'Pauta + Prod. + IVA':'Pauta + Producción';
-    // Update production unit text
-    const productLabels=camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');return fmt.produccion===0?'sin costo':fp(fmt.produccion);}).join('/');
-    document.getElementById('sInvProdU').innerText=productLabels+'/unidad';
-    // Update production card
-    const prodCard=document.getElementById('simProdCard');
-    const prodBreakdown=camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');return fmt.emoji+' '+fp(fmt.produccion);}).join(' | ');
-    prodCard.innerHTML='<div class="l">Producción por formato</div><div style="font-size:12px;color:#9ca3af">'+prodBreakdown+'</div><div class="v" style="font-size:14px;color:#f59e0b">Incluye ploteo e instalación</div>';
-    if(document.getElementById('sIVABox'))document.getElementById('sIVABox').innerText=iva>0?fp(iva):'—';
-    if(document.getElementById('sTotalIVA'))document.getElementById('sTotalIVA').innerText=fp(totalConIVA);
-    const cpmBase=ti>0?tinv/ti*1e3:0;
-    const cpmIVA=ti>0?totalConIVA/ti*1e3:0;
-    document.getElementById('sCPM').innerText=iva>0?fp(cpmIVA):fp(cpmBase);
-    document.getElementById('sTL').innerText=tl;
-    document.getElementById('sImp').innerText=f(ti);
-    document.getElementById('sImpD').innerText=f(ti/d)+'/mes × '+d+' meses';
-}
-
-function cpSim(){
-    const d=parseInt(document.getElementById('sD').value)||1,cl=document.getElementById('sC').value||'Cliente';
-    let ti=0,tinvPauta=0,tinvProd=0,tl=0;
-    camp.forEach(c=>{const i=D[c.l];if(!i)return;const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');const im=impEfect(i, c.f, c.fmt)*c.n;tl+=c.n;ti+=im*d;tinvPauta+=c.pr*c.n*d;tinvProd+=fmt.produccion*c.n;});
-    const tinv=tinvPauta+tinvProd;
-    const ivaChk=document.getElementById('sIVA').checked,ivaAmt=ivaChk?tinv*0.21:0,totalIVA=tinv+ivaAmt;
-    const cpm=ti>0?tinv/ti*1e3:0,cpmIVA=ti>0?totalIVA/ti*1e3:0;
-    let lt=camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');const invP=c.pr*c.n*d;const prod=fmt.produccion*c.n;const prodLabel=fmt.produccion===0?'sin costo':fp(prod);return`  • Línea ${c.l} (${fmt.emoji} ${fmt.nombre}): ${c.n} unid. × ${fp(c.pr)}/mes = ${fp(invP)} (prod: ${prodLabel})`}).join('\n');
-    const prodBreakdown=camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');return fmt.nombre+': '+fp(fmt.produccion);}).join(', ');
-    const ivaTxt=ivaChk?`\n📊 IVA (21%): ${fp(ivaAmt)}\n💰 *Total con IVA: ${fp(totalIVA)}*`:'';
-    const txt=`🎯 *Propuesta OOH — ${cl}*\n⏱ ${d} mes(es)\n\n📋 Líneas:\n${lt}\n\n💵 *Inversión en pauta:* ${fp(tinvPauta)}\n🏭 *Producción:* ${fp(tinvProd)} (${prodBreakdown})\n💰 *Inversión Total:* ${fp(tinv)}${ivaTxt}\n📊 *${f(ti)} OTS*\n📈 CPM${ivaChk?' con IVA':''}: ${fp(ivaChk?cpmIVA:cpm)}\n👁 Visibilidad: según formato\n🚌 ${tl} unidades en ${camp.length} líneas\n\n📝 *Costo de producción: varía por formato (${prodBreakdown}).${ivaChk?' Incluye IVA 21%.':' No incluye IVA.'}*\n\n🔗 Media 500`;
-    navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
-}
-
-// REPORTES
-function genRep(){
-    if(!camp.length){alert('Armá la campaña primero');return}
-    swTab('rep');
-    const d=parseInt(document.getElementById('sD').value)||1,cl=document.getElementById('sC').value||'Cliente',dt=fdt();
-    let ti=0,tinvPauta=0,tinvProd=0,tl=0;
-    const lineDetail=camp.map(c=>{
-        const i=D[c.l];
-        const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');
-        const im=impEfect(i, c.f, c.fmt)*c.n;const imT=im*d;const invP=c.pr*c.n*d;const prod=fmt.produccion*c.n;const invL=invP+prod;
-        ti+=imT;tinvPauta+=invP;tinvProd+=prod;tl+=c.n;
-        const cpmLine=imT>0?invL/imT*1e3:0;const otsDia=Math.round(imT/(d*30));
-        const rt=ROUTES[c.l];
-        const ruta=rt&&rt.avenues.length?rt.avenues.join(', '):i.z.join(', ');
-        const fuentes=[];
-        if(rt&&rt.sensors.length)fuentes.push('GCBA Anillo Digital');
-        else if(i.z.some(z=>z.includes('CABA')))fuentes.push('GCBA Anillo Digital (estimado)');
-        else fuentes.push('Vialidad Nacional (TMDA)');
-        fuentes.push('SUBE (Min. Transporte)');
-        const prodLabel=fmt.produccion===0?'Sin costo':fp(prod);
-        return`<tr>
-            <td style="font-weight:700;color:#1d4ed8">Línea ${c.l}</td>
-            <td>${fmt.emoji} ${fmt.nombre}</td>
-            <td>${c.n}/${c.f}</td>
-            <td>${fp(c.pr)}/mes</td>
-            <td>${f(im)}/mes</td>
-            <td>${f(otsDia)}/día</td>
-            <td>${fp(cpmLine)}</td>
-        </tr>
-        <tr>
-            <td colspan="7" style="font-size:11px;color:#6b7280;background:#f9fafb;padding:4px 12px;border-bottom:2px solid #e5e7eb">
-                👁 Visibilidad: ${(fmt.vp*100).toFixed(0)}% pasajeros + ${(fmt.vt*100).toFixed(0)}% tránsito · 🗺️ <strong>Recorrido:</strong> ${ruta} &nbsp;|&nbsp; 📡 <strong>Datos:</strong> ${fuentes.join(' + ')} &nbsp;|&nbsp; 🏭 <strong>Prod.:</strong> ${prodLabel} &nbsp;|&nbsp; 🚌 <strong>Flota:</strong> ${c.f} coches (${c.n} ploteados = ${(c.n/c.f*100).toFixed(0)}%)
-            </td>
-        </tr>`;
-    }).join('');
-    const tinv=tinvPauta+tinvProd;
-    const ivaChk=document.getElementById('sIVA').checked,ivaAmt=ivaChk?tinv*0.21:0,totalIVA=tinv+ivaAmt;
-    const cpm=ti>0?tinv/ti*1e3:0,cpmIVA=ti>0?totalIVA/ti*1e3:0;
-    const rp=document.getElementById('repPV');
-    // Build production breakdown for report
-    const prodDetail=camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');const p=fmt.produccion*c.n;return c.n+' '+fmt.nombre.toLowerCase()+' × '+fp(fmt.produccion)+' = '+fp(p);}).join(', ');
-    const prodLabel=prodDetail||fp(tinvProd);
-    const produccionNota="Costo de producción: varía por formato ("+camp.map(c=>{const fmt=FORMATOS.find(f=>f.id===c.fmt)||FORMATOS.find(f=>f.id==='luneta');return fmt.nombre+': '+fp(fmt.produccion);}).join(', ')+")";
-
-    rp.innerHTML=`
-        <div style="text-align:center;margin-bottom:16px">
-            <img src="https://i.ibb.co/N29Ts7WX/Logo-media-500-CIRCULAR-jpg.jpg" alt="Media 500" style="width:50px;border-radius:50%;margin-bottom:6px">
-            <h2 style="margin:0">Reporte de Campaña OOH</h2>
-            <div style="color:#6b7280;font-size:12px;margin-top:3px">${dt} — ${cl}</div>
-        </div>
-        <div class="rs"><div class="rl">Cliente:</div> ${cl}</div>
-        <div class="rs"><div class="rl">Duración:</div> ${d} mes(es)</div>
-        <div class="rs"><div class="rl">Total Unidades:</div> ${tl} unidades en ${camp.length} líneas</div>
-        <div class="rs" style="background:#eff6ff;border-radius:6px;padding:10px;margin-top:10px">
-            <div class="rl">📐 Metodología:</div> OTS = (Pasajeros SUBE por colectivo) × visibilidad pasajeros + Tránsito vehicular × visibilidad tránsito. Los pasajeros totales se dividen por la flota activa para calcular cuántos pasajeros reales transporta cada bondi. Solo contabilizamos la fracción de pasajeros que corresponde a nuestras unidades. La visibilidad varía según el formato elegido.
-        </div>
-        <div class="rs" style="margin-top:12px"><div class="rl">Desglose por Línea:</div>
-            <table><thead><tr><th>Línea</th><th>Formato</th><th>Unid.</th><th>$ Unid/mes</th><th>OTS/mes</th><th>OTS/día</th><th>CPM</th></tr></thead><tbody>${lineDetail}</tbody></table>
-        </div>
-        <div style="background:#eff6ff;border-radius:6px;padding:16px;margin:16px 0;text-align:center">
-            <div style="font-size:12px;color:#1d4ed8;font-weight:700;text-transform:uppercase">Desglose de Inversión</div>
-            <table style="width:60%;margin:8px auto 0">
-                <tr><td style="font-weight:700;text-align:right;padding:4px 8px">Inversión en Pauta (${d} mes(es)):</td><td style="font-weight:700;padding:4px 8px">${fp(tinvPauta)}</td></tr>
-                <tr><td style="font-weight:700;text-align:right;padding:4px 8px">Producción:</td><td style="font-weight:700;padding:4px 8px">${fp(tinvProd)}</td></tr>
-                <tr><td colspan="2" style="font-size:10px;color:#6b7280;padding:2px 8px">${prodDetail}</td></tr>
-                ${ivaChk?`<tr><td style="font-weight:700;text-align:right;padding:4px 8px">IVA (21%):</td><td style="font-weight:700;padding:4px 8px">${fp(ivaAmt)}</td></tr>`:''}
-                <tr style="border-top:2px solid #1d4ed8"><td style="font-weight:700;text-align:right;padding:6px 8px;font-size:14px;color:#1d4ed8">INVERSIÓN TOTAL${ivaChk?' (con IVA)':''}:</td><td style="font-weight:700;padding:6px 8px;font-size:14px;color:#1d4ed8">${fp(ivaChk?totalIVA:tinv)}</td></tr>
-            </table>
-            <div style="font-size:12px;color:#374151;margin-top:8px">${f(ti)} OTS</div>
-        </div>
-        <div class="rs" style="background:#fefce8;border-radius:6px;padding:10px;margin-top:10px;font-size:12px;color:#92400e;line-height:1.5">
-            <strong>📝 ${produccionNota}</strong> (pago único, incluye ploteo e instalación). No incluye IVA.
-        </div>
-        <div class="rs"><div class="rl">Métricas de Eficiencia:</div>
-            <table>
-                <tr><td style="font-weight:700">CPM (costo por 1.000 OTS)${ivaChk?' con IVA':''}</td><td>${fp(ivaChk?cpmIVA:cpm)}</td></tr>
-                <tr><td style="font-weight:700">OTS diarios promedio</td><td>${f(ti/(d*30))}</td></tr>
-            </table>
-        </div>
-        <div class="rf">
-            <strong>Media 500</strong> — Publicidad en Vía Pública<br>
-            Fuentes: Ministerio de Transporte (Red SUBE), Dirección Nacional de Vialidad (TMDA), GCBA — Anillo Digital (tránsito CABA).<br>
-            Factor de visibilidad: estándar FEPE/OUTSMART. Varía según el formato elegido.<br>
-            ${produccionNota} (pago único, incluye ploteo e instalación). ${ivaChk?'Incluye IVA 21%.':'No incluye IVA.'}<br>
-            Datos de pasajeros: promedio 2024. Datos de tránsito CABA: sensores GCBA Anillo Digital. Datos de tránsito GBA: TMDA Vialidad Nacional.
-        </div>`;
-    document.getElementById('repVacio').style.display='none';
-    document.getElementById('repCont').style.display='block';
-}
-
-function cpRep(){const t=document.getElementById('repPV').innerText;navigator.clipboard.writeText(t).then(()=>alert('¡Reporte copiado!'))}
-function prRep(){const e=document.getElementById('repPV'),w=window.open('','_blank');w.document.write('<html><head><title>Reporte Media 500</title><style>body{font-family:Segoe UI,sans-serif;padding:30px;color:#111}table{width:100%;border-collapse:collapse}th,td{padding:6px;border-bottom:1px solid #e5e7eb;text-align:left}th{background:#f3f4f6;font-size:11px}</style></head><body>'+e.innerHTML+'</body></html>');w.document.close();w.print()}
-
-// INIT
+// === INIT ===
 function init(){
     const ks=Object.keys(D).sort((a,b)=>(parseInt(a)||0)-(parseInt(b)||0));
     const o='<option value="" disabled selected>Elegí una Línea...</option>'+ks.map(l=>'<option value="'+l+'">Línea '+l+' — '+D[l].z.join('/')+'</option>').join('');
     document.getElementById('lS').innerHTML=o;
     document.getElementById('rL').innerHTML=o;
-    document.getElementById('sL').innerHTML=o;
-    // Format selectors
-    const fOpts=FORMATOS.map(f=>'<option value="'+f.id+'">'+f.emoji+' '+f.nombre+' — Desde '+fp(f.precio_min)+'</option>').join('');
-    document.getElementById('fmtSelect').innerHTML+='<option value="luneta">🏷️ Luneta</option>'+FORMATOS.filter(f=>f.id!=='luneta').map(f=>'<option value="'+f.id+'">'+f.emoji+' '+f.nombre+'</option>').join('');
-    document.getElementById('rFmt').innerHTML+='<option value="luneta">🏷️ Luneta</option>'+FORMATOS.filter(f=>f.id!=='luneta').map(f=>'<option value="'+f.id+'">'+f.emoji+' '+f.nombre+'</option>').join('');
-    document.getElementById('sFmt').innerHTML+='<option value="luneta">🏷️ Luneta</option>'+FORMATOS.filter(f=>f.id!=='luneta').map(f=>'<option value="'+f.id+'">'+f.emoji+' '+f.nombre+'</option>').join('');
 }
 init();fL();
 </script>
