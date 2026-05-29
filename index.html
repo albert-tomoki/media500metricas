@@ -333,6 +333,7 @@
 
 </div><!-- end appContent -->
 
+<script src="recorridos.js"></script>
 <script>
 // === AUTH ===
 const CREDS=[{u:'media500',p:'vendedores500'}];
@@ -524,7 +525,7 @@ function genReporteOTS(){
     let totalB=0, totalMin=0, totalMax=0;
     items.forEach(r=>{totalB+=r.bondis; totalMin+=r.rangeMin*r.bondis; totalMax+=r.rangeMax*r.bondis;});
 
-    var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reporte OOH Audiencia</title>';
+    var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reporte OOH Audiencia</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>';
     h+='<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;color:#111827;margin:30px;line-height:1.5}';
     h+='.hd{display:flex;align-items:center;border-bottom:2px solid #1d4ed8;padding-bottom:16px;margin-bottom:24px}';
     h+='.hd img{width:64px;border-radius:50%;margin-right:16px}.hd h1{color:#1d4ed8;font-size:18px;margin-bottom:2px}';
@@ -536,14 +537,14 @@ function genReporteOTS(){
     h+='tr.hl{background:#dbeafe!important;font-weight:700}';
     h+='.ots{background:linear-gradient(135deg,#dbeafe,#eff6ff);border:2px solid #1d4ed8;padding:24px;border-radius:10px;text-align:center;margin:24px 0}';
     h+='.ots .big{font-size:32px;font-weight:700;color:#1d4ed8}.ots .sub{font-size:13px;color:#4b5563;margin-top:6px}';
-    h+='.vis{background:#fef9c3;border-left:4px solid #eab308;padding:14px 16px;border-radius:6px;font-size:12px;margin:18px 0;line-height:1.6}';
+    h+='.vis{background:#fef9c3;border-left:4px solid #eab308;padding:14px 16px;border-radius:6px;font-size:12px;margin:18px 0;line-height:1.6}.map-wrap{width:100%;height:300px;margin:16px 0;border:1px solid #d1d5db;border-radius:8px;overflow:hidden}';
     h+='.rt .ave{display:inline-block;background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:12px;font-size:11px;margin:2px 4px 2px 0;font-weight:600}';
     h+='.sr{border:1px solid #d1d5db;padding:8px 12px;margin:6px 0;border-radius:6px;font-size:12px}';
     h+='.src{border-top:1px solid #e5e7eb;margin-top:24px;padding-top:14px;font-size:11px;color:#6b7280;line-height:1.8}';
     h+='.src a{color:#1d4ed8;text-decoration:none}';
     h+='.ft{text-align:center;font-size:10px;color:#9ca3af;margin-top:32px;border-top:1px solid #e5e7eb;padding-top:14px;line-height:1.6}';
     h+='.line-section{border:1px solid #d1d5db;padding:16px;border-radius:8px;margin:16px 0;page-break-inside:avoid}';
-    h+='.line-section h3{color:#1d4ed8;font-size:14px;margin-bottom:8px}';
+    h+='.line-section h3{color:#1d4ed8;font-size:14px;margin-bottom:8px}.map-wrap{width:100%;height:300px;margin:16px 0;border:1px solid #d1d5db;border-radius:8px;overflow:hidden}';
     h+='@media print{body{margin:12mm}}.print-btns{position:fixed;bottom:20px;right:20px;display:flex;gap:10px;z-index:9999}.print-btn{padding:12px 20px;border-radius:8px;border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3)}.print-btn.print{background:#2563eb}.print-btn.print:hover{background:#1d4ed8}.print-btn.close{background:#ef4444}.print-btn.close:hover{background:#dc2626}@media print{.print-btns{display:none}}</style></head><body>';
     h+='<div class="hd"><img src="https://i.ibb.co/N29Ts7WX/Logo-media-500-CIRCULAR-jpg.jpg"><div><h1>Media 500 — Métricas OOH</h1><span>'+now+'</span></div></div>';
     h+='<h2>Reporte de Audiencia OOH</h2>';
@@ -583,6 +584,18 @@ function genReporteOTS(){
             rt.sensors.forEach(function(s){h+='<div class="sr">📡 <strong>'+s.name+'</strong> — '+s.dist+'m — '+s.stops+' paradas en rango 500m</div>';});
             h+='<div style="font-size:11px;color:#6b7280;margin-top:4px">'+rt.stop_count+' paradas registradas GCBA</div></div>';
         }
+        // --- MAPA ---
+        h+='<div style="margin:20px 0;border:1px solid #d1d5db;border-radius:8px;padding:16px;background:#f8fafc">';
+        h+='<h3 style="font-size:13px;color:#1d4ed8;margin-bottom:10px">🗺️ Mapa del recorrido — Línea '+r.line+'</h3>';
+        var _lk=r.line;
+        if(typeof RECORRIDOS!=='undefined'&&RECORRIDOS[_lk]){
+            h+='<div id="reportemap" style="width:100%;height:300px;border-radius:6px"></div>';
+            h+='<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>';
+            h+='<script>var _rc='+JSON.stringify(RECORRIDOS[_lk])+';(function(){var m=L.map("reportemap");L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"&copy; OSM"}).addTo(m);var ll=_rc.map(function(c){return[c[1],c[0]]});L.polyline(ll,{color:"#2563eb",weight:4,opacity:.8}).addTo(m);m.fitBounds(ll)})();<\/script>';
+        } else {
+            h+='<a href="https://www.omnilineas.com.ar/buenos-aires/colectivo/linea-'+_lk+'/" target="_blank" style="display:block;text-align:center;padding:16px;background:#dbeafe;border-radius:8px;color:#1d4ed8;font-weight:700;text-decoration:none;font-size:14px">🗺️ Ver recorrido en Omnilíneas →</a>';
+        }
+        h+='</div>';
         var srcUrl=i.ts==='gcba'?'https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital':'https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos';
         h+='<div class="src"><strong>Fuentes:</strong><br>🔗 <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha">SUBE — Ministerio de Transporte</a><br>🔗 <a href="'+srcUrl+'">'+srcLabel+'</a><br>📚 Rango de visibilidad: FEPE / OUTSMART</div>';
         h+='</div>';
@@ -604,6 +617,24 @@ function genReporteOTS(){
             h+='<div style="font-size:10px;color:#60a5fa;margin-top:4px">Fuente tránsito: '+srcLabel+'</div>';
             h+='</div>';
         });
+        // --- MAPA MULTI-LÍNEA ---
+        h+='<div style="margin:20px 0;border:1px solid #d1d5db;border-radius:8px;padding:16px;background:#f8fafc">';
+        h+='<h3 style="font-size:13px;color:#1d4ed8;margin-bottom:10px">🗺️ Mapa de recorridos</h3>';
+        var _hasMap=false;
+        items.forEach(function(it){if(typeof RECORRIDOS!=='undefined'&&RECORRIDOS[it.line])_hasMap=true;});
+        if(_hasMap){
+            h+='<div id="reportemap" style="width:100%;height:350px;border-radius:6px"></div>';
+            h+='<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>';
+            var _linesData={},_colorPal=['#2563eb','#dc2626','#10b981','#f59e0b','#8b5cf6','#ec4899','#06b6d4','#f97316','#84cc16','#ef4444','#3b82f6','#14b8a6'],_ci=0;
+            items.forEach(function(it){if(typeof RECORRIDOS!=='undefined'&&RECORRIDOS[it.line]){_linesData[it.line]={c:_colorPal[_ci%_colorPal.length],p:RECORRIDOS[it.line]};_ci++;}});
+            h+='<script>var _ld='+JSON.stringify(_linesData)+';(function(){var m=L.map("reportemap");L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"&copy; OSM"}).addTo(m);var ab=[];Object.keys(_ld).forEach(function(k){var d=_ld[k];var ll=d.p.map(function(c){return[c[1],c[0]]});L.polyline(ll,{color:d.c,weight:4,opacity:.7}).addTo(m);ab=ab.concat(ll)});if(ab.length)m.fitBounds(ab)})();<\/script>';
+            h+='<div style="margin-top:8px;font-size:10px;display:flex;flex-wrap:wrap;gap:8px">';
+            _ci=0;items.forEach(function(it){if(typeof RECORRIDOS!=='undefined'&&RECORRIDOS[it.line]){h+='<span style="display:inline-flex;align-items:center;gap:3px"><span style="width:12px;height:4px;display:inline-block;background:'+_colorPal[_ci%_colorPal.length]+';border-radius:2px"></span> Línea '+it.line+'</span>';_ci++;}});
+            h+='</div>';
+        } else {
+            h+='<div style="text-align:center;padding:16px;color:#6b7280;font-size:12px">📍 Las líneas seleccionadas son GBA — sin recorridos GCBA</div>';
+        }
+        h+='</div>';
         h+='<div class="src"><strong>Fuentes:</strong><br>🔗 <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha">SUBE — Ministerio de Transporte</a><br>🔗 <a href="https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital">GCBA — Anillo Digital</a><br>🔗 <a href="https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos">Vialidad Nacional</a><br>📚 Rango de visibilidad: FEPE / OUTSMART</div>';
     }
 
@@ -663,7 +694,7 @@ function genReporteCPM(){
     const cpiMinIVA=imTMax>0?totalInv/imTMax:0,cpiMaxIVA=imTMin>0?totalInv/imTMin:0;
     const srcLabel=i.ts==='gcba'?'GCBA — Anillo Digital':'Vialidad Nacional';
     const now=new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
-    var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reporte CPM Linea '+l+'</title>';
+    var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reporte CPM Linea '+l+'</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>';
     h+='<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;color:#111827;margin:30px;line-height:1.5}';
     h+='.hd{display:flex;align-items:center;border-bottom:2px solid #1d4ed8;padding-bottom:16px;margin-bottom:24px}';
     h+='.hd img{width:64px;border-radius:50%;margin-right:16px}.hd h1{color:#1d4ed8;font-size:18px;margin-bottom:2px}';
@@ -680,7 +711,7 @@ function genReporteCPM(){
     h+='.cd .lb{font-size:11px;color:#1e40af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}';
     h+='.cd .vl{font-size:24px;font-weight:700;color:#1d4ed8}';
     h+='.cd .dt{font-size:11px;color:#4b5563;margin-top:4px}';
-    h+='.vis{background:#fef9c3;border-left:4px solid #eab308;padding:14px 16px;border-radius:6px;font-size:12px;margin:18px 0;line-height:1.6}';
+    h+='.vis{background:#fef9c3;border-left:4px solid #eab308;padding:14px 16px;border-radius:6px;font-size:12px;margin:18px 0;line-height:1.6}.map-wrap{width:100%;height:300px;margin:16px 0;border:1px solid #d1d5db;border-radius:8px;overflow:hidden}';
     h+='.src{border-top:1px solid #e5e7eb;margin-top:24px;padding-top:14px;font-size:11px;color:#6b7280;line-height:1.8}';
     h+='.src a{color:#1d4ed8;text-decoration:none}';
     h+='.ft{text-align:center;font-size:10px;color:#9ca3af;margin-top:32px;border-top:1px solid #e5e7eb;padding-top:14px;line-height:1.6}';
@@ -703,6 +734,17 @@ function genReporteCPM(){
     h+='<div class="cd"><div class="lb">Costo por OTS</div><div class="vl">'+fp(ivaChk?cpiMinIVA:cpiMin)+'</div><div class="dt">Rango: '+fp(ivaChk?cpiMinIVA:cpiMin)+' — '+fp(ivaChk?cpiMaxIVA:cpiMax)+'</div></div>';
     h+='</div>';
     h+='<div class="vis"><strong>👁 Rango de visibilidad 25%—45%</strong> segun estudios FEPE/OUTSMART. Los valores de OTS y CPM se calculan en base a este rango para ofrecer transparencia total.</div>';
+    // --- MAPA ---
+    h+='<div style="margin:20px 0;border:1px solid #d1d5db;border-radius:8px;padding:16px;background:#f8fafc">';
+    h+='<h3 style="font-size:13px;color:#1d4ed8;margin-bottom:10px">🗺️ Mapa del recorrido — Línea '+l+'</h3>';
+    if(typeof RECORRIDOS!=='undefined'&&RECORRIDOS[l]){
+        h+='<div id="reportemap" style="width:100%;height:300px;border-radius:6px"></div>';
+        h+='<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>';
+        h+='<script>var _rc='+JSON.stringify(RECORRIDOS[l])+';(function(){var m=L.map("reportemap");L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"&copy; OSM"}).addTo(m);var ll=_rc.map(function(c){return[c[1],c[0]]});L.polyline(ll,{color:"#2563eb",weight:4,opacity:.8}).addTo(m);m.fitBounds(ll)})();<\/script>';
+    } else {
+        h+='<a href="https://www.omnilineas.com.ar/buenos-aires/colectivo/linea-'+l+'/" target="_blank" style="display:block;text-align:center;padding:16px;background:#dbeafe;border-radius:8px;color:#1d4ed8;font-weight:700;text-decoration:none;font-size:14px">🗺️ Ver recorrido en Omnilíneas →</a>';
+    }
+    h+='</div>';
     var srcUrl=i.ts==='gcba'?'https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital':'https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos';
     h+='<div class="src"><strong>Fuentes:</strong><br>🔗 <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha">SUBE — Ministerio de Transporte</a><br>🔗 <a href="'+srcUrl+'">'+srcLabel+'</a><br>📚 Rango de visibilidad: FEPE / OUTSMART</div>';
     h+='<div class="ft">Media 500 — Publicidad en Via Publica<br>Fuentes: SUBE (Min. Transporte) | Anillo Digital (GCBA) | Vialidad Nacional | FEPE/OUTSMART</div>';
