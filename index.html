@@ -544,7 +544,7 @@ function genReporteOTS(){
     h+='.ft{text-align:center;font-size:10px;color:#9ca3af;margin-top:32px;border-top:1px solid #e5e7eb;padding-top:14px;line-height:1.6}';
     h+='.line-section{border:1px solid #d1d5db;padding:16px;border-radius:8px;margin:16px 0;page-break-inside:avoid}';
     h+='.line-section h3{color:#1d4ed8;font-size:14px;margin-bottom:8px}';
-    h+='@media print{body{margin:12mm}}</style></head><body>';
+    h+='@media print{body{margin:12mm}}.print-btns{position:fixed;bottom:20px;right:20px;display:flex;gap:10px;z-index:9999}.print-btn{padding:12px 20px;border-radius:8px;border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3)}.print-btn.print{background:#2563eb}.print-btn.print:hover{background:#1d4ed8}.print-btn.close{background:#ef4444}.print-btn.close:hover{background:#dc2626}@media print{.print-btns{display:none}}</style></head><body>';
     h+='<div class="hd"><img src="https://i.ibb.co/N29Ts7WX/Logo-media-500-CIRCULAR-jpg.jpg"><div><h1>Media 500 — Métricas OOH</h1><span>'+now+'</span></div></div>';
     h+='<h2>Reporte de Audiencia OOH</h2>';
     h+='<div class="badge">📋 '+items.length+' línea'+(items.length>1?'s':'')+' | Total: '+totalB+' bondis</div>';
@@ -576,7 +576,7 @@ function genReporteOTS(){
         h+='<tr><td>Flota de la línea</td><td style="font-weight:700">'+fl+' coches</td></tr>';
         h+='<tr><td>Bondis pautados</td><td style="font-weight:700">'+r.bondis+'</td></tr>';
         h+='</tbody></table>';
-        h+='<div class="ots"><div style="font-size:12px;color:#4b5563;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">OTS por bondi/mes</div><div class="big">'+f(r.rangeMin)+' — '+f(r.rangeMax)+'</div><div class="sub">'+f(Math.round(r.rangeMin/30))+' — '+f(Math.round(r.rangeMax/30))+' OTS/día</div></div>';
+        h+='<div class="ots"><div style="font-size:12px;color:#4b5563;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">OTS totales/mes ('+r.bondis+' bondi'+(r.bondis>1?'s':'')+')</div><div class="big">'+f(r.rangeMin*r.bondis)+' — '+f(r.rangeMax*r.bondis)+'</div><div class="sub">'+f(Math.round(r.rangeMin*r.bondis/30))+' — '+f(Math.round(r.rangeMax*r.bondis/30))+' OTS/día'; if(r.bondis>1)h+='<br><span style="font-size:11px;color:#6b7280">'+f(r.rangeMin)+' — '+f(r.rangeMax)+' OTS por bondi/mes</span>'; h+='</div></div>';
         if(rt&&rt.sensors&&rt.sensors.length>0){
             h+='<div style="margin:18px 0"><h3 style="font-size:12px;color:#1d4ed8;margin-bottom:6px">🗺 Recorrido y cobertura</h3>';
             if(rt.avenues&&rt.avenues.length>0){h+='<div style="margin-bottom:6px"><strong style="font-size:11px">Avenidas con sensor:</strong><br>'+rt.avenues.map(function(a){return'<span class="ave">'+a+'</span>'}).join('')+'</div>';}
@@ -596,8 +596,7 @@ function genReporteOTS(){
             h+='<tr><td>Pasajeros/mes (SUBE)</td><td style="font-weight:700">'+f(i.p)+'</td></tr>';
             h+='<tr><td>Tránsito/mes</td><td style="font-weight:700">'+f(i.t*30)+'</td></tr>';
             h+='<tr><td>Flota</td><td>'+fl+' coches</td></tr>';
-            h+='<tr><td>OTS por bondi/mes</td><td style="font-weight:700">'+f(r.rangeMin)+' — '+f(r.rangeMax)+'</td></tr>';
-            h+='<tr class="hl"><td>OTS totales/mes</td><td style="font-weight:700">'+f(r.rangeMin*r.bondis)+' — '+f(r.rangeMax*r.bondis)+'</td></tr>';
+            h+='<tr class="hl"><td>OTS totales/mes</td><td style="font-weight:700">'+f(r.rangeMin*r.bondis)+' — '+f(r.rangeMax*r.bondis)+'</td></tr>'; if(r.bondis>1)h+='<tr><td style="font-size:11px;color:#6b7280">≈ '+f(r.rangeMin)+' — '+f(r.rangeMax)+' por bondi/mes</td><td></td></tr>';
             h+='</tbody></table>';
             if(rt&&rt.sensors&&rt.sensors.length>0){
                 h+='<div style="font-size:11px;color:#6b7280;margin-top:8px">📡 '+rt.sensors.length+' sensor(es) Anillo Digital | '+rt.stop_count+' paradas GCBA</div>';
@@ -609,10 +608,9 @@ function genReporteOTS(){
     }
 
     h+='<div class="ft">Media 500 — Publicidad en Vía Pública<br>Fuentes: SUBE (Min. Transporte) | Anillo Digital (GCBA) | Vialidad Nacional | FEPE/OUTSMART</div>';
-    h+='</body></html>';
+    h+='<div class="print-btns"><button class="print-btn print" onclick="window.print()">📄 Descargar PDF</button><button class="print-btn close" onclick="window.close()">✕ Cerrar</button></div></body></html>';
     var w=window.open('','_blank','width=800,height=700');
     w.document.write(h);w.document.close();w.focus();
-    setTimeout(function(){w.print();w.close();},600);
 }
 
 // === CPM TAB ===
@@ -686,7 +684,7 @@ function genReporteCPM(){
     h+='.src{border-top:1px solid #e5e7eb;margin-top:24px;padding-top:14px;font-size:11px;color:#6b7280;line-height:1.8}';
     h+='.src a{color:#1d4ed8;text-decoration:none}';
     h+='.ft{text-align:center;font-size:10px;color:#9ca3af;margin-top:32px;border-top:1px solid #e5e7eb;padding-top:14px;line-height:1.6}';
-    h+='@media print{body{margin:12mm}.cr{display:flex}}</style></head><body>';
+    h+='@media print{body{margin:12mm}.cr{display:flex}}.print-btns{position:fixed;bottom:20px;right:20px;display:flex;gap:10px;z-index:9999}.print-btn{padding:12px 20px;border-radius:8px;border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3)}.print-btn.print{background:#2563eb}.print-btn.print:hover{background:#1d4ed8}.print-btn.close{background:#ef4444}.print-btn.close:hover{background:#dc2626}@media print{.print-btns{display:none}}</style></head><body>';
     h+='<div class="hd"><img src="https://i.ibb.co/N29Ts7WX/Logo-media-500-CIRCULAR-jpg.jpg"><div><h1>Media 500 — Metricas OOH</h1><span>'+now+'</span></div></div>';
     h+='<h2>Reporte de Costo por Mil — Linea '+l+'</h2>';
     h+='<div class="badge">📍 '+i.z.join(', ')+' | '+srcLabel+'</div>';
@@ -708,10 +706,9 @@ function genReporteCPM(){
     var srcUrl=i.ts==='gcba'?'https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital':'https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos';
     h+='<div class="src"><strong>Fuentes:</strong><br>🔗 <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha">SUBE — Ministerio de Transporte</a><br>🔗 <a href="'+srcUrl+'">'+srcLabel+'</a><br>📚 Rango de visibilidad: FEPE / OUTSMART</div>';
     h+='<div class="ft">Media 500 — Publicidad en Via Publica<br>Fuentes: SUBE (Min. Transporte) | Anillo Digital (GCBA) | Vialidad Nacional | FEPE/OUTSMART</div>';
-    h+='</body></html>';
+    h+='<div class="print-btns"><button class="print-btn print" onclick="window.print()">📄 Descargar PDF</button><button class="print-btn close" onclick="window.close()">✕ Cerrar</button></div></body></html>';
     var w=window.open('','_blank','width=800,height=700');
     w.document.write(h);w.document.close();w.focus();
-    setTimeout(function(){w.print();w.close();},600);
 }
 
 // === INIT ===
