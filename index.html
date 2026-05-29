@@ -209,7 +209,7 @@
                 <div id="routeContent"></div>
             </div>
         </div>
-        <div style="text-align:center"><button class="btn bs" onclick="cpImp()">📲 Copiar para WhatsApp</button></div>
+        <div style="text-align:center"><button class="btn bs" onclick="genReporteOTS()">📄 Generar Reporte</button></div>
     </div>
 </div>
 
@@ -217,14 +217,14 @@
 <div class="tc" id="t-roi">
     <div class="st">💰 Calculadora de CPM por Línea</div>
     <div class="pnl">
-        <div class="fb" style="margin-bottom:12px"><select id="rL" onchange="cROI()" style="min-width:100%"><option value="" disabled selected>Elegí una Línea...</option></select></div>
+        <div class="fb" style="margin-bottom:12px"><select id="rL" onchange="uROILine()" style="min-width:100%"><option value="" disabled selected>Elegí una Línea...</option></select></div>
         <div class="fr">
             <div class="fg"><label>Precio por Exhibición ($)</label><input type="number" id="rP" placeholder="Precio por unidad" oninput="cROI()" onchange="cROI()"></div>
             <div class="fg"><label>Producción ($)</label><input type="number" id="rProd" placeholder="Costo de producción" oninput="cROI()" onchange="cROI()"></div>
         </div>
         <div class="fr">
             <div class="fg"><label>Unidades</label><input type="number" id="rN" min="1" value="1" oninput="cROI()" onchange="cROI()"></div>
-            <div class="fg"><label>Flota</label><input type="number" id="rF" min="1" value="50" oninput="cROI()" onchange="cROI()"></div>
+            <div class="fg"><label>Flota</label><input type="number" id="rF" min="1" placeholder="Auto" oninput="cROI()" onchange="cROI()"></div>
             <div class="fg"><label>Meses</label><input type="number" id="rD" min="1" max="4" value="1" oninput="cROI()" onchange="cROI()"><div class="rh">Máx 4 (vida útil ploteo)</div></div>
         </div>
         <div class="fg" style="margin-top:8px">
@@ -245,7 +245,7 @@
             <div class="range-v" style="font-size:28px" id="rImp">0</div>
             <div class="range-s" id="rImpD"></div>
         </div>
-        <div style="text-align:center;margin-top:12px"><button class="btn bs" onclick="cpROI()">📲 Copiar para WhatsApp</button></div>
+        <div style="text-align:center;margin-top:12px"><button class="btn bs" onclick="genReporteCPM()">📄 Generar Reporte</button></div>
     </div>
 </div>
 
@@ -440,17 +440,63 @@ function uP(){
     }
 }
 
-function cpImp(){
-    if(!cL)return;const i=D[cL];const fl=i.f||50;
-    const range=impEfect(i, fl);
-    const pBus=Math.round(i.p/fl);
-    const srcLabel=i.ts==='gcba'?'GCBA Anillo Digital':'Vialidad';
-    const srcUrl=i.ts==='gcba'?'data.buenosaires.gob.ar':'argentina.gob.ar/vialidad';
-    const rt=ROUTES[cL];
-    let routeTxt='';
-    if(rt&&rt.avenues.length>0){routeTxt='\n🗺️ *Recorrido:* '+rt.avenues.join(', ')+(rt.sensors.length?' ('+rt.sensors.length+' sensor(es) Anillo Digital)':' (sin sensores cercanos)');}
-    const txt=`🚌 *OTS OOH — Línea ${cL}*\n📍 ${i.z.join(', ')}\n\n👥 ${f(i.p)} pasajeros/mes (SUBE)\n🚗 ${f(i.t*30)} vehículos/mes (${srcLabel})\n🚌 ${f(pBus)} pasajeros por bondi/mes\n👁 Rango visibilidad 25%–45% (FEPE/OUTSMART)\n\n🔥 *OTS: entre ${f(range.min)} y ${f(range.max)} por bondi/mes*${routeTxt}\n\n🔗 Fuentes: datos.transporte.gob.ar | ${srcUrl}`;
-    navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
+function uROILine(){
+    const l=document.getElementById('rL').value;
+    if(l&&D[l]){document.getElementById('rF').value=D[l].f||50;}
+    cROI();
+}
+
+function genReporteOTS(){
+    if(!cL)return;
+    const l=cL,i=D[l],fl=i.f||50;
+    const range=impEfect(i,fl);
+    const srcLabel=i.ts==='gcba'?'GCBA — Anillo Digital':'Vialidad Nacional';
+    const rt=ROUTES[l];
+    const now=new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
+    var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reporte OOH Linea '+l+'</title>';
+    h+='<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;color:#111827;margin:30px;line-height:1.5}';
+    h+='.hd{display:flex;align-items:center;border-bottom:2px solid #1d4ed8;padding-bottom:16px;margin-bottom:24px}';
+    h+='.hd img{width:64px;border-radius:50%;margin-right:16px}.hd h1{color:#1d4ed8;font-size:18px;margin-bottom:2px}';
+    h+='.hd span{color:#6b7280;font-size:12px}h2{color:#1d4ed8;font-size:18px;margin-bottom:6px}';
+    h+='.badge{display:inline-block;background:#dbeafe;color:#1e40af;padding:4px 12px;border-radius:12px;font-size:11px;margin-bottom:20px;font-weight:600}';
+    h+='table{width:100%;border-collapse:collapse;margin:18px 0;border:1px solid #e5e7eb}';
+    h+='table th{background:#1d4ed8;color:#fff;padding:10px 12px;text-align:left;font-size:12px;text-transform:uppercase}';
+    h+='table td{padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:13px}tr:nth-child(even){background:#f8fafc}';
+    h+='.ots{background:linear-gradient(135deg,#dbeafe,#eff6ff);border:2px solid #1d4ed8;padding:24px;border-radius:10px;text-align:center;margin:24px 0}';
+    h+='.ots .big{font-size:32px;font-weight:700;color:#1d4ed8}.ots .sub{font-size:13px;color:#4b5563;margin-top:6px}';
+    h+='.vis{background:#fef9c3;border-left:4px solid #eab308;padding:14px 16px;border-radius:6px;font-size:12px;margin:18px 0;line-height:1.6}';
+    h+='.rt .ave{display:inline-block;background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:12px;font-size:11px;margin:2px 4px 2px 0;font-weight:600}';
+    h+='.sr{border:1px solid #d1d5db;padding:8px 12px;margin:6px 0;border-radius:6px;font-size:12px}';
+    h+='.src{border-top:1px solid #e5e7eb;margin-top:24px;padding-top:14px;font-size:11px;color:#6b7280;line-height:1.8}';
+    h+='.src a{color:#1d4ed8;text-decoration:none}';
+    h+='.ft{text-align:center;font-size:10px;color:#9ca3af;margin-top:32px;border-top:1px solid #e5e7eb;padding-top:14px;line-height:1.6}';
+    h+='@media print{body{margin:12mm}}</style></head><body>';
+    h+='<div class="hd"><img src="https://i.ibb.co/N29Ts7WX/Logo-media-500-CIRCULAR-jpg.jpg"><div><h1>Media 500 — Metricas OOH</h1><span>'+now+'</span></div></div>';
+    h+='<h2>Reporte de Audiencia OOH — Linea '+l+'</h2>';
+    h+='<div class="badge">📍 '+i.z.join(', ')+' | '+srcLabel+'</div>';
+    h+='<table><thead><tr><th>Indicador</th><th>Valor</th></tr></thead><tbody>';
+    h+='<tr><td>Audiencia Interna (pasajeros/mes SUBE)</td><td style="font-weight:700">'+f(i.p)+'</td></tr>';
+    h+='<tr><td>Audiencia Interna por bondi/dia</td><td>'+f(Math.round(i.p/30/fl))+'</td></tr>';
+    h+='<tr><td>Audiencia Externa (transito/mes)</td><td style="font-weight:700">'+f(i.t*30)+'</td></tr>';
+    h+='<tr><td>Audiencia Externa por bondi/dia</td><td>'+f(Math.round(i.t/fl))+'</td></tr>';
+    h+='<tr><td>Flota de la linea</td><td style="font-weight:700">'+fl+' coches</td></tr>';
+    h+='</tbody></table>';
+    h+='<div class="ots"><div style="font-size:12px;color:#4b5563;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">OTS Aproximados por bondi/mes</div><div class="big">'+f(range.min)+' — '+f(range.max)+'</div><div class="sub">'+f(Math.round(range.min/30))+' — '+f(Math.round(range.max/30))+' OTS/dia</div></div>';
+    h+='<div class="vis"><strong>👁 Rango de visibilidad 25%—45%</strong> segun estudios internacionales FEPE/OUTSMART. La visibilidad real en OOH depende de factores como formato, posicion, transito y clima. Este rango ofrece una estimacion conservadora a optimista con respaldo de estandares de la industria.</div>';
+    if(rt&&rt.sensors&&rt.sensors.length>0){
+        h+='<div style="margin:18px 0"><h3 style="font-size:14px;color:#1d4ed8;margin-bottom:8px">🗺 Recorrido y cobertura</h3>';
+        if(rt.avenues&&rt.avenues.length>0){h+='<div style="margin-bottom:8px"><strong style="font-size:12px">Avenidas con sensor de transito:</strong><br>'+rt.avenues.map(function(a){return'<span class="ave">'+a+'</span>'}).join('')+'</div>';}
+        h+='<div style="font-size:12px;margin-top:10px;margin-bottom:4px;font-weight:600">Sensores Anillo Digital:</div>';
+        rt.sensors.forEach(function(s){h+='<div class="sr">📡 <strong>'+s.name+'</strong> — '+s.dist+'m — '+s.stops+' paradas en rango 500m</div>';});
+        h+='<div style="font-size:11px;color:#6b7280;margin-top:6px">'+rt.stop_count+' paradas registradas en dataset GCBA</div></div>';
+    }
+    var srcUrl=i.ts==='gcba'?'https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital':'https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos';
+    h+='<div class="src"><strong>Fuentes:</strong><br>🔗 <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha">SUBE — Ministerio de Transporte</a><br>🔗 <a href="'+srcUrl+'">'+srcLabel+'</a><br>📚 Rango de visibilidad: FEPE / OUTSMART</div>';
+    h+='<div class="ft">Media 500 — Publicidad en Via Publica<br>Fuentes: SUBE (Min. Transporte) | Anillo Digital (GCBA) | Vialidad Nacional | FEPE/OUTSMART</div>';
+    h+='</body></html>';
+    var w=window.open('','_blank','width=800,height=700');
+    w.document.write(h);w.document.close();w.focus();
+    setTimeout(function(){w.print();w.close();},600);
 }
 
 // === CPM TAB ===
@@ -484,21 +530,72 @@ function cROI(){
     document.getElementById('rR').style.display='block';
 }
 
-function cpROI(){
+function genReporteCPM(){
     const l=document.getElementById('rL').value,
         pr=parseFloat(document.getElementById('rP').value),
         prod=parseFloat(document.getElementById('rProd').value)||0,
-        n=parseInt(document.getElementById('rN').value),
-        d=parseInt(document.getElementById('rD').value),
+        n=parseInt(document.getElementById('rN').value)||0,
+        d=parseInt(document.getElementById('rD').value)||1,
         flota=parseInt(document.getElementById('rF').value)||50;
     const i=D[l];if(!i)return;
     const invPauta=pr*n*d,invProd=prod*n,inv=invPauta+invProd;
-    const range=impEfect(i, flota);
-    const imTMin=range.min*n*d,imTMax=range.max*n*d;
-    const cpmMin=imTMax>0?inv/imTMax*1e3:0;
-    const cpmMax=imTMin>0?inv/imTMin*1e3:0;
-    const txt=`💰 *CPM OOH — Línea ${l}*\n\n💵 Precio por exhibición: ${fp(pr)}\n🏭 Producción: ${fp(invProd)}\n💵 *Inversión Total: ${fp(inv)}*\n📊 *OTS: entre ${f(imTMin)} y ${f(imTMax)}*\n📈 *CPM: entre ${fp(cpmMin)} y ${fp(cpmMax)}*\n👁 Rango visibilidad 25%–45% (FEPE/OUTSMART)\n🚌 ${n} unidades × ${flota} flota × ${d} mes(es)\n\n🔥 OTS entre ${f(range.min)} y ${f(range.max)} por bondi/mes`;
-    navigator.clipboard.writeText(txt).then(()=>alert('¡Copiado!'));
+    const range=impEfect(i,flota);
+    const imMin=range.min*n,imMax=range.max*n;
+    const imTMin=imMin*d,imTMax=imMax*d;
+    const cpmMin=imTMax>0?inv/imTMax*1e3:0,cpmMax=imTMin>0?inv/imTMin*1e3:0;
+    const cpiMin=imTMax>0?inv/imTMax:0,cpiMax=imTMin>0?inv/imTMin:0;
+    const ivaChk=document.getElementById('rIVA').checked,ivaAmt=ivaChk?inv*0.21:0,totalInv=inv+ivaAmt;
+    const cpmMinIVA=imTMax>0?totalInv/imTMax*1e3:0,cpmMaxIVA=imTMin>0?totalInv/imTMin*1e3:0;
+    const cpiMinIVA=imTMax>0?totalInv/imTMax:0,cpiMaxIVA=imTMin>0?totalInv/imTMin:0;
+    const srcLabel=i.ts==='gcba'?'GCBA — Anillo Digital':'Vialidad Nacional';
+    const now=new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
+    var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Reporte CPM Linea '+l+'</title>';
+    h+='<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;color:#111827;margin:30px;line-height:1.5}';
+    h+='.hd{display:flex;align-items:center;border-bottom:2px solid #1d4ed8;padding-bottom:16px;margin-bottom:24px}';
+    h+='.hd img{width:64px;border-radius:50%;margin-right:16px}.hd h1{color:#1d4ed8;font-size:18px;margin-bottom:2px}';
+    h+='.hd span{color:#6b7280;font-size:12px}h2{color:#1d4ed8;font-size:18px;margin-bottom:6px}';
+    h+='.badge{display:inline-block;background:#dbeafe;color:#1e40af;padding:4px 12px;border-radius:12px;font-size:11px;margin-bottom:20px;font-weight:600}';
+    h+='table{width:100%;border-collapse:collapse;margin:18px 0;border:1px solid #e5e7eb}';
+    h+='table th{background:#1d4ed8;color:#fff;padding:10px 12px;text-align:left;font-size:12px;text-transform:uppercase}';
+    h+='table td{padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:13px}tr:nth-child(even){background:#f8fafc}';
+    h+='tr.hl{background:#dbeafe!important;font-weight:700}';
+    h+='.ots{background:linear-gradient(135deg,#dbeafe,#eff6ff);border:2px solid #1d4ed8;padding:24px;border-radius:10px;text-align:center;margin:24px 0}';
+    h+='.ots .big{font-size:32px;font-weight:700;color:#1d4ed8}.ots .sub{font-size:13px;color:#4b5563;margin-top:6px}';
+    h+='.cr{display:flex;gap:16px;margin:24px 0}';
+    h+='.cd{flex:1;background:#dbeafe;border:1px solid #93c5fd;padding:18px;border-radius:10px;text-align:center}';
+    h+='.cd .lb{font-size:11px;color:#1e40af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}';
+    h+='.cd .vl{font-size:24px;font-weight:700;color:#1d4ed8}';
+    h+='.cd .dt{font-size:11px;color:#4b5563;margin-top:4px}';
+    h+='.vis{background:#fef9c3;border-left:4px solid #eab308;padding:14px 16px;border-radius:6px;font-size:12px;margin:18px 0;line-height:1.6}';
+    h+='.src{border-top:1px solid #e5e7eb;margin-top:24px;padding-top:14px;font-size:11px;color:#6b7280;line-height:1.8}';
+    h+='.src a{color:#1d4ed8;text-decoration:none}';
+    h+='.ft{text-align:center;font-size:10px;color:#9ca3af;margin-top:32px;border-top:1px solid #e5e7eb;padding-top:14px;line-height:1.6}';
+    h+='@media print{body{margin:12mm}.cr{display:flex}}</style></head><body>';
+    h+='<div class="hd"><img src="https://i.ibb.co/N29Ts7WX/Logo-media-500-CIRCULAR-jpg.jpg"><div><h1>Media 500 — Metricas OOH</h1><span>'+now+'</span></div></div>';
+    h+='<h2>Reporte de Costo por Mil — Linea '+l+'</h2>';
+    h+='<div class="badge">📍 '+i.z.join(', ')+' | '+srcLabel+'</div>';
+    h+='<table><thead><tr><th>Concepto</th><th>Valor</th></tr></thead><tbody>';
+    h+='<tr><td>Inversion en exhibicion</td><td style="font-weight:700">'+fp(invPauta)+'</td></tr>';
+    h+='<tr><td>Produccion</td><td style="font-weight:700">'+fp(invProd)+'</td></tr>';
+    h+='<tr><td>Unidades</td><td>'+n+'</td></tr>';
+    h+='<tr><td>Flota</td><td>'+flota+' coches</td></tr>';
+    h+='<tr><td>Meses</td><td>'+d+'</td></tr>';
+    h+='<tr><td>IVA</td><td>'+(ivaChk?'Incluido (21%)':'No incluido')+'</td></tr>';
+    h+='<tr class="hl"><td>Inversion Total</td><td>'+fp(ivaChk?totalInv:inv)+'</td></tr>';
+    h+='</tbody></table>';
+    h+='<div class="ots"><div style="font-size:12px;color:#4b5563;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">OTS Totales de la Campaña</div><div class="big">'+f(imTMin)+' — '+f(imTMax)+'</div><div class="sub">'+f(range.min)+' — '+f(range.max)+' OTS/mes × '+n+' un. × '+d+' mes(es)</div></div>';
+    h+='<div class="cr">';
+    h+='<div class="cd"><div class="lb">CPM</div><div class="vl">'+fp(ivaChk?cpmMinIVA:cpmMin)+'</div><div class="dt">Rango: '+fp(ivaChk?cpmMinIVA:cpmMin)+' — '+fp(ivaChk?cpmMaxIVA:cpmMax)+'</div></div>';
+    h+='<div class="cd"><div class="lb">Costo por OTS</div><div class="vl">'+fp(ivaChk?cpiMinIVA:cpiMin)+'</div><div class="dt">Rango: '+fp(ivaChk?cpiMinIVA:cpiMin)+' — '+fp(ivaChk?cpiMaxIVA:cpiMax)+'</div></div>';
+    h+='</div>';
+    h+='<div class="vis"><strong>👁 Rango de visibilidad 25%—45%</strong> segun estudios FEPE/OUTSMART. Los valores de OTS y CPM se calculan en base a este rango para ofrecer transparencia total.</div>';
+    var srcUrl=i.ts==='gcba'?'https://data.buenosaires.gob.ar/dataset/flujo-vehicular-anillo-digital':'https://www.argentina.gob.ar/obras-publicas/vialidad-nacional/datos-abiertos';
+    h+='<div class="src"><strong>Fuentes:</strong><br>🔗 <a href="https://datos.transporte.gob.ar/dataset/sube-cantidad-de-transacciones-usos-por-fecha">SUBE — Ministerio de Transporte</a><br>🔗 <a href="'+srcUrl+'">'+srcLabel+'</a><br>📚 Rango de visibilidad: FEPE / OUTSMART</div>';
+    h+='<div class="ft">Media 500 — Publicidad en Via Publica<br>Fuentes: SUBE (Min. Transporte) | Anillo Digital (GCBA) | Vialidad Nacional | FEPE/OUTSMART</div>';
+    h+='</body></html>';
+    var w=window.open('','_blank','width=800,height=700');
+    w.document.write(h);w.document.close();w.focus();
+    setTimeout(function(){w.print();w.close();},600);
 }
 
 // === INIT ===
